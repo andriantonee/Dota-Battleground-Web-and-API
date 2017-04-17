@@ -1,0 +1,32 @@
+.modal-remove-padding-right {
+    padding-right: 0px !important;
+}
+.modal-dialog-fixed-width {
+    width: 320px !important;
+    margin: 90px auto 0px auto !important;
+}
+.modal-header-border-bottom-custom {
+    margin: 0px 20px;
+    border-bottom: 3px solid black;
+}
+.modal-title-align-center {
+    text-align: center;
+}
+.form-inline-authentication {
+    padding: 0px 15px;
+}
+.form-inline-authentication > .form-group {
+    margin: 5px 0px;
+}
+.form-inline-authentication > .form-group > label {
+    margin-right: 10px;
+}
+.form-inline-authentication > .form-group > input.form-control {
+    width: 230px;
+}
+.button-container-authentication {
+    width: 100%;
+    margin-top: 5px;
+    text-align: right;
+    padding: 0px 15px;
+}
