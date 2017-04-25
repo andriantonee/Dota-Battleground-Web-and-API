@@ -42,9 +42,18 @@ class Member extends Model
         return $this->getKey();
     }
 
-    public static function checkEmailExists($email, $member_type)
+    public function identifications()
     {
-        return self::where('email', $email)->where('member_type', $member_type)->exists();
+        return $this->hasMany('App\Identification', 'members_id', 'id');
+    }
+
+    public static function checkEmailExists($email, $member_type, $member_id = null)
+    {
+        if ($member_id) {
+            return self::where('email', $email)->where('id', '<>', $member_id)->where('member_type', $member_type)->exists();
+        } else {
+            return self::where('email', $email)->where('member_type', $member_type)->exists();
+        }
     }
 
     public static function getMemberIDByEmail($email, $member_type)

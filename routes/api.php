@@ -13,9 +13,18 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('/participant/login', 'Participant\AuthController@login');
-Route::post('/participant/register', 'Participant\AuthController@register');
-Route::get('/participant/profile', 'Participant\AuthController@profile');
+Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function() {
+    Route::post('/login', 'AuthController@login');
+    Route::post('/register', 'AuthController@register');
+
+    Route::group(['middleware' => ['auth:api']], function() {
+        Route::get('/profile', 'ProfileController@show');
+        Route::put('/profile', 'ProfileController@update');
+        Route::post('/profile-picture', 'ProfileController@updateProfilePicture');
+        Route::delete('/profile-picture', 'ProfileController@deleteProfilePicture');
+        Route::post('/identification', 'ProfileController@updateIdentification');
+    });
+});
 Route::get('/user', function (Request $request) {
-    return $request->user();
+    return response()->json($request->user());
 })->middleware('auth:api');

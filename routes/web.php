@@ -11,6 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    return view('participant.home');
+Route::group(['middleware' => ['exchange:participant,1'], 'namespace' => 'Participant'], function() {
+    Route::get('/', 'HomeController@index');
+
+    Route::group(['middleware' => ['authorize:participant']], function() {
+        Route::get('/profile', 'ProfileController@index');
+        Route::post('/logout', 'AuthController@webLogout');
+    });
 });

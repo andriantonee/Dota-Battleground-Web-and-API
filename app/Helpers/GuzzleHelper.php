@@ -12,16 +12,16 @@ class GuzzleHelper
         $http = new GuzzleClient();
 
         try {
-            $response = $http->post(url()->to('/').'/oauth/token', [
-                    'form_params' => [
-                        'grant_type' => 'password',
-                        'client_id' => env('PASSPORT_CLIENT_ID', ''),
-                        'client_secret' => env('PASSPORT_CLIENT_SECRET', ''),
-                        'username' => $member_id,
-                        'password' => $password,
-                        'scope' => ''
-                    ]
-                ]);
+            $response = $http->post(url('/').'/oauth/token', [
+                'form_params' => [
+                    'grant_type' => 'password',
+                    'client_id' => env('PASSPORT_CLIENT_ID', ''),
+                    'client_secret' => env('PASSPORT_CLIENT_SECRET', ''),
+                    'username' => $member_id,
+                    'password' => $password,
+                    'scope' => ''
+                ]
+            ]);
 
             return array_merge(['code' => 200], json_decode($response->getBody()->__toString(), true));
         } catch (RequestException $e) {
@@ -34,6 +34,24 @@ class GuzzleHelper
             } else {
                 return ['code' => 500, 'message' => ['Something went wrong. Please try again.']];
             }
+        }
+    }
+
+    public static function requestUserModel($access_token)
+    {
+        $http = new GuzzleClient();
+
+        try {
+            $response = $http->get(url('/').'/api/user', [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer '.$access_token
+                ]
+            ]);
+
+            return json_decode($response->getBody()->__toString(), false);
+        } catch (RequestException $e) {
+            return null;
         }
     }
 }

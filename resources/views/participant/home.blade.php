@@ -1,22 +1,10 @@
-@extends('master')
+@extends('participant.main.master')
 
 @section('title', 'Home')
 
 @section('style')
-    <link href="vendor/bootstrap-social/bootstrap-social.css" rel="stylesheet">
-    <link href="css/bootstrap-notifications-1.0.0/dist/stylesheets/bootstrap-notifications.min.css" rel="stylesheet">
-    <link href="css/participant/modify-modal-authentication.css" rel="stylesheet">
+    <link href="{{ asset('vendor/bootstrap-social/bootstrap-social.css') }}" rel="stylesheet">
     <style type="text/css">
-        .divider-vertical {
-            height: 30px;
-            margin: 10px 2px;
-            border-right: 1px solid #FFF;
-        }
-
-        .navbar-inverse .navbar-nav>.open>a.dropdown-toggle-open {
-            background-color: transparent;
-        }
-
         footer {
             background-color: #565656;
             min-width: 1024px !important;
@@ -48,10 +36,6 @@
             margin-bottom: 0px;
         }
     </style>
-@endsection
-
-@section('header')
-    @include('participant.navbar.navbar-home')
 @endsection
 
 @section('content')
@@ -138,7 +122,7 @@
         </div>
     </footer>
     <div class="container-fluid" style="min-height: 30px;background-color: black;">
-        <div class="col-md-12">
+        <div class="col-xs-12">
             <p style="text-align: center;color: white;padding: 5px 0px;margin-bottom: 0px;">© Dota Battleground - Portal Turnamen Dota 2</p>
         </div>
     </div>

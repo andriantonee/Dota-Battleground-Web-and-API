@@ -230,3 +230,7 @@
 .modal-open {
     padding-right: 0px !important;
 }
+/* Override overflow hidden when modal open */
+.modal-open .modal {
+    overflow: auto;
+}

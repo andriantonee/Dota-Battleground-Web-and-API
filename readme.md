@@ -30,3 +30,11 @@ $ php artisan migrate
 $ php artisan passport:client --password --name="Laravel Password Grant Client"
 ```
 8. Change **PASSPORT_CLIENT_ID** & **PASSPORT_CLIENT_SECRET** variable inside **_.env_** file using value from generated **CLIENT ID** above.
+9. Run **bower install** to install CSS & JS dependencies.
+```sh
+$ bower install
+```
+10. Generate symlink folder using **php artisan**.
+```sh
+$ php artisan storage:link
+```

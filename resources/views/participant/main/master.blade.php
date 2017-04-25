@@ -12,6 +12,25 @@
         <!-- Bootstrap -->
         <link href="{{ asset('vendor/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
         <link href="{{ asset('vendor/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('vendor/sweetalert/dist/sweetalert.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/bootstrap-notifications-1.0.0/dist/stylesheets/bootstrap-notifications.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/participant/modify-modal.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/participant/modify-form.css') }}" rel="stylesheet">
+        @if (!$user)
+            <link href="{{ asset('css/participant/modify-modal-authentication.css') }}" rel="stylesheet">
+        @endif
+        <style type="text/css">
+            .divider-vertical {
+                height: 30px;
+                margin: 10px 2px;
+                border-right: 1px solid #FFF;
+            }
+
+            .navbar-inverse .navbar-nav>.open>a.dropdown-toggle-open {
+                background-color: transparent;
+            }
+        </style>
+        <link href="{{ asset('vendor/ladda-bootstrap/dist/ladda-themeless.min.css') }}" rel="stylesheet">
         <link href="{{ asset('css/non-responsive.css') }}" rel="stylesheet">
         @yield('style')
 
@@ -23,7 +42,7 @@
         <![endif]-->
     </head>
     <body>
-        @yield('header')
+        @include('participant.navbar.navbar', ['user' => $user])
 
         @yield('content')
 
@@ -33,6 +52,13 @@
         <script src="{{ asset('vendor/jquery/dist/jquery.min.js') }}"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="{{ asset('vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('vendor/sweetalert/dist/sweetalert.min.js') }}"></script>
+        <script src="{{ asset('vendor/ladda-bootstrap/dist/spin.min.js') }}"></script>
+        <script src="{{ asset('vendor/ladda-bootstrap/dist/ladda.min.js') }}"></script>
+        <script src="{{ asset('js/participant/config.js') }}"></script>
+        @if (!$user)
+            <script src="{{ asset('js/participant/authentication.js') }}"></script>
+        @endif
         @yield('script')
     </body>
 </html>
