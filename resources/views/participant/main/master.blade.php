@@ -16,9 +16,7 @@
         <link href="{{ asset('css/bootstrap-notifications-1.0.0/dist/stylesheets/bootstrap-notifications.min.css') }}" rel="stylesheet">
         <link href="{{ asset('css/participant/modify-modal.css') }}" rel="stylesheet">
         <link href="{{ asset('css/participant/modify-form.css') }}" rel="stylesheet">
-        @if (!$user)
-            <link href="{{ asset('css/participant/modify-modal-authentication.css') }}" rel="stylesheet">
-        @endif
+        <link href="{{ asset('css/participant/modify-modal-authentication.css') }}" rel="stylesheet">
         <style type="text/css">
             .divider-vertical {
                 height: 30px;
@@ -58,6 +56,8 @@
         <script src="{{ asset('js/participant/config.js') }}"></script>
         @if (!$user)
             <script src="{{ asset('js/participant/authentication.js') }}"></script>
+        @else
+            <script src="{{ asset('js/participant/password.js') }}"></script>
         @endif
         @yield('script')
     </body>

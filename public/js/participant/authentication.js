@@ -6,7 +6,7 @@ $("#form-participant-login").on("submit", function(e) {
 
     $.ajax({
         "type" : "POST",
-        "url" : apiUrl + "login",
+        "url" : api_url + "login",
         "data" : data,
         "beforeSend" : function() {
             $("#login-alert-container").parent().hide();
@@ -56,7 +56,7 @@ $("#form-participant-register").on("submit", function(e) {
 
     $.ajax({
         "type" : "POST",
-        "url" : apiUrl + "register",
+        "url" : api_url + "register",
         "data" : data,
         "beforeSend" : function() {
             $("#register-alert-container").parent().hide();

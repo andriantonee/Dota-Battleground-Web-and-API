@@ -11,7 +11,7 @@ $(document).ready(function() {
         "display" : false,
         "error" : function(response, newValue) {
             if (response.status == 401) {
-                window.location.replace('/');
+                window.location.replace("/");
             } else {
                 return "Something went wrong. Please try again.";
             }
@@ -31,23 +31,23 @@ $(document).ready(function() {
 
                 return true;   
             } else {
-                var htmlErrorMessage = "";
+                var html_error_message = "";
                 $.each(response.message, function(index, value) {
-                    if (htmlErrorMessage != "") {
-                        htmlErrorMessage += "\n";
+                    if (html_error_message != "") {
+                        html_error_message += "\n";
                     }
 
-                    htmlErrorMessage += value;
+                    html_error_message += value;
                 });
-                return htmlErrorMessage;
+                return html_error_message;
             }
         },
         "type" : "text",
-        "url" : apiUrl + 'profile',
+        "url" : api_url + "profile",
         "send" : "always",
         "title" : "Enter Name",
         "value" : function() {
-            return $('#editable-name-value').text();
+            return $("#editable-name-value").text();
         }
     });
 
@@ -63,7 +63,7 @@ $(document).ready(function() {
         "display" : false,
         "error" : function(response, newValue) {
             if (response.status == 401) {
-                window.location.replace('/');
+                window.location.replace("/");
             } else {
                 return "Something went wrong. Please try again.";
             }
@@ -82,23 +82,23 @@ $(document).ready(function() {
 
                 return true;   
             } else {
-                var htmlErrorMessage = "";
+                var html_error_message = "";
                 $.each(response.message, function(index, value) {
-                    if (htmlErrorMessage != "") {
-                        htmlErrorMessage += "\n";
+                    if (html_error_message != "") {
+                        html_error_message += "\n";
                     }
 
-                    htmlErrorMessage += value;
+                    html_error_message += value;
                 });
-                return htmlErrorMessage;
+                return html_error_message;
             }
         },
         "type" : "text",
-        "url" : apiUrl + 'profile',
+        "url" : api_url + "profile",
         "send" : "always",
         "title" : "Enter E-mail",
         "value" : function() {
-            return $('#editable-email-value').text();
+            return $("#editable-email-value").text();
         }
     });
 
@@ -114,7 +114,7 @@ $(document).ready(function() {
         "display" : false,
         "error" : function(response, newValue) {
             if (response.status == 401) {
-                window.location.replace('/');
+                window.location.replace("/");
             } else {
                 return "Something went wrong. Please try again.";
             }
@@ -129,34 +129,34 @@ $(document).ready(function() {
         "placement" : "bottom",
         "success" : function(response, newValue) {
             if (response.code == 200) {
-                if ($("#" + $(this).attr("aria-describedby")).find("input[type=\"text\"]").val().trim() == '') {
-                    $("#editable-steam32_id-value").text('-');
+                if ($("#" + $(this).attr("aria-describedby")).find("input[type=\"text\"]").val().trim() == "") {
+                    $("#editable-steam32_id-value").text("-");
                 } else {
                     $("#editable-steam32_id-value").text($("#" + $(this).attr("aria-describedby")).find("input[type=\"text\"]").val());
                 }
 
                 return true;   
             } else {
-                var htmlErrorMessage = "";
+                var html_error_message = "";
                 $.each(response.message, function(index, value) {
-                    if (htmlErrorMessage != "") {
-                        htmlErrorMessage += "\n";
+                    if (html_error_message != "") {
+                        html_error_message += "\n";
                     }
 
-                    htmlErrorMessage += value;
+                    html_error_message += value;
                 });
-                return htmlErrorMessage;
+                return html_error_message;
             }
         },
         "type" : "text",
-        "url" : apiUrl + 'profile',
+        "url" : api_url + "profile",
         "send" : "always",
         "title" : "Enter Steam ID 32-bit",
         "value" : function() {
-            if ($('#editable-steam32_id-value').text() != '-') {
-                return $('#editable-steam32_id-value').text();
+            if ($("#editable-steam32_id-value").text() != "-") {
+                return $("#editable-steam32_id-value").text();
             } else {
-                return '';
+                return "";
             }
         }
     });
@@ -177,7 +177,7 @@ $(document).ready(function() {
         }, function() {
             $.ajax({
                 "type" : "DELETE",
-                "url" : apiUrl + "profile-picture",
+                "url" : api_url + "profile-picture",
                 "headers" : {
                     "Accept" : "application/json",
                     "Authorization" : "Bearer " + document.cookie.replace(/(?:(?:^|.*;\s*)participant_token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
@@ -216,17 +216,17 @@ $(document).ready(function() {
     $("#form-profile-picture").on("submit", function(e) {
         e.preventDefault();
 
-        var formData = new FormData(this);
+        var form_data = new FormData(this);
         var btn_save = Ladda.create(document.querySelector("#btn-save-form-profile-picture"));
 
         $.ajax({
             "type" : "POST",
-            "url" : apiUrl + "profile-picture",
+            "url" : api_url + "profile-picture",
             "headers" : {
                 "Accept" : "application/json",
                 "Authorization" : "Bearer " + document.cookie.replace(/(?:(?:^|.*;\s*)participant_token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
             },
-            "data" : formData,
+            "data" : form_data,
             "contentType" : false,
             "processData" : false,
             "beforeSend" : function() {
@@ -243,7 +243,6 @@ $(document).ready(function() {
                 if (data.code == 200) {
                     $("#profile-picture-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-success");
                 } else {
-                    btn_login.stop();
                     $("#profile-picture-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-danger");
                 }
                 $("#profile-picture-alert-container").parent().show();
@@ -267,17 +266,17 @@ $(document).ready(function() {
     $("#form-settings").on("submit", function(e) {
         e.preventDefault();
 
-        var formData = new FormData(this);
+        var form_data = new FormData(this);
         var btn_save = Ladda.create(document.querySelector("#btn-save-form-settings"));
 
         $.ajax({
             "type" : "POST",
-            "url" : apiUrl + "identification",
+            "url" : api_url + "identification",
             "headers" : {
                 "Accept" : "application/json",
                 "Authorization" : "Bearer " + document.cookie.replace(/(?:(?:^|.*;\s*)participant_token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
             },
-            "data" : formData,
+            "data" : form_data,
             "contentType" : false,
             "processData" : false,
             "beforeSend" : function() {
@@ -294,7 +293,6 @@ $(document).ready(function() {
                 if (data.code == 200) {
                     $("#settings-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-success");
                 } else {
-                    btn_login.stop();
                     $("#settings-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-danger");
                 }
                 $("#settings-alert-container").parent().show();
@@ -312,6 +310,78 @@ $(document).ready(function() {
             })
             .always(function() {
                 btn_save.stop();
+            });
+    });
+
+    $("#ckbox-join-password").on("change", function(e) {
+        if ($(this).prop("checked")) {
+            $("#txtbox-join-password").prop("disabled", false);
+        } else {
+            $("#txtbox-join-password").val("");
+            $("#txtbox-join-password").prop("disabled", true);
+        }
+    });
+
+    $("#form-create-team").on("submit", function(e) {
+        e.preventDefault();
+
+        var form_data = new FormData(this);
+        var btn_create = Ladda.create(document.querySelector("#btn-create-form-create-team"));
+
+        $.ajax({
+            "type" : "POST",
+            "url" : api_url + "team",
+            "headers" : {
+                "Accept" : "application/json",
+                "Authorization" : "Bearer " + document.cookie.replace(/(?:(?:^|.*;\s*)participant_token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
+            },
+            "data" : form_data,
+            "contentType" : false,
+            "processData" : false,
+            "beforeSend" : function() {
+                $("#create-team-alert-container").parent().hide();
+                $("#create-team-alert-container").empty();
+                btn_create.start();
+            }
+        })
+            .done(function(data) {
+                var li_message = "";
+                $.each(data.message, function(index, value) {
+                    li_message += "<li>" + value + "</li>";
+                });
+                if (data.code == 201) {
+                    $("#create-team-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-success");
+                } else {
+                    $("#create-team-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-danger");
+                }
+                $("#create-team-alert-container").parent().show();
+                $("#create-team-alert-container").append(li_message);
+
+                if (data.code == 201) {
+                    var team_html = "" +
+                        "<a class=\"team-list-content\" href=\"" + data.team.url + "\">" +
+                            "<div class=\"row\" style=\"padding: 15px 5px;border: 1px solid #000000;margin: 0px;margin-bottom: 15px;\">" +
+                                "<div class=\"col-xs-2\">" +
+                                    "<div class=\"thumbnail\" style=\"margin: 0px auto;width: 75px;height: 75px;\">" +
+                                        "<img src=\"" + data.team.picture_path + "\" style=\"width: 65px;height: 65px;\">" +
+                                    "</div>" +
+                                "</div>" +
+                                "<div class=\"col-xs-10\">" +
+                                    "<h3 style=\"margin-top: 12px;\">" + data.team.name + "</h3>" +
+                                    "<h5>" + data.team.count + " Member</h5>" +
+                                "</div>" +
+                            "</div>" +
+                        "</a>";
+                    $("#team-list-container").append(team_html);
+                }
+            })
+            .fail(function() {
+                $("#create-team-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-danger");
+                $("#create-team-alert-container").parent().show();
+                $("#create-team-alert-container").append("<li>Something went wrong. Please try again.</li>");
+            })
+            .always(function() {
+                btn_create.stop();
             });
     });
 });

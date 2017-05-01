@@ -1,0 +1,23 @@
+.footer-ul-horizontal {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.footer-ul-horizontal > li {
+    display: inline;
+    margin: 0px 10px;
+    line-height: 30px;
+}
+.footer-ul-horizontal > li.separator {
+    display: inline;
+    margin: 0px;
+    border: 1px solid #ffffff;
+}
+.footer-ul-horizontal > li > a {
+    color: white;
+    text-decoration: underline;
+}
+.footer-ul-horizontal > li > a:hover {
+    color: #23527c;
+}

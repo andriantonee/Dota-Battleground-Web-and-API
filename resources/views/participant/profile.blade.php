@@ -5,6 +5,9 @@
 @section('style')
     <link href="{{ asset('vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/jasny-bootstrap/dist/css/jasny-bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/participant/footer.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/participant/tab-pages.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/participant/team.css') }}" rel="stylesheet">
     <style type="text/css">
         #profile-picture-container {
             height: 150px;
@@ -59,85 +62,11 @@
         .fileinput-exists #btn-file-size-settings {
             width: 168px;
         }
-
-        .panel.with-nav-tabs .panel-heading{
-            padding: 5px 5px 0 5px;
-        }
-        .panel.with-nav-tabs .nav-tabs{
-            border-bottom: none;
-        }
-        .panel.with-nav-tabs .nav-justified{
-            margin-bottom: -1px;
-        }
-
-        .with-nav-tabs.panel-default .nav-tabs > li > a,
-        .with-nav-tabs.panel-default .nav-tabs > li > a:hover,
-        .with-nav-tabs.panel-default .nav-tabs > li > a:focus {
-            color: #777;
-        }
-        .with-nav-tabs.panel-default .nav-tabs > .open > a,
-        .with-nav-tabs.panel-default .nav-tabs > .open > a:hover,
-        .with-nav-tabs.panel-default .nav-tabs > .open > a:focus,
-        .with-nav-tabs.panel-default .nav-tabs > li > a:hover,
-        .with-nav-tabs.panel-default .nav-tabs > li > a:focus {
-            color: #777;
-            background-color: #ddd;
-            border-color: transparent;
-        }
-        .with-nav-tabs.panel-default .nav-tabs > li.active > a,
-        .with-nav-tabs.panel-default .nav-tabs > li.active > a:hover,
-        .with-nav-tabs.panel-default .nav-tabs > li.active > a:focus {
-            color: #555;
-            background-color: #fff;
-            border-color: #000000;
-            border-bottom-color: transparent;
-        }
-        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu {
-            background-color: #f5f5f5;
-            border-color: #ddd;
-        }
-        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a {
-            color: #777;   
-        }
-        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
-        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
-            background-color: #ddd;
-        }
-        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a,
-        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:hover,
-        .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
-            color: #fff;
-            background-color: #555;
-        }
-
-        .footer-ul-horizontal {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-        .footer-ul-horizontal > li {
-            display: inline;
-            margin: 0px 10px;
-            line-height: 30px;
-        }
-        .footer-ul-horizontal > li.separator {
-            display: inline;
-            margin: 0px;
-            border: 1px solid #ffffff;
-        }
-        .footer-ul-horizontal > li > a {
-            color: white;
-            text-decoration: underline;
-        }
-        .footer-ul-horizontal > li > a:hover {
-            color: #23527c;
-        }
     </style>
 @endsection
 
 @section('content')
-    <div class="container">
+    <div class="container" style="min-height: 536px;">
         <div class="row">
             <div class="col-xs-offset-1 col-xs-2">
                 <div id="profile-picture-container" class="thumbnail">
@@ -192,16 +121,22 @@
                     <div class="panel-body" style="border: 1px solid #000000;border-top: none;">
                         <div class="tab-content">
                             <div class="tab-pane fade in active" id="teams-tab">
-                                <div class="row" style="padding: 15px 5px;border: 1px solid #000000;margin: 0px;">
-                                    <div class="col-xs-2">
-                                        <div class="thumbnail" style="margin: 0px auto;width: 75px;height: 75px;">
-                                            <img src="{{ asset('img/holder65x65.png') }}" style="width: 65px;height: 65px;">
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-10">
-                                        <h3 style="margin-top: 12px;">Team Name</h3>
-                                        <h5>10 Member</h5>
-                                    </div>
+                                <div id="team-list-container">
+                                    @foreach ($teams as $team)
+                                        <a class="team-list-content" href="{{ url('/team/'.$team->id) }}">
+                                            <div class="row" style="padding: 15px 5px;border: 1px solid #000000;margin: 0px;margin-bottom: 15px;">
+                                                <div class="col-xs-2">
+                                                    <div class="thumbnail" style="margin: 0px auto;width: 75px;height: 75px;">
+                                                        <img src="{{ asset($team->picture_file_name ? '/storage/team/'.$team->picture_file_name : 'img/default-group.png') }}" style="width: 65px;height: 65px;">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-10">
+                                                    <h3 style="margin-top: 12px;">{{ $team->name }}</h3>
+                                                    <h5>{{ $team->details_count }} Member</h5>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @endforeach
                                 </div>
                                 <div style="margin: 25px 0px;text-align: center;">
                                     <a role="button" class="btn btn-default" data-toggle="modal" data-target="#create-team-modal" style="border-radius: 0px;border-color: #000000;">
@@ -330,12 +265,17 @@
                     <h1 class="modal-title modal-title-align-center" id="create-team-modal-label">Create Team</h1>
                 </div>
                 <div class="modal-body">
-                    <form id="form-create-team" class="form-padding-left-right-15">
+                    <div class="alert alert-success" role="alert" style="margin-left: 5px;margin-right: 5px;display: none;">
+                        <ul id="create-team-alert-container">
+                            <!-- All message that want to deliver to the user -->
+                        </ul>
+                    </div>
+                    <form id="form-create-team" class="form-padding-left-right-15" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-xs-4">
                                 <div class="fileinput fileinput-new" data-provides="fileinput">
                                     <div class="fileinput-new thumbnail" style="width: 75px; height: 75px;">
-                                        <img src="{{ asset('img/holder65x65.png') }}" style="width: 65px;height: 65px;">
+                                        <img src="{{ asset('img/default-group.png') }}" style="width: 65px;height: 65px;">
                                     </div>
                                     <div class="fileinput-preview fileinput-exists thumbnail" style="width: 75px; height: 75px;">
                                     </div>
@@ -343,17 +283,22 @@
                                         <span class="btn btn-default btn-file" style="width: 75px;">
                                             <span class="fileinput-new">Browse</span>
                                             <span class="fileinput-exists">Change</span>
-                                            <input type="file" name="...">
+                                            <input type="file" name="picture" accept="image/jpeg, image/png">
                                         </span>
                                         <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput" style="width: 75px;">Remove</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xs-8">
-                                <input type="text" class="form-control" name="name...." placeholder="Team Name" style="margin-bottom: 7px;">
-                                <input type="text" class="form-control" name="name....." placeholder="Team Join Code" style="margin-bottom: 5px;">
+                                <input type="text" class="form-control" name="name" placeholder="Team Name" required="required" style="margin-bottom: 7px;">
+                                <input type="text" class="form-control" name="join_password" id="txtbox-join-password" placeholder="Team Join Code" required="required" style="margin-bottom: 5px;">
                                 <div style="text-align: right;">
-                                    <button type="submit" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-create-form-create-team">
+                                    <div class="checkbox" style="margin: 0px 10px 0px 0px;display: inline-block;">
+                                        <label>
+                                            <input type="checkbox" name="with_join_password" id="ckbox-join-password" value="1" checked="checked"> Join Code
+                                        </label>
+                                    </div>
+                                    <button type="submit" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-create-form-create-team" style="display: inline-block;">
                                         <span class="ladda-label">Create</span>
                                     </button>
                                 </div>
@@ -367,24 +312,7 @@
 @endsection
 
 @section('footer')
-    <footer>
-        <div class="container-fluid" style="min-height: 30px;background-color: black;">
-            <div class="col-xs-6">
-                <p style="color: white;padding: 5px 0px;margin-bottom: 0px;">© Dota Battleground - Portal Turnamen Dota 2</p>
-            </div>
-            <div class="col-xs-6 text-right">
-                <ul class="footer-ul-horizontal">
-                    <li><a href="#">About Us</a></li>
-                    <li class="separator"></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li class="separator"></li>
-                    <li><a href="#">Terms and Conditions</a></li>
-                    <li class="separator"></li>
-                    <li><a href="#">Contact Us</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
+    @include('participant.footer.footer')
 @endsection
 
 @section('script')

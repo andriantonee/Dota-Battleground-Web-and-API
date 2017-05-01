@@ -3,6 +3,8 @@
 namespace App\Helpers;
 
 use App\Member;
+use App\Team;
+use Hash;
 use Validator;
 
 class ValidatorHelper
@@ -20,6 +22,7 @@ class ValidatorHelper
             'email.email' => 'E-mail format is not a valid email address.',
             'password.required' => 'Password is required.',
             'password.string' => 'Password must be a string.',
+            'token_in_json.required' => 'Token in JSON parameter is required.',
             'token_in_json.integer' => 'Token in JSON parameter must be an integer.',
             'token_in_json.in' => 'Token in JSON parameter value can support 0 or 1 only.'
         ];
@@ -100,6 +103,33 @@ class ValidatorHelper
         }
     }
 
+    public static function validatePasswordUpdateRequest(array $data, $password)
+    {
+        $rule = [
+            'old_password' => 'required|string',
+            'new_password' => 'required|string|min:6|confirmed'
+        ];
+        $message = [
+            'old_password.required' => 'Old Password is required.',
+            'old_password.string' => 'Old Password must be a string.',
+            'new_password.required' => 'New Password is required.',
+            'new_password.string' => 'New Password must be a string.',
+            'new_password.min' => 'New Password must contain minimum :min characters.',
+            'new_password.confirmed' => 'New Password confirmation does not match.'
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            if (!Hash::check($data['old_password'], $password)) {
+                return ['Old Password is not valid.'];
+            } else {
+                return null;
+            }
+        }
+    }
+
     public static function validateProfilePictureUpdateRequest(array $data)
     {
         $rule = [
@@ -135,6 +165,118 @@ class ValidatorHelper
             return $validator->errors()->all();
         } else {
             return null;
+        }
+    }
+
+    public static function validateTeamCreateRequest(array $data)
+    {
+        $rule = [
+            'picture' => 'filled|mimes:jpeg,png|max:1024',
+            'name' => 'required|string|max:255',
+            'with_join_password' => 'required|integer|in:0,1',
+            'join_password' => 'required_if:with_join_password,1|string|max:255'
+        ];
+        $message = [
+            'picture.filled' => 'Picture file not found.',
+            'picture.mimes' => 'Picture file only support jpeg and png file type.',
+            'picture.max' => 'Picture file has passed :max Kb.',
+            'name.required' => 'Name is required.',
+            'name.string' => 'Name must be a string.',
+            'name.max' => 'Name has a maximum :max characters only.',
+            'with_join_password.required' => 'With Join Password parameter is required.',
+            'with_join_password.integer' => 'With Join Password parameter must be an integer.',
+            'with_join_password.in' => 'With Join Password parameter value can support 0 or 1 only.',
+            'join_password.required_if' => 'Join Code is required.',
+            'join_password.string' => 'Join Code must be a string.',
+            'join_password.max' => 'Join Code has a maximum :max characters only.'
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            if (Team::checkNameExists($data['name'])) {
+                return ['Name '.$data['name'].' has been used.'];
+            } else {
+                return null;
+            }
+        }
+    }
+
+    public static function validateTeamUpdateRequest(array $data, $team_id)
+    {
+        $rule = [
+            'name' => 'filled|string|max:255',
+            'with_join_password' => 'filled|integer|in:0,1',
+            'join_password' => 'required_if:with_join_password,1|string|max:255'
+        ];
+        $message = [
+            'name.filled' => 'Name must not empty.',
+            'name.string' => 'Name must be a string.',
+            'name.max' => 'Name has a maximum :max characters only.',
+            'with_join_password.filled' => 'With Join Password parameter must not empty.',
+            'with_join_password.integer' => 'With Join Password parameter must be an integer.',
+            'with_join_password.in' => 'With Join Password parameter value can support 0 or 1 only.',
+            'join_password.required_if' => 'Join Code must not empty.',
+            'join_password.string' => 'Join Code must be a string.',
+            'join_password.max' => 'Join Code has a maximum :max characters only.'
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            if (array_key_exists('name', $data)) {
+                if (Team::checkNameExists($data['name'], $team_id)) {
+                    return ['Name '.$data['name'].' has been used.'];
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+    }
+
+    public static function validateTeamPictureUpdateRequest(array $data)
+    {
+        $rule = [
+            'picture' => 'required|mimes:jpeg,png|max:1024'
+        ];
+        $message = [
+            'picture.required' => 'Picture file not found.',
+            'picture.mimes' => 'Picture file only support jpeg and png file type.',
+            'picture.max' => 'Picture file has passed :max Kb.'
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            return null;
+        }
+    }
+
+    public static function validateJoinTeamRequest(array $data, $join_password)
+    {
+        $rule = [
+            'join_password' => 'required|string|max:255'
+        ];
+        $message = [
+            'join_password.required' => 'Join Code must not empty.',
+            'join_password.string' => 'Join Code must be a string.',
+            'join_password.max' => 'Join Code has a maximum :max characters only.'
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            if ($data['join_password'] !== $join_password) {
+                return ['Join Code is invalid.'];
+            } else {
+                return null;
+            }
         }
     }
 }

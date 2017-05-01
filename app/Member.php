@@ -47,6 +47,16 @@ class Member extends Model
         return $this->hasMany('App\Identification', 'members_id', 'id');
     }
 
+    public function teams()
+    {
+        return $this->belongsToMany('App\Team', 'teams_details', 'members_id', 'teams_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany('App\Notification', 'members_id', 'id');
+    }
+
     public static function checkEmailExists($email, $member_type, $member_id = null)
     {
         if ($member_id) {

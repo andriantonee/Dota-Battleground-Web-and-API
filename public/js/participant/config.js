@@ -1,4 +1,4 @@
 /**
  * configure global variable for participant.
  */
-var apiUrl = "api/participant/";
+var api_url = "/api/participant/";

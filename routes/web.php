@@ -11,8 +11,10 @@
 |
 */
 
-Route::group(['middleware' => ['exchange:participant,1'], 'namespace' => 'Participant'], function() {
+Route::group(['middleware' => ['exchange:participant,1', 'notification'], 'namespace' => 'Participant'], function() {
     Route::get('/', 'HomeController@index');
+    Route::get('/team', 'TeamController@index');
+    Route::get('/team/{id}', 'TeamController@show');
 
     Route::group(['middleware' => ['authorize:participant']], function() {
         Route::get('/profile', 'ProfileController@index');

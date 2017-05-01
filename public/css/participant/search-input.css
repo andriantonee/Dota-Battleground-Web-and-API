@@ -1,0 +1,11 @@
+.stylish-input-group .input-group-addon{
+    background: white !important;
+    border-radius: 24px 0px 0px 24px;
+}
+.stylish-input-group .form-control{
+    padding-left: 0px;
+    box-shadow: 0 0 0;
+    border-color: #ccc;
+    border-left: 0;
+    border-radius: 0px 24px 24px 0px;
+}

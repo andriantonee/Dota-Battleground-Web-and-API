@@ -1,0 +1,7 @@
+.team-list-content {
+    color: #000;
+}
+.team-list-content:hover > div.row {
+    color: #000;
+    background-color: #eee;
+}

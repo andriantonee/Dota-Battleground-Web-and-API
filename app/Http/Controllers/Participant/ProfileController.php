@@ -6,6 +6,7 @@ use App\Helpers\ValidatorHelper;
 use App\Identification;
 use App\Member;
 use DB;
+use Hash;
 use Illuminate\Http\Request;
 use Storage;
 
@@ -13,14 +14,18 @@ class ProfileController extends BaseController
 {
     public function index(Request $request)
     {
-        $identification_file_name = Member::find($request->input('participant_model')->id)->identifications()->orderBy('created_at', 'DESC')->value('identification_file_name');
+        $identification_file_name = Member::find($request->input('participant_model')->id)
+            ->identifications()
+            ->orderBy('created_at', 'DESC')
+            ->value('identification_file_name');
+        $teams = Member::find($request->input('participant_model')->id)
+            ->teams()
+            ->select('teams.id', 'teams.name', 'teams.picture_file_name')
+            ->orderBy('teams.created_at', 'ASC')
+            ->withCount('details')
+            ->get();
 
-        return view('participant.profile', compact('identification_file_name'));
-    }
-
-    public function show(Request $request)
-    {
-
+        return view('participant.profile', compact('identification_file_name', 'teams'));
     }
 
     public function update(Request $request)
@@ -66,6 +71,26 @@ class ProfileController extends BaseController
         }
     }
 
+    public function updatePassword(Request $request)
+    {
+        $member = $request->user();
+
+        $data = [
+            'old_password' => $request->input('old_password'),
+            'new_password' => $request->input('new_password'),
+            'new_password_confirmation' => $request->input('new_password_confirmation')
+        ];
+
+        if (!$validatorResponse = ValidatorHelper::validatePasswordUpdateRequest($data, $member->password)) {
+            $member->password = Hash::make($data['new_password']);
+            $member->save();
+
+            return response()->json(['code' => 200, 'message' => ['Password has been updated.']]);
+        } else {
+            return response()->json(['code' => 400, 'message' => $validatorResponse]);
+        }
+    }
+
     public function updateProfilePicture(Request $request)
     {
         $member = $request->user();
@@ -75,7 +100,7 @@ class ProfileController extends BaseController
         ];
         
         if (!$validatorResponse = ValidatorHelper::validateProfilePictureUpdateRequest($data)) {
-            $path = $data['profile_picture_file']->store('public/member');
+            $path = $data['profile_picture_file']->storeAs('public/member', time().uniqid().$data['profile_picture_file']->hashName());
             if ($member->picture_file_name) {
                 Storage::delete('public/member/'.$member->picture_file_name);
             }
@@ -110,7 +135,7 @@ class ProfileController extends BaseController
         ];
 
         if (!$validatorResponse = ValidatorHelper::validateIdentificationUpdateRequest($data)) {
-            $path = $data['identification_file']->store('public/member/identification');
+            $path = $data['identification_file']->storeAs('public/member/identification', time().uniqid().$data['identification_file']->hashName());
             $identification = new Identification(['identification_file_name' => substr($path, strlen('public/member/identification') + 1)]);
             $member->identifications()->save($identification);
 

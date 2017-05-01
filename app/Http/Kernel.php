@@ -54,5 +54,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'exchange' => \App\Http\Middleware\ExchangeCookiesToModel::class,
         'authorize' => \App\Http\Middleware\RedirectIfUnauthorized::class,
+        'notification' => \App\Http\Middleware\Notification::class,
     ];
 }
