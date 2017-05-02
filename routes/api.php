@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function() {
     Route::post('/login', 'AuthController@login');
     Route::post('/register', 'AuthController@register');
+    Route::get('/team/search', 'TeamController@searchTeam');
 
     Route::group(['middleware' => ['auth:api']], function() {
         Route::get('/profile', 'ProfileController@show');

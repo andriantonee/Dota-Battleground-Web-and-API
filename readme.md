@@ -20,21 +20,29 @@ $ cd project-directory
 ```sh
 $ composer install
 ```
-5. Create database in mySQL with name **dota_battleground**.
-6. Run installation schema.
+5. Generate Application Key.
+```sh
+$ php artisan key:generate
+```
+6. Create database in mySQL with name **dota_battleground**.
+7. Run installation schema.
 ```sh
 $ php artisan migrate
 ```
-7. Generate **CLIENT ID** for Passport Authentication.
+8. Generate Passport Key.
+```sh
+$ php artisan passport:key
+```
+9. Generate **CLIENT ID** for Passport Authentication.
 ```sh
 $ php artisan passport:client --password --name="Laravel Password Grant Client"
 ```
-8. Change **PASSPORT_CLIENT_ID** & **PASSPORT_CLIENT_SECRET** variable inside **_.env_** file using value from generated **CLIENT ID** above.
-9. Run **bower install** to install CSS & JS dependencies.
+10. Change **PASSPORT_CLIENT_ID** & **PASSPORT_CLIENT_SECRET** variable inside **_.env_** file using value from generated **CLIENT ID** above.
+11. Run **bower install** to install CSS & JS dependencies.
 ```sh
 $ bower install
 ```
-10. Generate symlink folder using **php artisan**.
+12. Generate symlink folder using **php artisan**.
 ```sh
 $ php artisan storage:link
 ```

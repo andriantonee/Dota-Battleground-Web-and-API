@@ -11,18 +11,16 @@ use App\Team;
 use Carbon;
 use DB;
 use Illuminate\Http\Request;
+use Lcobucci\JWT\Parser;
 use Storage;
 
 class TeamController extends BaseController
 {
-    public function index(Request $request)
+    private function getTeamList($member_id, $search_keyword = null)
     {
-        $member_id = null;
-        if ($request->input('participant_model')) {
-            $member_id = $request->input('participant_model')->id;
-        }
-
-        $teams = Team::with([
+        $teams = Team::select('id', 'name', 'picture_file_name', 'join_password')
+            ->withCount('details')
+            ->with([
                 'details' => function($details) use($member_id) {
                     $details->where('teams_details.members_id', $member_id);
                 },
@@ -33,10 +31,22 @@ class TeamController extends BaseController
                         });
                 }
             ])
-            ->select('teams.id', 'teams.name', 'teams.picture_file_name', 'teams.join_password')
-            ->withCount('details')
-            ->orderBy('teams.created_at', 'DESC')
-            ->get();
+            ->orderBy('teams.created_at', 'DESC');
+        if ($search_keyword) {
+            $teams = $teams->where('name', 'LIKE', '%'.$search_keyword.'%');
+        }
+
+        return $teams->get();
+    }
+
+    public function index(Request $request)
+    {
+        $member_id = null;
+        if ($request->input('participant_model')) {
+            $member_id = $request->input('participant_model')->id;
+        }
+
+        $teams = $this->getTeamList($member_id);
 
         return view('participant.team', compact('teams'));
     }
@@ -546,5 +556,48 @@ class TeamController extends BaseController
             DB::rollBack();
             return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
         }
+    }
+
+    public function searchTeam(Request $request)
+    {
+        $member_id = null;
+        $isLogin = false;
+        $bearerToken = $request->bearerToken();
+        if ($bearerToken) {
+            $accessTokenID = (new Parser)->parse($bearerToken)->getHeader('jti');
+            $accessToken = DB::table('oauth_access_tokens')->select('user_id')->where('id', $accessTokenID)->first();
+            if ($accessToken) {
+                $member_id = $accessToken->user_id;
+                $isLogin = true;
+            }
+        }
+
+        $search_keyword = $request->input('search_keyword') ? (!is_array($request->input('search_keyword')) ? ((string) $request->input('search_keyword')) : '') : '';
+        $teams = null;
+        if ($search_keyword) {
+            $teams = $this->getTeamList($member_id, $search_keyword);
+        } else {
+            $teams = $this->getTeamList($member_id);
+        }
+
+        if ($teams) {
+            $teams = $teams->map(function($team, $key) {
+                $team->url = url('/team/'.$team->id);
+                if ($team->picture_file_name) {
+                    $team->picture_file_name = asset('storage/team/'.$team->picture_file_name);
+                } else {
+                    $team->picture_file_name = asset('img/default-group.png');
+                }
+                if ($team->join_password) {
+                    $team->join_password = true;
+                } else {
+                    $team->join_password = false;
+                }
+
+                return $team;
+            });
+        }
+
+        return response()->json(['code' => 200, 'message' => ['Search team name success.'], 'teams' => $teams, 'isLogin' => $isLogin]);
     }
 }

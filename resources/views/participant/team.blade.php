@@ -22,11 +22,11 @@
                     <span class="input-group-addon">
                         <i class="glyphicon glyphicon-search"></i>
                     </span>
-                    <input type="text" class="form-control" placeholder="Search name..." >
+                    <input type="text" id="txtbox-search-team" class="form-control" placeholder="Search name..." >
                 </div>
             </div>
         </div>
-        <div style="width: 700px;margin-top: 20px;">
+        <div id="team-list-container" style="width: 700px;margin-top: 20px;">
             @foreach ($teams as $team)
                 <a class="team-list-content" href="{{ url('/team/'.$team->id) }}">
                     <div class="row" style="border: 1px solid #000000;margin-bottom: 15px;padding: 10px 0px;">
@@ -86,4 +86,5 @@
     @if ($user)
         <script src="{{ asset('js/participant/team.js') }}"></script>
     @endif
+    <script src="{{ asset('js/participant/search-team.js') }}"></script>
 @endsection

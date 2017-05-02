@@ -216,7 +216,7 @@ $(document).ready(function() {
 
     $("#txtbox-invite-members").on("keyup", function(e) {
         clearTimeout(invite_members_typing_timer);
-        invite_members_typing_timer = setTimeout(invite_members_done_typing, invite_members_done_typing_interval)
+        invite_members_typing_timer = setTimeout(invite_members_done_typing, invite_members_done_typing_interval);
     });
 
     $("#txtbox-invite-members").on("keydown", function(e) {
