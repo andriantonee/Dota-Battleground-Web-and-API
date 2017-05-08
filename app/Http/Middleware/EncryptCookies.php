@@ -12,8 +12,8 @@ class EncryptCookies extends BaseEncrypter
      * @var array
      */
     protected $except = [
-    	'participant_token',
-    	'event_organizer_token',
-    	'admin_token'
+        'participant_token',
+        'organizer_token',
+        'admin_token'
     ];
 }

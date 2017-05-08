@@ -14,20 +14,12 @@
         <link href="{{ asset('vendor/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
         <link href="{{ asset('vendor/sweetalert/dist/sweetalert.css') }}" rel="stylesheet">
         <link href="{{ asset('vendor/ladda-bootstrap/dist/ladda-themeless.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/bootstrap-notifications-1.0.0/dist/stylesheets/bootstrap-notifications.min.css') }}" rel="stylesheet">
         <link href="{{ asset('css/non-responsive.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/participant/modify-modal.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/participant/modify-form.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/participant/modify-modal-authentication.css') }}" rel="stylesheet">
         <style type="text/css">
             .divider-vertical {
                 height: 30px;
                 margin: 10px 2px;
                 border-right: 1px solid #FFF;
-            }
-
-            .navbar-inverse .navbar-nav>.open>a.dropdown-toggle-open {
-                background-color: transparent;
             }
         </style>
         @yield('style')
@@ -40,7 +32,7 @@
         <![endif]-->
     </head>
     <body>
-        @include('participant.navbar.navbar')
+        @yield('header')
 
         @yield('content')
 
@@ -53,12 +45,7 @@
         <script src="{{ asset('vendor/sweetalert/dist/sweetalert.min.js') }}"></script>
         <script src="{{ asset('vendor/ladda-bootstrap/dist/spin.min.js') }}"></script>
         <script src="{{ asset('vendor/ladda-bootstrap/dist/ladda.min.js') }}"></script>
-        <script src="{{ asset('js/participant/config.js') }}"></script>
-        @if (!$participant)
-            <script src="{{ asset('js/participant/authentication.js') }}"></script>
-        @else
-            <script src="{{ asset('js/participant/password.js') }}"></script>
-        @endif
+        <script src="{{ asset('js/organizer/config.js') }}"></script>
         @yield('script')
     </body>
 </html>

@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div id="team-list-container" style="width: 700px;margin-top: 20px;">
+        <div id="team-list-container" style="width: 700px;margin-left: 15px;margin-top: 20px;">
             @foreach ($teams as $team)
                 <a class="team-list-content" href="{{ url('/team/'.$team->id) }}">
                     <div class="row" style="border: 1px solid #000000;margin-bottom: 15px;padding: 10px 0px;">
@@ -44,7 +44,7 @@
                             <p><span class="team-count">{{ $team->details_count }}</span> Member</p>
                         </div>
                         <div class="col-xs-5 text-right" style="padding-top: 20px;">
-                            @if (count($team->details) == 0 && $user)
+                            @if (count($team->details) == 0 && $participant)
                                 @if (count($team->invitation_list) > 0)
                                     <button class="btn btn-default accept-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false">
                                         <i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;Accept
@@ -83,7 +83,7 @@
 @endsection
 
 @section('script')
-    @if ($user)
+    @if ($participant)
         <script src="{{ asset('js/participant/team.js') }}"></script>
     @endif
     <script src="{{ asset('js/participant/search-team.js') }}"></script>

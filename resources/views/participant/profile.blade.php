@@ -70,8 +70,8 @@
         <div class="row">
             <div class="col-xs-offset-1 col-xs-2">
                 <div id="profile-picture-container" class="thumbnail">
-                    @if ($user->picture_file_name)
-                        <img id="default-profile-picture" src="{{ asset('storage/member/'.$user->picture_file_name) }}">
+                    @if ($participant->picture_file_name)
+                        <img id="default-profile-picture" src="{{ asset('storage/member/'.$participant->picture_file_name) }}">
                     @else
                         <img id="default-profile-picture" src="{{ asset('img/default-profile.jpg') }}">
                     @endif
@@ -84,19 +84,19 @@
             <div class="col-xs-8">
                 <div style="position: relative;margin-top: 35px;border-bottom: 1px solid #d6d6d6;">
                     <h2>
-                        <span id="editable-name-value">{{ $user->name }}</span>&nbsp;&nbsp;
+                        <span id="editable-name-value">{{ $participant->name }}</span>&nbsp;&nbsp;
                         <a role="button" id="editable-name" class="editable-bottom-border-none">
                             <i class="glyphicon glyphicon-pencil"></i>
                         </a>
                     </h2>
                     <h4>
-                        <span id="editable-email-value">{{ $user->email }}</span>&nbsp;&nbsp;
+                        <span id="editable-email-value">{{ $participant->email }}</span>&nbsp;&nbsp;
                         <a role="button" id="editable-email" class="editable-bottom-border-none">
                             <i class="glyphicon glyphicon-pencil"></i>
                         </a>
                     </h4>
                     <h6>
-                        <span id="editable-steam32_id-value">{{ $user->steam32_id ?: '-' }}</span>&nbsp;&nbsp;
+                        <span id="editable-steam32_id-value">{{ $participant->steam32_id ?: '-' }}</span>&nbsp;&nbsp;
                         <a role="button" id="editable-steam32_id" class="editable-bottom-border-none">
                             <i class="glyphicon glyphicon-pencil"></i>
                         </a>
@@ -173,7 +173,7 @@
                 <div class="modal-body">
                     <div class="alert alert-success" role="alert" style="margin-left: 5px;margin-right: 5px;display: none;">
                         <ul id="profile-picture-alert-container">
-                            <!-- All message that want to deliver to the user -->
+                            <!-- All message that want to deliver to the Participant -->
                         </ul>
                     </div>
                     <form id="form-profile-picture" class="form-padding-left-right-15 text-center" enctype="multipart/form-data">
@@ -181,8 +181,8 @@
                         <div class="form-group form-group-margin-bottom-0">
                             <div class="fileinput fileinput-new" data-provides="fileinput">
                                 <div class="fileinput-new thumbnail" style="width: 150px; height: 150px;">
-                                    @if ($user->picture_file_name)
-                                        <img id="default-profile-picture-modal" src="{{ asset('storage/member/'.$user->picture_file_name) }}" style="width: 140px;height: 140px;">
+                                    @if ($participant->picture_file_name)
+                                        <img id="default-profile-picture-modal" src="{{ asset('storage/member/'.$participant->picture_file_name) }}" style="width: 140px;height: 140px;">
                                     @else
                                         <img id="default-profile-picture-modal" src="{{ asset('img/default-profile.jpg') }}" style="width: 140px;height: 140px;">
                                     @endif
@@ -220,7 +220,7 @@
                 <div class="modal-body">
                     <div class="alert alert-success" role="alert" style="margin-left: 5px;margin-right: 5px;display: none;">
                         <ul id="settings-alert-container">
-                            <!-- All message that want to deliver to the user -->
+                            <!-- All message that want to deliver to the Participant -->
                         </ul>
                     </div>
                     <form id="form-settings" class="form-padding-left-right-15" enctype="multipart/form-data">
@@ -267,7 +267,7 @@
                 <div class="modal-body">
                     <div class="alert alert-success" role="alert" style="margin-left: 5px;margin-right: 5px;display: none;">
                         <ul id="create-team-alert-container">
-                            <!-- All message that want to deliver to the user -->
+                            <!-- All message that want to deliver to the Participant -->
                         </ul>
                     </div>
                     <form id="form-create-team" class="form-padding-left-right-15" enctype="multipart/form-data">

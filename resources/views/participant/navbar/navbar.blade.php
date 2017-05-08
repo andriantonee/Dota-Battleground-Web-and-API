@@ -8,12 +8,12 @@
         <!-- Note that the .navbar-collapse and .collapse classes have been removed from the #navbar -->
         <div id="navbar">
             <ul class="nav navbar-nav">
-                <li><a href="#">Tournaments</a></li>
+                <li><a href="{{ url('/tournament') }}">Tournaments</a></li>
                 <li class="divider-vertical"></li>
                 <li><a href="{{ url('/team') }}">Teams</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                @if ($user)
+                @if ($participant)
                     <li class="dropdown dropdown-notifications">
                         <a role="button" class="dropdown-toggle dropdown-toggle-open" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="padding: 15px 0px;">
                             @if ($unread_notifications)
@@ -77,7 +77,7 @@
                     </li>
                     <li class="dropdown">
                         <a role="button" class="dropdown-toggle dropdown-toggle-open" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;<span id="navbar-login-name">{{ $user->name }}</span>&nbsp;<span class="caret"></span>
+                            <i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;<span id="navbar-login-name">{{ $participant->name }}</span>&nbsp;<span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url('/profile') }}">Profile</a></li>
@@ -104,7 +104,7 @@
     </div>
 </nav>
 
-@if ($user)
+@if ($participant)
     <!-- Password Modal -->
     <div class="modal modal-remove-padding-right" id="password-modal" tabindex="-1" role="dialog" aria-labelledby="password-modal-label">
         <div class="modal-dialog modal-dialog-fixed-width-320" role="document">

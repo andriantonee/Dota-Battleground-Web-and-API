@@ -112,7 +112,7 @@
                             </a>
                         @endif
                     @else
-                        @if ($user)
+                        @if ($participant)
                             <div style="position: absolute;right: 0px;top: 10px;">
                                 @if (count($team->invitation_list) > 0)
                                     <button class="btn btn-default accept-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="true">
@@ -335,7 +335,7 @@
             <script src="{{ asset('js/participant/team-detail.js') }}"></script>
         @endif
     @else
-        @if ($user)
+        @if ($participant)
             <script src="{{ asset('js/participant/team.js') }}"></script>
         @endif
     @endif

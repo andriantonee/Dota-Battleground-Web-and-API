@@ -37,6 +37,16 @@ Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function
         Route::delete('/team/{id}/kick-member/{member_id}', 'TeamController@kickMember');
     });
 });
+
+Route::group(['prefix' => 'organizer', 'namespace' => 'Organizer'], function() {
+    Route::post('/login', 'AuthController@login');
+    Route::post('/register', 'AuthController@register');
+
+    Route::group(['middleware' => ['auth:api']], function() {
+        Route::put('/password', 'ProfileController@updatePassword');
+    });
+});
+
 Route::get('/user', function (Request $request) {
     return response()->json($request->user());
 })->middleware('auth:api');

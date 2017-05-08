@@ -1,58 +1,48 @@
-$("#form-participant-login").on("submit", function(e) {
+$("#form-organizer-login").on("submit", function(e) {
     e.preventDefault();
 
     var data = $(this).serialize();
-    var btn_login = Ladda.create(document.querySelector("#btn-participant-login"));
+    var btn_login = Ladda.create(document.querySelector("#btn-organizer-login"));
 
     $.ajax({
         "type" : "POST",
         "url" : api_url + "login",
         "data" : data,
         "beforeSend" : function() {
-            $("#login-alert-container").parent().hide();
-            $("#login-alert-container").empty();
+            $("#sign-in-email").parent().removeClass("has-error");
+            $("#sign-in-password").parent().removeClass("has-error");
             btn_login.start();
         }
     })
         .done(function(data) {
-            var li_message = "";
-            $.each(data.message, function(index, value) {
-                li_message += "<li>" + value + "</li>";
-            });
-            if (data.code == 200) {
-                $("#login-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-success");
-            } else {
-                btn_login.stop();
-                $("#login-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-danger");
-            }
-            $("#login-alert-container").parent().show();
-            $("#login-alert-container").append(li_message);
-
             if (data.code == 200) {
                 location.reload();
+            } else {
+                btn_login.stop();
+                $("#sign-in-email").parent().addClass("has-error");
+                $("#sign-in-password").parent().addClass("has-error");
             }
         })
         .fail(function() {
             btn_login.stop();
-            $("#login-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-danger");
-            $("#login-alert-container").parent().show();
-            $("#login-alert-container").append("<li>Something went wrong. Please try again.</li>");
+            $("#sign-in-email").parent().addClass("has-error");
+            $("#sign-in-password").parent().addClass("has-error");
         });
 });
 
-$("#ckbox-participant-agree").on("change", function(e) {
+$("#ckbox-organizer-agree").on("change", function(e) {
     if ($(this).prop("checked")) {
-        $("#btn-participant-register").prop("disabled", false);
+        $("#btn-organizer-register").prop("disabled", false);
     } else {
-        $("#btn-participant-register").prop("disabled", true);
+        $("#btn-organizer-register").prop("disabled", true);
     }
 });
 
-$("#form-participant-register").on("submit", function(e) {
+$("#form-organizer-register").on("submit", function(e) {
     e.preventDefault();
 
     var data = $(this).serialize();
-    var btn_register = Ladda.create(document.querySelector("#btn-participant-register"));
+    var btn_register = Ladda.create(document.querySelector("#btn-organizer-register"));
 
     $.ajax({
         "type" : "POST",

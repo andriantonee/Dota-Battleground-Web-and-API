@@ -55,5 +55,6 @@ class Kernel extends HttpKernel
         'exchange' => \App\Http\Middleware\ExchangeCookiesToModel::class,
         'authorize' => \App\Http\Middleware\RedirectIfUnauthorized::class,
         'notification' => \App\Http\Middleware\Notification::class,
+        'already_authorize' => \App\Http\Middleware\RedirectIfAuthorized::class,
     ];
 }

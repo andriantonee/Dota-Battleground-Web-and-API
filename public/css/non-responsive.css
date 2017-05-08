@@ -97,10 +97,11 @@
 
 /* Undo form expansion */
 .navbar-form {
-    float: left;
+    float: right;
     width: auto;
     padding-top: 0;
     padding-bottom: 0;
+    padding-right: 0;
     margin-right: 0;
     margin-left: 0;
     border: 0;
@@ -112,6 +113,7 @@
 .navbar-form .form-group {
     display: inline-block;
     margin-bottom: 0;
+    margin-right: 10px;
     vertical-align: middle;
 }
 
@@ -233,4 +235,9 @@
 /* Override overflow hidden when modal open */
 .modal-open .modal {
     overflow: auto;
+}
+
+.form-horizontal .control-label {
+    padding-top: 7px;
+    margin-bottom: 0;
 }

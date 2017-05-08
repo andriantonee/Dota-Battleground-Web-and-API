@@ -17,9 +17,9 @@ class RedirectIfUnauthorized
     {
         if (!$request->input($guard.'_model')) {
             if ($guard == 'participant') {
-                return redirect('/login');
-            } else {
-                return response()->json(['Unauthorize'], 401);
+                return redirect('/');
+            } else if ($guard == 'organizer') {
+                return redirect('/organizer');
             }
         }
 

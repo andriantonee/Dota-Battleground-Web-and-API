@@ -27,7 +27,7 @@ class ExchangeCookiesToModel
             }
         }
 
-        view()->share('user', $model);
+        view()->share($guard, $model);
 
         return $next($request);
     }
