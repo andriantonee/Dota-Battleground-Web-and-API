@@ -18,6 +18,8 @@ class RedirectIfAuthorized
         if ($request->input($guard.'_model')) {
             if ($guard == 'organizer') {
                 return redirect('/organizer/dashboard');
+            } else if ($guard == 'admin') {
+                return redirect('/admin');
             }
         }
 

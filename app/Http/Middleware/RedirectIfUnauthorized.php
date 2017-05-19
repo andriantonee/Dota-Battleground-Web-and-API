@@ -20,6 +20,8 @@ class RedirectIfUnauthorized
                 return redirect('/');
             } else if ($guard == 'organizer') {
                 return redirect('/organizer');
+            } else if ($guard == 'admin') {
+                return redirect('/admin/login');
             }
         }
 

@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\Team;
+use App\Tournament;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
 
@@ -46,6 +48,62 @@ class GuzzleHelper
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Bearer '.$access_token
+                ]
+            ]);
+
+            return json_decode($response->getBody()->__toString(), false);
+        } catch (RequestException $e) {
+            return null;
+        }
+    }
+
+    public static function createTournamentChallonge(Tournament $tournament)
+    {
+        $http = new GuzzleClient();
+
+        try {
+            $name = substr('[Dota Battleground] ' . $tournament->name, 0, 60);
+            $tournament_type = $tournament->type == 2 ? 'double elimination' : ($tournament->type == 1 ? 'single elimination' : 'single elimination');
+            $url = 'dotabattleground_'.$tournament->id.md5(uniqid(rand(), true));
+
+            $response = $http->post('https://api.challonge.com/v1/tournaments.json', [
+                'form_params' => [
+                    'api_key' => env('CHALLONGE_API_KEY', ''),
+                    'tournament' => [
+                        'name' => $name,
+                        'tournament_type' => $tournament_type,
+                        'url' => $url,
+                        'open_signup' => false,
+                        'hold_third_place_match' => true,
+                        'ranked_by' => 'match wins',
+                        'hide_forum' => true,
+                        'show_rounds' => true,
+                        'private' => true,
+                        'grand_finals_modifier' => 'single match'
+                    ]
+                ]
+            ]);
+
+            return json_decode($response->getBody()->__toString(), false);
+        } catch (RequestException $e) {
+            return null;
+        }
+    }
+
+    public static function createTournamentChallongeParticipant(Tournament $tournament, Team $team)
+    {
+        $http = new GuzzleClient();
+
+        try {
+            $name = $team->name;
+            $challonge_tournament_id = $tournament->challonges_id;
+
+            $response = $http->post('https://api.challonge.com/v1/tournaments/'.$challonge_tournament_id.'/participants.json', [
+                'form_params' => [
+                    'api_key' => env('CHALLONGE_API_KEY', ''),
+                    'participant' => [
+                        'name' => $name
+                    ]
                 ]
             ]);
 

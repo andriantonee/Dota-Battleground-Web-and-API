@@ -4,6 +4,8 @@ namespace App\Helpers;
 
 use App\Member;
 use App\Team;
+use App\Tournament;
+use App\TournamentRegistration;
 use Hash;
 use Validator;
 
@@ -277,6 +279,228 @@ class ValidatorHelper
             } else {
                 return null;
             }
+        }
+    }
+
+    public static function validateTournamentCreateRequest(array $data)
+    {
+        $rule = [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:65535',
+            'logo' => 'required|mimes:jpeg,png|max:1024',
+            'type' => 'required|integer|in:1,2',
+            'league_id' => 'integer|min:0|max:4294967295',
+            'city' => 'filled|integer|exists:cities,id',
+            'address' => 'string|max:255',
+            'max_participant' => 'required|integer|min:3|max:256',
+            'rules' => 'required|string|max:65535',
+            'prize_1st' => 'string|max:255',
+            'prize_2nd' => 'string|max:255',
+            'prize_3rd' => 'string|max:255',
+            'prize_other' => 'string|max:65535',
+            'entry_fee' => 'required|integer|min:1|max:999999',
+            'registration_closed' => 'required|string|date_format:d/m/Y H:i',
+            'upload_identification_card' => 'filled|integer|in:0,1',
+            'start_date' => 'required|string|date_format:d/m/Y',
+            'end_date' => 'required|string|date_format:d/m/Y'
+        ];
+        $message = [
+            'name.required' => 'Name is required.',
+            'name.string' => 'Name must be a string.',
+            'name.max' => 'Name has a maximum :max characters only.',
+            'description.required' => 'Description is required.',
+            'description.string' => 'Description must be a string.',
+            'description.max' => 'Description has a maximum :max characters only.',
+            'logo.required' => 'Logo file not found.',
+            'logo.mimes' => 'Logo file only support jpeg and png file type.',
+            'logo.max' => 'Logo file has passed :max Kb.',
+            'type.required' => 'Type is required.',
+            'type.integer' => 'Type must be an integer.',
+            'type.in' => 'Type can support Single Elimination or Double Elimination only.',
+            'league_id.integer' => 'League ID must be an integer.',
+            'league_id.min' => 'League ID has a minimum :min value.',
+            'league_id.max' => 'League ID has a maximum :max value.',
+            'city.filled' => 'City must not empty.',
+            'city.integer' => 'City must be an integer.',
+            'city.exists' => 'City is invalid.',
+            'address.string' => 'Address must be a string.',
+            'address.max' => 'Address has a maximum :max characters only.',
+            'max_participant.required' => 'Max Participant is required.',
+            'max_participant.integer' => 'Max Participant must be an integer.',
+            'max_participant.min' => 'Max Participant has a minimum :min value.',
+            'max_participant.max' => 'Max Participant has a maximum :max value.',
+            'rules.required' => 'Rules is required.',
+            'rules.string' => 'Rules must be a string.',
+            'rules.max' => 'Rules has a maximum :max characters only.',
+            'prize_1st.string' => 'Prize 1st must be a string.',
+            'prize_1st.max' => 'Prize 1st has a maximum :max characters only.',
+            'prize_2nd.string' => 'Prize 2nd must be a string.',
+            'prize_2nd.max' => 'Prize 2nd has a maximum :max characters only.',
+            'prize_3rd.string' => 'Prize 3rd must be a string.',
+            'prize_3rd.max' => 'Prize 3rd has a maximum :max characters only.',
+            'prize_other.string' => 'Prize Other must be a string.',
+            'prize_other.max' => 'Prize Other has a maximum :max characters only.',
+            'entry_fee.required' => 'Entry Fee is required.',
+            'entry_fee.integer' => 'Entry Fee must be an integer.',
+            'entry_fee.min' => 'Entry Fee has a minimum :min value.',
+            'entry_fee.max' => 'Entry Fee has a maximum :max value.',
+            'registration_closed.required' => 'Registration Closed is required.',
+            'registration_closed.string' => 'Registration Closed must be a string.',
+            'registration_closed.date_format' => 'Registration Closed does not match the format :format.',
+            'upload_identification_card.filled' => 'Upload Identification Card must not empty.',
+            'upload_identification_card.integer' => 'Upload Identification Card must be an integer.',
+            'upload_identification_card.in' => 'Upload Identification Card can support 0 or 1 only.',
+            'start_date.required' => 'Start Date is required.',
+            'start_date.string' => 'Start Date must be a string.',
+            'start_date.date_format' => 'Start Date does not match the format :format.',
+            'end_date.required' => 'End Date is required.',
+            'end_date.string' => 'End Date must be a string.',
+            'end_date.date_format' => 'End Date does not match the format :format.'
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            if (array_key_exists('league_id', $data)) {
+                if (Tournament::checkLeagueIDExists($data['league_id'])) {
+                    return ['League ID '.$data['league_id'].' has been used.'];
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+    }
+
+    public static function validateTournamentUpdateRequest(array $data, $tournament_id)
+    {
+        $rule = [
+            'description' => 'required|string|max:65535',
+            'league_id' => 'integer|min:0|max:4294967295',
+            'city' => 'filled|integer|exists:cities,id',
+            'address' => 'string|max:255',
+            'prize_1st' => 'string|max:255',
+            'prize_2nd' => 'string|max:255',
+            'prize_3rd' => 'string|max:255',
+            'prize_other' => 'string|max:65535'
+        ];
+        $message = [
+            'description.required' => 'Description is required.',
+            'description.string' => 'Description must be a string.',
+            'description.max' => 'Description has a maximum :max characters only.',
+            'league_id.integer' => 'League ID must be an integer.',
+            'league_id.min' => 'League ID has a minimum :min value.',
+            'league_id.max' => 'League ID has a maximum :max value.',
+            'city.filled' => 'City must not empty.',
+            'city.integer' => 'City must be an integer.',
+            'city.exists' => 'City is invalid.',
+            'address.string' => 'Address must be a string.',
+            'address.max' => 'Address has a maximum :max characters only.',
+            'prize_1st.string' => 'Prize 1st must be a string.',
+            'prize_1st.max' => 'Prize 1st has a maximum :max characters only.',
+            'prize_2nd.string' => 'Prize 2nd must be a string.',
+            'prize_2nd.max' => 'Prize 2nd has a maximum :max characters only.',
+            'prize_3rd.string' => 'Prize 3rd must be a string.',
+            'prize_3rd.max' => 'Prize 3rd has a maximum :max characters only.',
+            'prize_other.string' => 'Prize Other must be a string.',
+            'prize_other.max' => 'Prize Other has a maximum :max characters only.'
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            if (array_key_exists('league_id', $data)) {
+                if ($data['league_id']) {
+                    if (Tournament::checkLeagueIDExists($data['league_id'], $tournament_id)) {
+                        return ['League ID '.$data['league_id'].' has been used.'];
+                    } else {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+    }
+
+    public static function validateTournamentRegisterRequest(array $data, $leader_id, $tournament_id)
+    {
+        $rule = [
+            'team' => 'required|integer',
+            'members' => 'required|array|size:5',
+            'members.*' => 'required|integer'
+        ];
+        $message = [
+            'team.required' => 'You must select a team.',
+            'team.integer' => 'Team must be an integer.',
+            'members.required' => 'You must select 5 members in order to participate this tournament.',
+            'members.array' => 'Member must be an array.',
+            'members.size' => 'You need :size members in order to participate this tournament.',
+            'members.*.required' => 'Each member is required.',
+            'members.*.integer' => 'Each member must be an integer.'
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            $team = Team::find($data['team']);
+            if ($team) {
+                $team_leader = $team->details()->withPivot('members_privilege')->find($leader_id);
+                if ($team_leader) {
+                    if ($team_leader->pivot->members_privilege == 2) {
+                        foreach ($data['members'] as $member_id) {
+                            if (!$team->details()->where('members.id', $member_id)->exists()) {
+                                return ['Each member must be a part of the team.'];
+                            }
+                        }
+                    } else {
+                        return ['You are not a team leader of this team.'];
+                    }
+                } else {
+                    return ['You are not a part of this team.'];
+                }
+            } else {
+                return ['Team ID is invalid.'];
+            }
+
+            if (TournamentRegistration::checkTournamentRegisterExists($team->id, $tournament_id)) {
+                return ['The team already registered in this tournament.'];
+            } else {
+                return null;
+            }
+        }
+    }
+
+    public static function validateTournamentRegisterConfirmationRequest(array $data)
+    {
+        $rule = [
+            'name' => 'required|string|max:255',
+            'bank' => 'required|integer|in:1,2',
+            'confirmation_file_name' => 'required|mimes:jpeg,png|max:1024'
+        ];
+        $message = [
+            'name.required' => 'Transfer Name is required.',
+            'name.string' => 'Transfer Name must be a string.',
+            'name.max' => 'Transfer Name has a maximum :max characters.',
+            'bank.required' => 'Transfer Bank is required.',
+            'bank.integer' => 'Transfer Bank must be an integer.',
+            'bank.in' => 'Transfer Bank value can support 1 or 2 only.',
+            'confirmation_file_name.required' => 'Proof of Payment file not found.',
+            'confirmation_file_name.mimes' => 'Proof of Payment file only support jpeg and png file type.',
+            'confirmation_file_name.max' => 'Proof of Payment file has passed :max Kb.'
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            return null;
         }
     }
 }

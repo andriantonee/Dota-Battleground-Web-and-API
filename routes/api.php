@@ -35,6 +35,9 @@ Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function
         Route::post('/team/{id}/accept-invitation', 'TeamController@acceptInvitation');
         Route::post('/team/{id}/reject-invitation', 'TeamController@rejectInvitation');
         Route::delete('/team/{id}/kick-member/{member_id}', 'TeamController@kickMember');
+        Route::get('/team/{id}/member', 'TeamController@member');
+        Route::post('/tournament/{id}/register', 'TournamentController@register');
+        Route::post('/tournament/confirm-payment/{id}', 'TournamentController@confirmPayment');
     });
 });
 
@@ -44,6 +47,19 @@ Route::group(['prefix' => 'organizer', 'namespace' => 'Organizer'], function() {
 
     Route::group(['middleware' => ['auth:api']], function() {
         Route::put('/password', 'ProfileController@updatePassword');
+        Route::post('/tournament/create', 'TournamentController@store');
+        Route::put('/tournament/{id}', 'TournamentController@update');
+    });
+});
+
+Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function() {
+    Route::post('/login', 'AuthController@login');
+
+    Route::group(['middleware' => ['auth:api']], function() {
+        Route::post('/tournament/{id}/approve', 'TournamentController@approve');
+        Route::post('/tournament/{id}/decline', 'TournamentController@decline');
+        Route::post('/tournament-payment/{id}/approve', 'TournamentController@approvePayment');
+        Route::post('/tournament-payment/{id}/decline', 'TournamentController@declinePayment');
     });
 });
 

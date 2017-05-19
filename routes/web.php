@@ -21,6 +21,9 @@ Route::group(['middleware' => ['exchange:participant,1', 'notification'], 'names
     Route::group(['middleware' => ['authorize:participant']], function() {
         Route::get('/profile', 'ProfileController@index');
         Route::post('/logout', 'AuthController@webLogout');
+
+        Route::get('/tournament/{id}/register', 'TournamentController@registerIndex');
+        Route::get('/tournament/confirm-payment/{id}', 'TournamentController@confirmPaymentIndex');
     });
 });
 
@@ -35,6 +38,19 @@ Route::group(['prefix' => 'organizer', 'middleware' => ['exchange:organizer,2'],
         Route::get('/tournament/create', 'TournamentController@create');
         Route::get('/tournament/{id}/detail', 'TournamentController@detail');
         Route::get('/password', 'HomeController@password');
+        Route::post('/logout', 'AuthController@webLogout');
+    });
+});
+
+Route::group(['prefix' => 'admin', 'middleware' => ['exchange:admin,3'], 'namespace' => 'Admin'], function() {
+    Route::group(['middleware' => ['already_authorize:admin']], function() {
+        Route::get('/login', 'AuthController@index');
+    });
+
+    Route::group(['middleware' => ['authorize:admin']], function() {
+        Route::get('/', 'HomeController@index');
+        Route::get('/verify-tournament/{id}', 'TournamentController@detail');
+        Route::get('/verify-tournament-payment', 'TournamentController@verifyTournamentPaymentIndex');
         Route::post('/logout', 'AuthController@webLogout');
     });
 });

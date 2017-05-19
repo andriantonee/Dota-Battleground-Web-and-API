@@ -46,3 +46,4 @@ $ bower install
 ```sh
 $ php artisan storage:link
 ```
+13. Generate **Challonge Developer API Key** and change **CHALLONGE_API_KEY** variable inside **_.env_** file.

@@ -15,9 +15,16 @@
         }
 
         .tournament-list-group-item {
+            border: 1px solid #ddd;
+            color: black;
+            display: block;
             height: 130px;
             padding: 15px;
-            border: 1px solid #ddd;
+        }
+        .tournament-list-group-item:hover {
+            background-color: #ddd;
+            color: black;
+            text-decoration: none;
         }
         .tournament-list-group-item:first-child {
             margin-bottom: 5px;
@@ -39,7 +46,6 @@
             width: 100px;
             height: 100px;
             border: 1px solid black;
-            border-radius: 5px;
         }
 
         .tournament-list-group-item-detail-1 {
@@ -153,9 +159,9 @@
                         <div class="form-group" style="margin-bottom: 5px;">
                             <label for="start-date" class="control-label" style="font-weight: normal;">Location</label>
                             <select class="form-control" id="team-size" name="team_size">
-                                <option value="1">Medan</option>
-                                <option value="2">Jakarta</option>
-                                <option value="3">Palembang</option>
+                                @foreach ($cities as $city)
+                                    <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -165,66 +171,23 @@
                 </div>
             </div>
             <div class="col-xs-8">
-                <div class="tournament-list-group-item">
-                    <div class="tournament-list-group-item-logo">
-                        <img src="{{ asset('img/the-international-7.jpg') }}">
-                    </div>
-                    <div class="tournament-list-group-item-detail-1">
-                        <h4 class="tournament-list-group-item-detail-1-name">Tournament Name</h4>
-                        <p class="tournament-list-group-item-detail-1-organizer-name">Organizer Name</p>
-                        <p class="tournament-list-group-item-detail-1-event-date">30 July - 10 August</p>
-                    </div>
-                    <div class="tournament-list-group-item-detail-2">
-                        <h4 class="tournament-list-group-item-detail-2-price">Rp. 100.000 / Team</h4>
-                        <p class="tournament-list-group-item-detail-2-registration-closed">Registration Before 24 July</p>
-                        <p class="tournament-list-group-item-detail-2-status">Upcoming</p>
-                    </div>
-                </div>
-                <div class="tournament-list-group-item">
-                    <div class="tournament-list-group-item-logo">
-                        <img src="{{ asset('img/the-international-7.jpg') }}">
-                    </div>
-                    <div class="tournament-list-group-item-detail-1">
-                        <h4 class="tournament-list-group-item-detail-1-name">Tournament Name</h4>
-                        <p class="tournament-list-group-item-detail-1-organizer-name">Organizer Name</p>
-                        <p class="tournament-list-group-item-detail-1-event-date">30 July - 10 August</p>
-                    </div>
-                    <div class="tournament-list-group-item-detail-2">
-                        <h4 class="tournament-list-group-item-detail-2-price">Rp. 100.000 / Team</h4>
-                        <p class="tournament-list-group-item-detail-2-registration-closed">Registration Before 24 July</p>
-                        <p class="tournament-list-group-item-detail-2-status">Upcoming</p>
-                    </div>
-                </div>
-                <div class="tournament-list-group-item">
-                    <div class="tournament-list-group-item-logo">
-                        <img src="{{ asset('img/the-international-7.jpg') }}">
-                    </div>
-                    <div class="tournament-list-group-item-detail-1">
-                        <h4 class="tournament-list-group-item-detail-1-name">Tournament Name</h4>
-                        <p class="tournament-list-group-item-detail-1-organizer-name">Organizer Name</p>
-                        <p class="tournament-list-group-item-detail-1-event-date">30 July - 10 August</p>
-                    </div>
-                    <div class="tournament-list-group-item-detail-2">
-                        <h4 class="tournament-list-group-item-detail-2-price">Rp. 100.000 / Team</h4>
-                        <p class="tournament-list-group-item-detail-2-registration-closed">Registration Before 24 July</p>
-                        <p class="tournament-list-group-item-detail-2-status">Upcoming</p>
-                    </div>
-                </div>
-                <div class="tournament-list-group-item">
-                    <div class="tournament-list-group-item-logo">
-                        <img src="{{ asset('img/the-international-7.jpg') }}">
-                    </div>
-                    <div class="tournament-list-group-item-detail-1">
-                        <h4 class="tournament-list-group-item-detail-1-name">Tournament Name</h4>
-                        <p class="tournament-list-group-item-detail-1-organizer-name">Organizer Name</p>
-                        <p class="tournament-list-group-item-detail-1-event-date">30 July - 10 August</p>
-                    </div>
-                    <div class="tournament-list-group-item-detail-2">
-                        <h4 class="tournament-list-group-item-detail-2-price">Rp. 100.000 / Team</h4>
-                        <p class="tournament-list-group-item-detail-2-registration-closed">Registration Before 24 July</p>
-                        <p class="tournament-list-group-item-detail-2-status">Upcoming</p>
-                    </div>
-                </div>
+                @foreach ($tournaments as $tournament)
+                    <a href="{{ url('/tournament/'.$tournament->id) }}" class="tournament-list-group-item">
+                        <div class="tournament-list-group-item-logo">
+                            <img src="{{ asset('storage/tournament/'.$tournament->logo_file_name) }}">
+                        </div>
+                        <div class="tournament-list-group-item-detail-1">
+                            <h4 class="tournament-list-group-item-detail-1-name">{{ $tournament->name }}</h4>
+                            <p class="tournament-list-group-item-detail-1-organizer-name">{{ $tournament->owner->name }}</p>
+                            <p class="tournament-list-group-item-detail-1-event-date">{{ date('d F Y', strtotime($tournament->start_date)) }} - {{ date('d F Y', strtotime($tournament->end_date)) }}</p>
+                        </div>
+                        <div class="tournament-list-group-item-detail-2">
+                            <h4 class="tournament-list-group-item-detail-2-price">Rp. {{ number_format($tournament->entry_fee, 0, ',', '.') }} / Team</h4>
+                            <p class="tournament-list-group-item-detail-2-registration-closed">Registration Before {{ date('d F Y H:i', strtotime($tournament->registration_closed)) }}</p>
+                            <p class="tournament-list-group-item-detail-2-status">Upcoming</p>
+                        </div>
+                    </a>
+                @endforeach
             </div>
         </div>
     </div>

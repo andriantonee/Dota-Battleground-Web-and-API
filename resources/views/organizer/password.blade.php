@@ -31,19 +31,19 @@
                                 <div class="form-inline" style="margin-bottom: 10px;">
                                     <div class="form-group">
                                         <label for="old-password" style="margin-right: 15px;"><i class="fa fa-key" aria-hidden="true"></i></label>
-                                        <input type="password" class="form-control" id="old-password" name="old_password" placeholder="Old Password" style="width: 280px;">
+                                        <input type="password" class="form-control" id="old-password" name="old_password" placeholder="Old Password" required="required" style="width: 280px;">
                                     </div>
                                 </div>
                                 <div class="form-inline" style="margin-bottom: 10px;">
                                     <div class="form-group">
                                         <label for="new-password" style="margin-right: 15px;"><i class="fa fa-key" aria-hidden="true"></i></label>
-                                        <input type="password" class="form-control" id="new-password" name="new_password" placeholder="New Password" style="width: 280px;">
+                                        <input type="password" class="form-control" id="new-password" name="new_password" placeholder="New Password" required="required" style="width: 280px;">
                                     </div>
                                 </div>
                                 <div class="form-inline" style="margin-bottom: 10px;">
                                     <div class="form-group">
                                         <label for="new-password-confirmation" style="margin-right: 15px;"><i class="fa fa-key" aria-hidden="true"></i></label>
-                                        <input type="password" class="form-control" id="new-password-confirmation" name="new_password_confirmation" placeholder="New Password Confirmation" style="width: 280px;">
+                                        <input type="password" class="form-control" id="new-password-confirmation" name="new_password_confirmation" placeholder="New Password Confirmation" required="required" style="width: 280px;">
                                     </div>
                                 </div>
                                 <div class="text-right">

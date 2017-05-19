@@ -115,7 +115,7 @@ class TeamController extends BaseController
             try {
                 $path = null;
                 if (array_key_exists('picture', $data)) {
-                    $path = $data['picture']->store('public/team');
+                    $path = $data['picture']->storeAs('public/team', time().uniqid().$data['picture']->hashName());
                 }
                 $team = new Team([
                     'name' => $data['name'],
@@ -599,5 +599,39 @@ class TeamController extends BaseController
         }
 
         return response()->json(['code' => 200, 'message' => ['Search team name success.'], 'teams' => $teams, 'isLogin' => $isLogin]);
+    }
+
+    public function member($id, Request $request)
+    {
+        $team = Team::find($id);
+        $member = $request->user();
+
+        if ($team) {
+            $isTeamLeader = $member->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
+            if ($isTeamLeader) {
+                // Continue
+            } else {
+                return response()->json(['code' => 403, 'message' => ['Member is not a leader of the team.']]);
+            }
+        } else {
+            return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
+        }
+
+        $details = $team->details()
+            ->select('id', 'name', 'picture_file_name')
+            ->orderBy('name', 'ASC')
+            ->get();
+
+        $details = $details->map(function($detail, $key) {
+            if ($detail->picture_file_name) {
+                $detail->picture_file_name = asset('storage/member/'.$detail->picture_file_name);
+            } else {
+                $detail->picture_file_name = asset('img/default-profile.jpg');
+            }
+
+            return $detail;
+        });
+
+        return response()->json(['code' => 200, 'message' => ['Fetch team member success.'], 'members' => $details]);
     }
 }

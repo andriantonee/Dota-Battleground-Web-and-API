@@ -74,6 +74,13 @@
             margin-bottom: 15px;
             width: 180px;
         }
+        #tournament-header-alert {
+            border: 1px solid #cccccc;
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 6px 12px;
+            width: 180px;
+        }
 
         #tournament-body {
             padding: 0px 15px;
@@ -84,15 +91,27 @@
             border-radius: 0;
             min-height: 386px;
         }
-        .tab-pane-title {
+        .well-title {
             border-bottom: 1px solid #ddd;
-            margin-bottom: 0;
+            margin-bottom: 15px;
             margin-top: 0;
             padding-bottom: 10px;
+        }
+        .tab-pane-title {
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+            margin-top: 0;
+            padding-bottom: 10px;
+        }
+        .tab-pane-title:first-child {
+            margin-bottom: 0;
         }
         table.table-tournament-detail {
             margin-bottom: 0;
             margin-top: 20px;
+        }
+        table.table-tournament-detail > tbody > tr > td:first-child {
+            font-weight: bold;
         }
         table.table-tournament-detail > tbody > tr > td {
             border: none;
@@ -168,6 +187,12 @@
             display: table-cell;
             vertical-align: middle;
         }
+        .prizes-other {
+            margin-top: 20px;
+            max-height: 384px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
     </style>
 @endsection
 
@@ -175,30 +200,35 @@
     <div id="tournament-container" class="container">
         <div id="tournament-header">
             <div id="tournament-header-logo">
-                <img src="{{ asset('img/the-boston-major.png') }}">
+                <img src="{{ asset('storage/tournament/'.$tournament->logo_file_name) }}">
             </div>
             <div id="tournament-header-detail">
-                <h1 id="tournament-header-detail-name">Tournaments Name</h1>
-                <p class="tournament-header-detail-other">Organized By : Lenovo Gaming League</p>
-                <p class="tournament-header-detail-other">Event Start : 14 March 2017</p>
+                <h1 id="tournament-header-detail-name">{{ $tournament->name }}</h1>
+                <p class="tournament-header-detail-other">Organized By : {{ $tournament->owner->name }}</p>
+                <p class="tournament-header-detail-other">Event Date : {{ date('d F Y', strtotime($tournament->start_date)) }} - {{ date('d F Y', strtotime($tournament->end_date)) }}</p>
             </div>
             <div id="tournament-header-registration">
                 <div id="tournament-header-registration-container">
                     <div id="tournament-header-registration-content">
                         <h4 id="tournament-header-registration-status">REGISTRATION IS OPEN!</h4>
-                        <p id="tournament-header-registration-closed">Registration Ends : 13 March 2017, 5.30 PM</p>
-                        <button id="tournament-header-registration-action" class="btn btn-default">REGISTER</button>
+                        <p id="tournament-header-registration-closed">Registration Ends : {{ date('d F Y H:i', strtotime($tournament->registration_closed)) }}</p>
+                        @if ($participant)
+                            @if ($tournament->registration_closed < date('Y-m-d H:i:s'))
+                                <span id="tournament-header-alert">REGISTRATION CLOSED</span>
+                            @else
+                                <a href="{{ url('tournament/'.$tournament->id.'/register') }}" id="tournament-header-registration-action" class="btn btn-default">REGISTER</a>
+                            @endif
+                        @else
+                            <span id="tournament-header-alert">SIGN IN TO REGISTER</span>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
         <div id="tournament-body">
             <div class="well well-lg">
-                <h4 style="margin-top: 0;">Overview</h4>
-                <p>Welcome to the Lenovo Dota 2 League! Up to 256 teams will compete for Matilda IV tanks, game gold and cash prizes!</p>
-                <p>This is a 2 part tournament, where you will be placed into a Round Robin qualifier with other teams and competing for qualifying spots to a Single Elimination playoff.</p>
-                <p>For more information, rules and schedule can be found below.</p>
-                <p>NOTE: The organizers are monitoring sign-ups and format/schedule will be set after registration closes.</p>
+                <h4 class="well-title">Overview</h4>
+                <p>{!! $tournament->description !!}</p>
                 <div class="panel with-nav-tabs panel-default" style="border: none;">
                     <div class="panel-heading" style="background-color: transparent;border-color: #000000;">
                         <ul class="nav nav-tabs">
@@ -217,28 +247,20 @@
                                 <table class="table table-striped table-tournament-detail">
                                     <tbody>
                                         <tr>
+                                            <td>Event Type</td>
+                                            <td>{{ $tournament->type }}</td>
+                                        </tr>
+                                        <tr>
                                             <td>Location</td>
-                                            <td>Medan</td>
+                                            <td>{{ $tournament->city ? $tournament->city->name : '-' }}</td>
                                         </tr>
                                         <tr>
-                                            <td>Registration Close</td>
-                                            <td>13 March 2017</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Event Start</td>
-                                            <td>14 March 2017</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Event End</td>
-                                            <td>31 March 2017</td>
+                                            <td>Address</td>
+                                            <td>{{ $tournament->address ?: '-' }}</td>
                                         </tr>
                                         <tr>
                                             <td>Entry Fee</td>
-                                            <td>Rp. 150.000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Event Type</td>
-                                            <td>Single Elimination</td>
+                                            <td>Rp. {{ number_format($tournament->entry_fee, 0, ',', '.') }}</td>
                                         </tr>
                                         <tr>
                                             <td>Min Participants</td>
@@ -246,11 +268,11 @@
                                         </tr>
                                         <tr>
                                             <td>Max Participants</td>
-                                            <td>16</td>
+                                            <td>{{ $tournament->max_participant }}</td>
                                         </tr>
                                         <tr>
                                             <td>Current Participants</td>
-                                            <td>7</td>
+                                            <td>{{ $tournament->registration_count }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -258,24 +280,7 @@
                             <div class="tab-pane fade" id="rules-tab">
                                 <h4 class="tab-pane-title">Rules</h4>
                                 <div class="tournament-rule-content">
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                    </p>
-                                    <p>
-                                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
-                                    </p>
-                                    <p>
-                                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.
-                                    </p>
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                    </p>
-                                    <p>
-                                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
-                                    </p>
-                                    <p>
-                                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.
-                                    </p>
+                                    <p>{!! $tournament->rules !!}</p>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="prizes-tab">
@@ -287,7 +292,7 @@
                                         </div>
                                         <div class="prizes-detail-container">
                                             <div class="prizes-detail-content">
-                                                <h3>Rp. 2.000.000 + Steam Wallet sebesar Rp. 500.000</h3>
+                                                <h3>{{ $tournament->prize_1st ?: '-' }}</h3>
                                             </div>
                                         </div>
                                     </div>
@@ -297,7 +302,7 @@
                                         </div>
                                         <div class="prizes-detail-container">
                                             <div class="prizes-detail-content">
-                                                <h3>Rp. 1.000.000 + Steam Wallet sebesar Rp. 500.000</h3>
+                                                <h3>{{ $tournament->prize_2nd ?: '-' }}</h3>
                                             </div>
                                         </div>
                                     </div>
@@ -307,11 +312,17 @@
                                         </div>
                                         <div class="prizes-detail-container">
                                             <div class="prizes-detail-content">
-                                                <h3>Steam Wallet sebesar Rp. 500.000</h3>
+                                                <h3>{{ $tournament->prize_3rd ?: '-' }}</h3>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                @if ($tournament->prize_other)
+                                    <h4 class="tab-pane-title">Other Prizes</h4>
+                                    <div class="prizes-other">
+                                        <p>{!! $tournament->prize_other !!}</p>
+                                    </div>
+                                @endif
                             </div>
                             <div class="tab-pane fade" id="schedule-tab">
                                 <h4 class="tab-pane-title">Schedule</h4>
