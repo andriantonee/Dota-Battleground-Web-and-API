@@ -92,8 +92,8 @@ class TournamentController extends BaseController
     {
         $tournament_registration_confirmations = TournamentRegistrationConfirmation::select('*')
             ->with([
-                'registration' => function($registration) {
-                    $registration->select('id', 'tournaments_id', 'teams_id')
+                'registrations' => function($registrations) {
+                    $registrations->select('id', 'tournaments_id', 'teams_id')
                         ->with([
                             'tournament' => function($tournament) {
                                 $tournament->select('id', 'name', 'entry_fee');

@@ -34,9 +34,14 @@ class Tournament extends Model
         return $this->hasOne('App\TournamentApproval', 'tournaments_id', 'id');
     }
 
-    public function registration()
+    public function registrations()
     {
         return $this->hasMany('App\TournamentRegistration', 'tournaments_id', 'id');
+    }
+
+    public function matches()
+    {
+        return $this->hasMany('App\Match', 'tournaments_id', 'id');
     }
 
     public static function checkLeagueIDExists($leagues_id, $tournament_id = null)

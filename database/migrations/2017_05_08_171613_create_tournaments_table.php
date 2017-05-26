@@ -36,6 +36,8 @@ class CreateTournamentsTable extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->boolean('start')->default('0');
+            $table->boolean('complete')->default('0');
+            $table->boolean('cancel')->default('0');
             $table->unsignedBigInteger('members_id');
             $table->timestamps();
 

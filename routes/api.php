@@ -49,6 +49,10 @@ Route::group(['prefix' => 'organizer', 'namespace' => 'Organizer'], function() {
         Route::put('/password', 'ProfileController@updatePassword');
         Route::post('/tournament/create', 'TournamentController@store');
         Route::put('/tournament/{id}', 'TournamentController@update');
+        Route::put('/tournament/{id}/type', 'TournamentController@updateType');
+        Route::put('/tournament/{id}/start', 'TournamentController@start');
+        Route::put('/tournament/{id}/end', 'TournamentController@end');
+        Route::put('/match/{id}/schedule', 'MatchController@updateSchedule');
     });
 });
 

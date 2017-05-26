@@ -53,8 +53,8 @@ class TournamentController extends BaseController
                 }
             ])
             ->withCount([
-                'registration' => function($registration) {
-                    $registration->whereHas('confirmation', function($confirmation) {
+                'registrations' => function($registrations) {
+                    $registrations->whereHas('confirmation', function($confirmation) {
                         $confirmation->whereHas('approval', function($approval) {
                             $approval->where('status', 1);
                         });

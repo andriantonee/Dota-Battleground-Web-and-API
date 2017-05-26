@@ -503,4 +503,46 @@ class ValidatorHelper
             return null;
         }
     }
+
+    public static function validateTournamentTypeUpdateRequest(array $data)
+    {
+        $rule = [
+            'type' => 'required|integer|in:1,2',
+            'randomize' => 'required|integer|in:0,1'
+        ];
+        $message = [
+            'type.required' => 'Type is required.',
+            'type.integer' => 'Type must be an integer.',
+            'type.in' => 'Type can support Single Elimination or Double Elimination only.',
+            'randomize.required' => 'Randomize Parameter is required.',
+            'randomize.integer' => 'Randomize Parameter must be an integer.',
+            'randomize.in' => 'Randomize Parameter can support 0 or 1 only.'
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            return null;
+        }
+    }
+
+    public static function validateMatchScheduleUpdateRequest(array $data)
+    {
+        $rule = [
+            'scheduled_time' => 'required|string|date_format:d/m/Y H:i:s'
+        ];
+        $message = [
+            'scheduled_time.required' => 'Scheduled Time is required.',
+            'scheduled_time.string' => 'Scheduled Time must be a string.',
+            'scheduled_time.date_format' => 'Scheduled Time does not match the format :format.',
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            return null;
+        }
+    }
 }

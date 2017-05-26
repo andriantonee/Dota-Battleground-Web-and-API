@@ -78,7 +78,7 @@
                                         </h6>
                                     </div>
                                     <div class="text-right" style="position: absolute;top: 10px;right: 15px;width: 200px;">
-                                        <p><i class="fa fa-users" aria-hidden="true"></i>&nbsp;&nbsp;{{ $tournament->registration_count }}/{{ $tournament->max_participant }}</p>
+                                        <p><i class="fa fa-users" aria-hidden="true"></i>&nbsp;&nbsp;{{ $tournament->registrations_count }}/{{ $tournament->max_participant }}</p>
                                         <h6 style="margin-top: 73px;">In Progress</h6>
                                     </div>
                                 </a>

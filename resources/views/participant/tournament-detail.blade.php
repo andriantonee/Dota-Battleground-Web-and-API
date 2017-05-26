@@ -72,14 +72,14 @@
         #tournament-header-registration-action {
             border-radius: 0;
             margin-bottom: 15px;
-            width: 180px;
+            width: 200px;
         }
         #tournament-header-alert {
             border: 1px solid #cccccc;
             display: inline-block;
             margin-bottom: 15px;
             padding: 6px 12px;
-            width: 180px;
+            width: 200px;
         }
 
         #tournament-body {
@@ -210,16 +210,20 @@
             <div id="tournament-header-registration">
                 <div id="tournament-header-registration-container">
                     <div id="tournament-header-registration-content">
-                        <h4 id="tournament-header-registration-status">REGISTRATION IS OPEN!</h4>
+                        @if ($tournament->registration_closed >= date('Y-m-d H:i:s'))
+                            <h4 id="tournament-header-registration-status">REGISTRATION IS OPEN!</h4>
+                        @else
+                            <h4 id="tournament-header-registration-status">REGISTRATION IS CLOSED!</h4>
+                        @endif
                         <p id="tournament-header-registration-closed">Registration Ends : {{ date('d F Y H:i', strtotime($tournament->registration_closed)) }}</p>
-                        @if ($participant)
-                            @if ($tournament->registration_closed < date('Y-m-d H:i:s'))
-                                <span id="tournament-header-alert">REGISTRATION CLOSED</span>
-                            @else
+                        @if ($tournament->registration_closed >= date('Y-m-d H:i:s'))
+                            @if ($participant)
                                 <a href="{{ url('tournament/'.$tournament->id.'/register') }}" id="tournament-header-registration-action" class="btn btn-default">REGISTER</a>
+                            @else
+                                <span id="tournament-header-alert">SIGN IN TO REGISTER</span>
                             @endif
                         @else
-                            <span id="tournament-header-alert">SIGN IN TO REGISTER</span>
+                            <span id="tournament-header-alert">REGISTRATION CLOSED</span>
                         @endif
                     </div>
                 </div>
@@ -272,7 +276,7 @@
                                         </tr>
                                         <tr>
                                             <td>Current Participants</td>
-                                            <td>{{ $tournament->registration_count }}</td>
+                                            <td>{{ $tournament->registrations_count }}</td>
                                         </tr>
                                     </tbody>
                                 </table>

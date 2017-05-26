@@ -112,4 +112,66 @@ class GuzzleHelper
             return null;
         }
     }
+
+    public static function updateTournamentChallongeType(Tournament $tournament, $type)
+    {
+        $http = new GuzzleClient();
+
+        try {
+            $challonge_tournament_id = $tournament->challonges_id;
+            $tournament_type = $type == 2 ? 'double elimination' : ($type == 1 ? 'single elimination' : 'single elimination');
+
+            $response = $http->put('https://api.challonge.com/v1/tournaments/'.$challonge_tournament_id.'.json', [
+                'form_params' => [
+                    'api_key' => env('CHALLONGE_API_KEY', ''),
+                    'tournament' => [
+                        'tournament_type' => $tournament_type
+                    ]
+                ]
+            ]);
+
+            return json_decode($response->getBody()->__toString(), false);
+        } catch (RequestException $e) {
+            return null;
+        }
+    }
+
+    public static function updateTournamentChallongeParticipantSeed(Tournament $tournament)
+    {
+        $http = new GuzzleClient();
+
+        try {
+            $challonge_tournament_id = $tournament->challonges_id;
+
+            $response = $http->post('https://api.challonge.com/v1/tournaments/'.$challonge_tournament_id.'/participants/randomize.json', [
+                'form_params' => [
+                    'api_key' => env('CHALLONGE_API_KEY', '')
+                ]
+            ]);
+
+            return json_decode($response->getBody()->__toString(), false);
+        } catch (RequestException $e) {
+            return null;
+        }
+    }
+
+    public static function startTournamentChallonge(Tournament $tournament)
+    {
+        $http = new GuzzleClient();
+
+        try {
+            $challonge_tournament_id = $tournament->challonges_id;
+
+            $response = $http->post('https://api.challonge.com/v1/tournaments/'.$challonge_tournament_id.'/start.json', [
+                'form_params' => [
+                    'api_key' => env('CHALLONGE_API_KEY', ''),
+                    'include_matches' => 1
+                ]
+            ]);
+
+            return json_decode($response->getBody()->__toString(), false);
+        } catch (RequestException $e) {
+            return null;
+        }
+    }
 }
