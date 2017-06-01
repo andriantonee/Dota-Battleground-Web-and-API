@@ -101,7 +101,7 @@
                             </a>
                         @endif
                     </h2>
-                    <h6 style="margin-bottom: 35px;">Created on {{ date('d F Y', strtotime($team->created_at)) }}</h6>
+                    <h6 style="margin-bottom: 35px; color:#afaeae">Created on {{ date('d F Y', strtotime($team->created_at)) }}</h6>
                     @if ($inTeam)
                         @if ($isTeamLeader)
                             <a role="button" class="btn btn-default" data-toggle="modal" data-target="#team-settings-modal" style="position: absolute;right: 0px;top: 0px;width: 148px;">
@@ -145,55 +145,53 @@
             </div>
         </div>
         <div class="row">
-            <div class="well well-lg" style="background-color: #ffffff;border: 1px solid #000000;border-radius: 0px;">
-                <div class="panel with-nav-tabs panel-default" style="border: none;">
-                    <div class="panel-heading" style="background-color: transparent;border-color: #000000;">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#teams-tab" data-toggle="tab">Members</a></li>
-                            <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
-                            <li><a href="#registration-status-tab" data-toggle="tab">Tournaments</a></li>
-                        </ul>
-                    </div>
-                    <div class="panel-body" style="border: 1px solid #000000;border-top: none;">
-                        <div class="tab-content">
-                            <div class="tab-pane fade in active" id="teams-tab" style="min-height: 400px;">
-                                <div style="width: 450px;margin-left: 25px;">
-                                    @foreach ($team->details as $detail)
-                                        <div class="row" style="border: 1px solid #000000;padding: 15px 0px;margin-bottom: 10px;">
-                                            <div class="col-xs-4">
-                                                <div class="thumbnail" style="height: 110px;width: 110px;margin: 0px auto;">
-                                                    @if ($detail->picture_file_name)
-                                                        <img src="{{ asset('storage/member/'.$detail->picture_file_name) }}" style="height: 100px;width: 100px;">
-                                                    @else
-                                                        <img src="{{ asset('img/default-profile.jpg') }}" style="height: 100px;width: 100px;">
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-8" style="position: relative;">
-                                                <h3 style="margin-top: 15px;">{{ $detail->name }}</h3>
-                                                <p>{{ $detail->steam32_id ?: '-' }}</p>
-                                                <p>Joined on {{ date('d F Y', strtotime($detail->created_at)) }}</p>
-                                                @if ($detail->members_privilege == 1 && $inTeam && $isTeamLeader)
-                                                    <div style="position: absolute;right: 10px;top: -5px;">
-                                                        <a role="button" class="btn-kick-member" data-member-id="{{ $detail->id }}" data-member-name="{{ $detail->name }}">
-                                                            <i class="glyphicon glyphicon-remove-sign" style="font-size: 24px;"></i>
-                                                        </a>
-                                                    </div>
-                                                @endif
-                                                @if ($detail->members_privilege == 2)
-                                                    <p style="position: absolute;right: 0;bottom: -25px;font-size: 16px;"><strong>Captain</strong></p>
+            <div class="panel with-nav-tabs panel-default" style="">
+                <div class="panel-heading" style=";">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#teams-tab" data-toggle="tab">Members</a></li>
+                        <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
+                        <li><a href="#registration-status-tab" data-toggle="tab">Tournaments</a></li>
+                    </ul>
+                </div>
+                <div class="panel-body" style="">
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="teams-tab" style="min-height: 400px;">
+                            <div style="width: 450px;margin-left: 25px;">
+                                @foreach ($team->details as $detail)
+                                    <div class="row" style="border: 1px solid #000000;padding: 15px 0px;margin-bottom: 10px;">
+                                        <div class="col-xs-4">
+                                            <div class="thumbnail" style="height: 110px;width: 110px;margin: 0px auto;">
+                                                @if ($detail->picture_file_name)
+                                                    <img src="{{ asset('storage/member/'.$detail->picture_file_name) }}" style="height: 100px;width: 100px;">
+                                                @else
+                                                    <img src="{{ asset('img/default-profile.jpg') }}" style="height: 100px;width: 100px;">
                                                 @endif
                                             </div>
                                         </div>
-                                    @endforeach
-                                </div>
+                                        <div class="col-xs-8" style="position: relative;">
+                                            <h3 style="margin-top: 15px;">{{ $detail->name }}</h3>
+                                            <p>{{ $detail->steam32_id ?: '-' }}</p>
+                                            <p>Joined on {{ date('d F Y', strtotime($detail->created_at)) }}</p>
+                                            @if ($detail->members_privilege == 1 && $inTeam && $isTeamLeader)
+                                                <div style="position: absolute;right: 10px;top: -5px;">
+                                                    <a role="button" class="btn-kick-member" data-member-id="{{ $detail->id }}" data-member-name="{{ $detail->name }}">
+                                                        <i class="glyphicon glyphicon-remove-sign" style="font-size: 24px;"></i>
+                                                    </a>
+                                                </div>
+                                            @endif
+                                            @if ($detail->members_privilege == 2)
+                                                <p style="position: absolute;right: 0;bottom: -25px;font-size: 16px;"><strong>Captain</strong></p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
-                            <div class="tab-pane fade" id="schedule-tab">
-                                Default 2
-                            </div>
-                            <div class="tab-pane fade" id="registration-status-tab">
-                                Default 3
-                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="schedule-tab">
+                            Default 2
+                        </div>
+                        <div class="tab-pane fade" id="registration-status-tab">
+                            Default 3
                         </div>
                     </div>
                 </div>

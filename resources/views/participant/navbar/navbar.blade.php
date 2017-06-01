@@ -1,4 +1,5 @@
-<nav class="navbar navbar-inverse" style="min-width: 1024px;border-radius: 0px;">
+<nav class="navbar navbar-inverse" style="min-width: 1024px;border-radius: 0px;background-color: #292E3A;border-bottom: 1px solid #343946;
+box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3);color:#fff;">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" style="display: table-cell;vertical-align: middle;height: 50px;padding: 0px;padding-right: 15px;float: none;" href="{{ url('/') }}">
@@ -153,9 +154,9 @@
     <!-- Sign In Modal -->
     <div class="modal modal-remove-padding-right" id="sign-in-modal" tabindex="-1" role="dialog" aria-labelledby="sign-in-modal-label">
         <div class="modal-dialog modal-dialog-fixed-width-320" role="document">
-            <div class="modal-content">
+            <div class="modal-content modal-content-custom" >
                 <div class="modal-header modal-header-border-bottom-custom">
-                    <h1 class="modal-title modal-title-align-center" id="sign-in-modal-label">Sign In</h1>
+                    <h1 class="modal-title modal-title-align-center" id="sign-in-modal-label" style="color:#fff">Sign In</h1>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-success" role="alert" style="margin-left: 5px;margin-right: 5px;display: none;">
@@ -179,7 +180,7 @@
                             </div>
                         </div>
                         <div class="button-container-authentication">
-                            <button type="submit" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-participant-login">
+                            <button type="submit" class="btn btn-default ladda-button btn-custom" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-participant-login">
                                 <span class="ladda-label">Login</span>
                             </button>
                         </div>
@@ -192,9 +193,9 @@
     <!-- Sign Up Modal -->
     <div class="modal modal-remove-padding-right" id="sign-up-modal" tabindex="-1" role="dialog" aria-labelledby="mySignInModalLabel">
         <div class="modal-dialog modal-dialog-fixed-width-320" role="document">
-            <div class="modal-content">
+            <div class="modal-content modal-content-custom">
                 <div class="modal-header modal-header-border-bottom-custom">
-                    <h1 class="modal-title modal-title-align-center" id="mySignInModalLabel">Sign Up</h1>
+                    <h1 class="modal-title modal-title-align-center" id="mySignInModalLabel" style="color:#fff">Sign Up</h1>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-success" role="alert" style="margin-left: 5px;margin-right: 5px;display: none;">
@@ -235,7 +236,7 @@
                             </label>
                         </div>
                         <div class="button-container-authentication">
-                            <button type="submit" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-participant-register" disabled="disabled">
+                            <button type="submit" class="btn btn-default ladda-button btn-custom" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-participant-register" disabled="disabled">
                                 <span class="ladda-label">Register</span>
                             </button>
                         </div>

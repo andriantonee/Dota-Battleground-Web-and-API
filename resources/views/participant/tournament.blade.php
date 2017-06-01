@@ -15,15 +15,22 @@
         }
 
         .tournament-list-group-item {
-            border: 1px solid #ddd;
-            color: black;
+            color:#e3e3e3;
+            border: 1px solid #5f6471;
+            background: linear-gradient(to right, #2f313a, #2f3341);
+            box-shadow: 5px 5px 12px 5px rgba(0,0,0,0.5);
+            border-radius: 3px;
             display: block;
             height: 130px;
             padding: 15px;
         }
         .tournament-list-group-item:hover {
-            background-color: #ddd;
-            color: black;
+            background: linear-gradient(to right, #323645,#3d3f4b);
+            color: #fff;
+            text-decoration: none;
+        }
+        .tournament-list-group-item:focus {
+            color: #fff;
             text-decoration: none;
         }
         .tournament-list-group-item:first-child {
@@ -82,6 +89,25 @@
         .tournament-list-group-item-detail-2-status {
             font-size: 10px;
         }
+        .list-group > button {
+            background: linear-gradient(to right, #232520, #272A30);
+            border: 1px solid #5f6471;
+            color:#D8D8D8;
+        }
+        .list-group > button:hover {
+            color:#fff;
+            background: linear-gradient(to right, #34372f, #3f444e);
+        }
+        .list-group > button:focus {
+            color:#D8D8D8;
+        }
+        .list-group-item-detail {
+            color:#D8D8D8;
+            border: 1px solid #5f6471;
+            background: linear-gradient(to right, #2f313a, #2f3341);
+            border-top: 0;
+            padding: 5px 15px;
+        }
     </style>
 @endsection
 
@@ -89,7 +115,7 @@
     <div id="tournament-list-container" class="container">
         <div class="row" style="border-bottom: 1px solid #cecece;padding-bottom: 10px;height: 84px;">
             <div class="col-xs-6" style="height: 100%;">
-                <h1 style="line-height: 84px;margin-top: 0px;margin-bottom: 0px;">Tournament</h1>
+                <h1 style="color:#fff;line-height: 84px;margin-top: 0px;margin-bottom: 0px;">Tournament</h1>
             </div>
             <div class="col-xs-6">
                 <div class="input-group stylish-input-group">
@@ -121,9 +147,9 @@
         </div>
         <div class="row" style="margin-top: 15px;margin-bottom: 15px;">
             <div class="col-xs-4">
-                <div class="list-group" style="margin-bottom: 10px;">
+                <div class="list-group" style="margin-bottom: 10px;box-shadow: 5px 5px 12px 5px rgba(0,0,0,0.5);">
                     <button class="list-group-item" data-toggle="collapse" data-target="#filter-prices" aria-expanded="false" aria-controls="filter-prices" style="border-top-left-radius: 0;border-top-right-radius: 0;">Prices</button>
-                    <div class="collapse in" id="filter-prices" style="border: 1px solid #ddd;border-top: 0;border-bottom: 0;padding: 5px 15px;">
+                    <div class="collapse in list-group-item-detail" id="filter-prices">
                         <div class="radio" style="margin-top: 0;">
                             <label>
                                 <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-1" value="1">&nbsp;Dibawah Rp. 50.000
@@ -146,7 +172,7 @@
                         </div>
                     </div>
                     <button class="list-group-item" data-toggle="collapse" data-target="#filter-date-and-location" aria-expanded="false" aria-controls="filter-date-and-location">Date &amp; Location</button>
-                    <div class="collapse in" id="filter-date-and-location" style="border: 1px solid #ddd;border-top: 0;padding: 5px 15px;">
+                    <div class="collapse in list-group-item-detail" id="filter-date-and-location">
                         <div class="form-group" style="margin-bottom: 5px;">
                             <label for="start-date" class="control-label" style="font-weight: normal;">Start Date</label>
                             <div class="input-group date" id="start-date-datetimepicker">
@@ -167,7 +193,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button class="form-control btn btn-default">Filter</button>
+                    <button class="form-control btn btn-default btn-custom">Filter</button>
                 </div>
             </div>
             <div class="col-xs-8">
@@ -177,14 +203,14 @@
                             <img src="{{ asset('storage/tournament/'.$tournament->logo_file_name) }}">
                         </div>
                         <div class="tournament-list-group-item-detail-1">
-                            <h4 class="tournament-list-group-item-detail-1-name">{{ $tournament->name }}</h4>
-                            <p class="tournament-list-group-item-detail-1-organizer-name">{{ $tournament->owner->name }}</p>
+                            <h4 class="tournament-list-group-item-detail-1-name" style="color: #f45138;">{{ $tournament->name }}</h4>
+                            <p class="tournament-list-group-item-detail-1-organizer-name" style="color:#afaeae">{{ $tournament->owner->name }}</p>
                             <p class="tournament-list-group-item-detail-1-event-date">{{ date('d F Y', strtotime($tournament->start_date)) }} - {{ date('d F Y', strtotime($tournament->end_date)) }}</p>
                         </div>
                         <div class="tournament-list-group-item-detail-2">
-                            <h4 class="tournament-list-group-item-detail-2-price">Rp. {{ number_format($tournament->entry_fee, 0, ',', '.') }} / Team</h4>
+                            <h4 class="tournament-list-group-item-detail-2-price" style="color: #fc7b67;">Rp. {{ number_format($tournament->entry_fee, 0, ',', '.') }} / Team</h4>
                             <p class="tournament-list-group-item-detail-2-registration-closed">Registration Before {{ date('d F Y H:i', strtotime($tournament->registration_closed)) }}</p>
-                            <p class="tournament-list-group-item-detail-2-status">Upcoming</p>
+                            <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Upcoming</p>
                         </div>
                     </a>
                 @endforeach

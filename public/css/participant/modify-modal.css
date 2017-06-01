@@ -18,9 +18,15 @@
     padding-right: 0px !important;
 }
 .modal-header-border-bottom-custom {
-    margin: 0px 20px;
-    border-bottom: 3px solid black;
+    margin: 0px 10px;
+    border-bottom: 1px solid white;
+    padding: 5px;
 }
 .modal-title-align-center {
     text-align: center;
+}
+
+.modal-content-custom{
+    background-color: #292E3A;
+    border: 1px solid transparent;
 }

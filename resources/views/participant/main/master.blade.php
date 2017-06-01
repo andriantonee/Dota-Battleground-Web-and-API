@@ -19,6 +19,7 @@
         <link href="{{ asset('css/participant/modify-modal.css') }}" rel="stylesheet">
         <link href="{{ asset('css/participant/modify-form.css') }}" rel="stylesheet">
         <link href="{{ asset('css/participant/modify-modal-authentication.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/participant/modify-button.css') }}" rel="stylesheet">
         <style type="text/css">
             .divider-vertical {
                 height: 30px;
@@ -28,6 +29,10 @@
 
             .navbar-inverse .navbar-nav>.open>a.dropdown-toggle-open {
                 background-color: transparent;
+            }
+            body{
+                color: #D8D8D8;
+                background-color: #272A33;
             }
         </style>
         @yield('style')

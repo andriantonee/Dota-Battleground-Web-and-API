@@ -12,12 +12,12 @@
 .footer-ul-horizontal > li.separator {
     display: inline;
     margin: 0px;
-    border: 1px solid #ffffff;
+    border: 1px solid #5f6472;
 }
 .footer-ul-horizontal > li > a {
-    color: white;
+    color: #5f6472;
     text-decoration: underline;
 }
 .footer-ul-horizontal > li > a:hover {
-    color: #23527c;
+    color: #FFF;
 }

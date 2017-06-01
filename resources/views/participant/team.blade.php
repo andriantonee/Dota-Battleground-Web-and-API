@@ -15,7 +15,7 @@
     <div class="container" style="min-height: 536px;">
         <div class="row" style="border-bottom: 1px solid #cecece;">
             <div class="col-xs-6">
-                <h1 style="margin-top: 0px;">Teams</h1>
+                <h1 style="margin-top: 0px;color:#fff">Teams</h1>
             </div>
             <div class="col-xs-6">
                 <div class="input-group stylish-input-group">
@@ -29,7 +29,7 @@
         <div id="team-list-container" style="width: 700px;margin-left: 15px;margin-top: 20px;">
             @foreach ($teams as $team)
                 <a class="team-list-content" href="{{ url('/team/'.$team->id) }}">
-                    <div class="row" style="border: 1px solid #000000;margin-bottom: 15px;padding: 10px 0px;">
+                    <div class="row" >
                         <div class="col-xs-2">
                             <div class="thumbnail" style="height: 80px;width: 80px;margin: 0px auto;">
                                 @if ($team->picture_file_name)
@@ -40,8 +40,8 @@
                             </div>
                         </div>
                         <div class="col-xs-5">
-                            <h3 style="margin-top: 13px;">{{ $team->name }}</h3>
-                            <p><span class="team-count">{{ $team->details_count }}</span> Member</p>
+                            <h3 style="margin-top: 13px;color: #f45138;">{{ $team->name }}</h3>
+                            <p style="color: #afaeae;"><span class="team-count" >{{ $team->details_count }}</span> Member</p>
                         </div>
                         <div class="col-xs-5 text-right" style="padding-top: 20px;">
                             @if (count($team->details) == 0 && $participant)
