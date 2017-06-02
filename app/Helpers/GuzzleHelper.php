@@ -14,7 +14,7 @@ class GuzzleHelper
         $http = new GuzzleClient();
 
         try {
-            $response = $http->post(url('/').'/oauth/token', [
+            $response = $http->post('http://dota-battleground.local/oauth/token', [
                 'form_params' => [
                     'grant_type' => 'password',
                     'client_id' => env('PASSPORT_CLIENT_ID', ''),
@@ -44,7 +44,7 @@ class GuzzleHelper
         $http = new GuzzleClient();
 
         try {
-            $response = $http->get(url('/').'/api/user', [
+            $response = $http->get('http://dota-battleground.local/api/user', [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Bearer '.$access_token
@@ -170,6 +170,26 @@ class GuzzleHelper
             ]);
 
             return json_decode($response->getBody()->__toString(), false);
+        } catch (RequestException $e) {
+            return null;
+        }
+    }
+
+    public static function requestDota2LiveLeagueGames()
+    {
+        $http = new GuzzleClient();
+
+        try {
+            $response = $http->get('http://api.steampowered.com/IDOTA2Match_570/GetLiveLeagueGames/v1', [
+                'query' => [
+                    'key' => env('DOTA2_API_KEY', ''),
+                    'format' => 'xml'
+                ]
+            ]);
+
+            $xml_obj = simplexml_load_string($response->getBody()->__toString());
+            $obj = json_decode(json_encode((array) $xml_obj), false);
+            return $obj;
         } catch (RequestException $e) {
             return null;
         }
