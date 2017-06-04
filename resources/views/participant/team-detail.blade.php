@@ -63,13 +63,8 @@
             width: 168px;
         }
 
-        .team-list-content {
-            color: #000;
-        }
-        .team-list-content:hover > div.row {
-            color: #000;
-            background-color: #eee;
-        }
+
+
     </style>
 @endsection
 
@@ -105,7 +100,7 @@
                     @if ($inTeam)
                         @if ($isTeamLeader)
                             <a role="button" class="btn btn-default" data-toggle="modal" data-target="#team-settings-modal" style="position: absolute;right: 0px;top: 0px;width: 148px;">
-                                <i class="glyphicon glyphicon-cog"></i>&nbsp;&nbsp;Team Settings
+                                <i class="glyphicon glyphicon-cog" style="color:#fff"></i>&nbsp;&nbsp;Team Settings
                             </a>
                             <a role="button" class="btn btn-default" data-toggle="modal" data-target="#invite-members-modal" style="position: absolute;right: 0px;top: 40px;width: 148px;">
                                 <i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;Invite Members
@@ -115,26 +110,26 @@
                         @if ($participant)
                             <div style="position: absolute;right: 0px;top: 10px;">
                                 @if (count($team->invitation_list) > 0)
-                                    <button class="btn btn-default accept-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="true">
-                                        <i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;Accept
+                                    <button class="btn btn-default btn-custom btn-accept accept-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="true">
+                                        <i class="glyphicon glyphicon-ok" style="color:#68ff90"></i>&nbsp;&nbsp;Accept
                                     </button>
                                     @if ($team->join_password)
-                                        <button class="btn btn-default reject-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="true" data-with-password="true">
-                                            <i class="glyphicon glyphicon-remove"></i>&nbsp;&nbsp;Reject
+                                        <button class="btn btn-default btn-custom btn-reject reject-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="true" data-with-password="true">
+                                            <i class="glyphicon glyphicon-remove" style="color:#fc5d5d"></i>&nbsp;&nbsp;Reject
                                         </button>
                                     @else
-                                        <button class="btn btn-default reject-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="true" data-with-password="false">
-                                            <i class="glyphicon glyphicon-remove"></i>&nbsp;&nbsp;Reject
+                                        <button class="btn btn-default btn-custom btn-reject reject-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="true" data-with-password="false">
+                                            <i class="glyphicon glyphicon-remove" style="color:#fc5d5d"></i>&nbsp;&nbsp;Reject
                                         </button>
                                     @endif
                                 @else
                                     @if ($team->join_password)
-                                        <button class="btn btn-default join-with-password" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="true">
-                                            <i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;Join Team
+                                        <button class="btn btn-default btn-custom join-with-password" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="true">
+                                            <i class="glyphicon glyphicon-log-in" style="color:#fff841"></i>&nbsp;&nbsp;Join Team
                                         </button>
                                     @else
-                                        <button class="btn btn-default join-without-password" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="true">
-                                            <i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;Join Team
+                                        <button class="btn btn-default btn-custom join-without-password" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="true">
+                                            <i class="glyphicon glyphicon-log-in" style="color:#fff841"></i>&nbsp;&nbsp;Join Team
                                         </button>
                                     @endif
                                 @endif
@@ -145,20 +140,18 @@
             </div>
         </div>
         <div class="row">
-            <div class="panel with-nav-tabs panel-default" style="">
-                <div class="panel-heading" style=";">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#teams-tab" data-toggle="tab">Members</a></li>
-                        <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
-                        <li><a href="#registration-status-tab" data-toggle="tab">Tournaments</a></li>
-                    </ul>
-                </div>
-                <div class="panel-body" style="">
+            <div class="panel with-nav-tabs panel-default">
+                <ul class="nav nav-tabs" style="border:none">
+                    <li class="active"><a href="#teams-tab" data-toggle="tab">Members</a></li>
+                    <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
+                    <li><a href="#registration-status-tab" data-toggle="tab">Tournaments</a></li>
+                </ul>
+                <div class="panel-body">
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="teams-tab" style="min-height: 400px;">
                             <div style="width: 450px;margin-left: 25px;">
                                 @foreach ($team->details as $detail)
-                                    <div class="row" style="border: 1px solid #000000;padding: 15px 0px;margin-bottom: 10px;">
+                                    <div class="row well-custom" style="padding: 15px 0px;margin-bottom: 10px;">
                                         <div class="col-xs-4">
                                             <div class="thumbnail" style="height: 110px;width: 110px;margin: 0px auto;">
                                                 @if ($detail->picture_file_name)
@@ -171,7 +164,7 @@
                                         <div class="col-xs-8" style="position: relative;">
                                             <h3 style="margin-top: 15px;">{{ $detail->name }}</h3>
                                             <p>{{ $detail->steam32_id ?: '-' }}</p>
-                                            <p>Joined on {{ date('d F Y', strtotime($detail->created_at)) }}</p>
+                                            <p style="color: #afaeae;">Joined on {{ date('d F Y', strtotime($detail->created_at)) }}</p>
                                             @if ($detail->members_privilege == 1 && $inTeam && $isTeamLeader)
                                                 <div style="position: absolute;right: 10px;top: -5px;">
                                                     <a role="button" class="btn-kick-member" data-member-id="{{ $detail->id }}" data-member-name="{{ $detail->name }}">
@@ -180,7 +173,7 @@
                                                 </div>
                                             @endif
                                             @if ($detail->members_privilege == 2)
-                                                <p style="position: absolute;right: 0;bottom: -25px;font-size: 16px;"><strong>Captain</strong></p>
+                                                <p style="position: absolute;right: 0;bottom: -25px;font-size: 16px;color: #afaeae;"><strong>Captain</strong></p>
                                             @endif
                                         </div>
                                     </div>
@@ -203,7 +196,7 @@
         <!-- Profile Picture Modal -->
         <div class="modal modal-remove-padding-right" id="profile-picture-modal" tabindex="-1" role="dialog" aria-labelledby="profile-picture-modal-label">
             <div class="modal-dialog modal-dialog-fixed-width-320" role="document">
-                <div class="modal-content">
+                <div class="modal-content modal-content-custom">
                     <div class="modal-header modal-header-border-bottom-custom">
                         <h1 class="modal-title modal-title-align-center" id="profile-picture-modal-label">Picture</h1>
                     </div>
@@ -250,7 +243,7 @@
         <!-- Team Settings Modal -->
         <div class="modal modal-remove-padding-right" id="team-settings-modal" tabindex="-1" role="dialog" aria-labelledby="team-settings-modal-label">
             <div class="modal-dialog modal-dialog-fixed-width-320" role="document">
-                <div class="modal-content">
+                <div class="modal-content modal-content-custom">
                     <div class="modal-header modal-header-border-bottom-custom">
                         <h1 class="modal-title modal-title-align-center" id="team-settings-modal-label">Team Settings</h1>
                     </div>
@@ -296,7 +289,7 @@
         <!-- Invite Members Modal -->
         <div class="modal modal-remove-padding-right" id="invite-members-modal" tabindex="-1" role="dialog" aria-labelledby="invite-members-modal-label">
             <div class="modal-dialog modal-dialog-fixed-width-500" role="document">
-                <div class="modal-content">
+                <div class="modal-content modal-content-custom">
                     <div class="modal-header modal-header-border-bottom-custom">
                         <h1 class="modal-title modal-title-align-center" id="invite-members-modal-label">Invite Members</h1>
                     </div>

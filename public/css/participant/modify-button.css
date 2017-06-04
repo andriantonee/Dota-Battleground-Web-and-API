@@ -1,3 +1,10 @@
+.btn-default{
+	background-color: #292E3A;color:#fff;
+}
+.btn-default:hover{
+	color:#fff;
+	background-color: #39424b;
+}
 .btn-custom {
     color: #D8D8D8;
     background : linear-gradient(to bottom, #a43827, #c64823);
@@ -7,4 +14,28 @@
     color: #FFF;
     border-color: #b2792d;
     background : linear-gradient(to bottom, #913122, #b94827);
+}
+.btn-custom:focus{
+	color: #D8D8D8;
+    background : linear-gradient(to bottom, #a43827, #c64823);
+    border-color: #CD5F51;
+    outline:none;
+}
+.btn-accept{
+    background : linear-gradient(to bottom, #1f872b, #20bc36);
+    border-color: #31aa53;
+}
+.btn-accept:hover{
+    color: #FFF;
+    border-color: #51cd74;
+    background : linear-gradient(to bottom, #196d22, #26b937);
+}
+.btn-reject{
+    background : linear-gradient(to bottom, #ba1f1f,#ba3f3f);
+    border-color: #ba3f3f;
+}
+.btn-reject:hover{
+    color: #FFF;
+    border-color:#d14f4f;
+    background : linear-gradient(to bottom, #9b1b1b, #b74747);
 }

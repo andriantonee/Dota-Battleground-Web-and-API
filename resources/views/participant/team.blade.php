@@ -5,7 +5,6 @@
 @section('style')
     <link href="{{ asset('css/participant/footer.css') }}" rel="stylesheet">
     <link href="{{ asset('css/participant/search-input.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/participant/team.css') }}" rel="stylesheet">
     <style type="text/css">
 
     </style>
@@ -28,8 +27,8 @@
         </div>
         <div id="team-list-container" style="width: 700px;margin-left: 15px;margin-top: 20px;">
             @foreach ($teams as $team)
-                <a class="team-list-content" href="{{ url('/team/'.$team->id) }}">
-                    <div class="row" >
+                <a href="{{ url('/team/'.$team->id) }}">
+                    <div class="row well-custom" style="margin-bottom: 5px;padding: 10px 0px;">
                         <div class="col-xs-2">
                             <div class="thumbnail" style="height: 80px;width: 80px;margin: 0px auto;">
                                 @if ($team->picture_file_name)
@@ -46,25 +45,26 @@
                         <div class="col-xs-5 text-right" style="padding-top: 20px;">
                             @if (count($team->details) == 0 && $participant)
                                 @if (count($team->invitation_list) > 0)
-                                    <button class="btn btn-default accept-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false">
-                                        <i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;Accept
+                                    <button class="btn btn-default btn-custom btn-accept accept-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false">
+                                        <i class="glyphicon glyphicon-ok" style="color:#68ff90"></i>&nbsp;&nbsp;Accept
                                     </button>
                                     @if ($team->join_password)
-                                        <button class="btn btn-default reject-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false" data-with-password="true">
-                                            <i class="glyphicon glyphicon-remove"></i>&nbsp;&nbsp;Reject
+                                        <button class="btn btn-default btn-custom btn-reject reject-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false" data-with-password="true">
+                                            <i class="glyphicon glyphicon-remove" style="color:#fc5d5d"></i>&nbsp;&nbsp;Reject
                                         </button>
                                     @else
-                                        <button class="btn btn-default reject-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false" data-with-password="false">
-                                            <i class="glyphicon glyphicon-remove"></i>&nbsp;&nbsp;Reject
+                                        <button class="btn btn-default btn-custom btn-reject reject-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false" data-with-password="false">
+                                            <i class="glyphicon glyphicon-remove" style="color:#fc5d5d"></i>&nbsp;&nbsp;Reject
                                         </button>
                                     @endif
                                 @else
                                     @if ($team->join_password)
-                                        <button class="btn btn-default join-with-password" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false">
-                                            <i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;Join Team
+                                        <button class="btn btn-default btn-custom join-with-password" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false">
+                                            <i class="glyphicon glyphicon-log-in" style="color:#fff841"></i>&nbsp;&nbsp;Join Team
                                         </button>
+                                        
                                     @else
-                                        <button class="btn btn-default join-without-password" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false">
+                                        <button class="btn btn-default btn-custom join-without-password" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false">
                                             <i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;Join Team
                                         </button>
                                     @endif

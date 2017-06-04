@@ -15,23 +15,8 @@
         }
 
         .tournament-list-group-item {
-            color:#e3e3e3;
-            border: 1px solid #5f6471;
-            background: linear-gradient(to right, #2f313a, #2f3341);
-            box-shadow: 5px 5px 12px 5px rgba(0,0,0,0.5);
-            border-radius: 3px;
-            display: block;
             height: 130px;
             padding: 15px;
-        }
-        .tournament-list-group-item:hover {
-            background: linear-gradient(to right, #323645,#3d3f4b);
-            color: #fff;
-            text-decoration: none;
-        }
-        .tournament-list-group-item:focus {
-            color: #fff;
-            text-decoration: none;
         }
         .tournament-list-group-item:first-child {
             margin-bottom: 5px;
@@ -198,7 +183,7 @@
             </div>
             <div class="col-xs-8">
                 @foreach ($tournaments as $tournament)
-                    <a href="{{ url('/tournament/'.$tournament->id) }}" class="tournament-list-group-item">
+                    <a href="{{ url('/tournament/'.$tournament->id) }}" class="well-custom tournament-list-group-item">
                         <div class="tournament-list-group-item-logo">
                             <img src="{{ asset('storage/tournament/'.$tournament->logo_file_name) }}">
                         </div>

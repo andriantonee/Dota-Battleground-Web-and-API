@@ -233,9 +233,9 @@
             <div class="well well-lg">
                 <h4 class="well-title">Overview</h4>
                 <p>{!! $tournament->description !!}</p>
-                <div class="panel with-nav-tabs panel-default" style="border: none;">
-                    <div class="panel-heading" style="background-color: transparent;border-color: #000000;">
-                        <ul class="nav nav-tabs">
+                <div class="panel with-nav-tabs panel-default">
+                    
+                        <ul class="nav nav-tabs" style="border:none">
                             <li class="active"><a href="#details-tab" data-toggle="tab">Details</a></li>
                             <li><a href="#rules-tab" data-toggle="tab">Rules</a></li>
                             <li><a href="#prizes-tab" data-toggle="tab">Prizes</a></li>
@@ -243,8 +243,8 @@
                             <li><a href="#bracket-tab" data-toggle="tab">Bracket</a></li>
                             <li><a href="#live-match-tab" data-toggle="tab">Live Match</a></li>
                         </ul>
-                    </div>
-                    <div class="panel-body" style="border: 1px solid #000000;border-top: none;">
+                    
+                    <div class="panel-body">
                         <div class="tab-content">
                             <div class="tab-pane fade in active" id="details-tab">
                                 <h4 class="tab-pane-title">Details</h4>

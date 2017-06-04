@@ -1,5 +1,4 @@
-<nav class="navbar navbar-inverse" style="min-width: 1024px;border-radius: 0px;background-color: #292E3A;border-bottom: 1px solid #343946;
-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3);color:#fff;">
+<nav class="navbar navbar-inverse navbar-custom">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" style="display: table-cell;vertical-align: middle;height: 50px;padding: 0px;padding-right: 15px;float: none;" href="{{ url('/') }}">
@@ -23,7 +22,7 @@ box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3);color:#fff;">
                                 <i class="glyphicon glyphicon-bell"></i>
                             @endif
                         </a>
-                        <div class="dropdown-container" style="right: 0;left: auto;margin-top: 0px;">
+                        <div class="dropdown-container" style="background-color: #292E3A;right: 0;left: auto;margin-top: 0px;">
                             <div class="dropdown-toolbar">
                                 <h3 class="dropdown-toolbar-title" style="line-height: 1.5;">
                                     @if ($unread_notifications)
@@ -109,7 +108,7 @@ box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3);color:#fff;">
     <!-- Password Modal -->
     <div class="modal modal-remove-padding-right" id="password-modal" tabindex="-1" role="dialog" aria-labelledby="password-modal-label">
         <div class="modal-dialog modal-dialog-fixed-width-320" role="document">
-            <div class="modal-content">
+            <div class="modal-content modal-content-custom">
                 <div class="modal-header modal-header-border-bottom-custom">
                     <h1 class="modal-title modal-title-align-center" id="password-modal-label">Password</h1>
                 </div>
@@ -141,7 +140,7 @@ box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3);color:#fff;">
                             </div>
                         </div>
                         <div class="button-container-authentication">
-                            <button type="submit" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-participant-password">
+                            <button type="submit" class="btn btn-default ladda-button btn-custom" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-participant-password">
                                 <span class="ladda-label">Change</span>
                             </button>
                         </div>

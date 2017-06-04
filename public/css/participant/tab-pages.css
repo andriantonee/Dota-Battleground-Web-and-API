@@ -1,14 +1,30 @@
-.panel.with-nav-tabs .panel-heading{
-    padding: 5px 5px 0 5px;
+.with-nav-tabs{
+    background:transparent;border:none;
 }
-.panel.with-nav-tabs .nav-tabs{
+.with-nav-tabs > .panel-body{
+    box-shadow: 5px 5px 12px 5px rgba(0,0,0,0.2);
+    background-color: #292E3A;
+}
+.with-nav-tabs > .nav-tabs > li.active > a{
+    margin: 0px;
+    font-weight: bold;
+    border-color: rgb(95, 100, 114);
+    border: none; 
+    border-top: 3px solid #5f6472;
+    background-color: #292E3A;
+    color:#fff;
+}
+.with-nav-tabs > .nav-tabs > li > a{
     border-bottom: none;
+    color:#afaeae;
+    background-color:#363b49;
 }
-.panel.with-nav-tabs .nav-justified{
-    margin-bottom: -1px;
+.with-nav-tabs > .nav-tabs > li > a:hover{
+    color:#fff;
+    border-color:#5f6472;
 }
 
-.with-nav-tabs.panel-default .nav-tabs > li > a,
+/*.with-nav-tabs.panel-default .nav-tabs > li > a,
 .with-nav-tabs.panel-default .nav-tabs > li > a:hover,
 .with-nav-tabs.panel-default .nav-tabs > li > a:focus {
     color: #777;
@@ -46,4 +62,4 @@
 .with-nav-tabs.panel-default .nav-tabs > li.dropdown .dropdown-menu > .active > a:focus {
     color: #fff;
     background-color: #555;
-}
+}*/

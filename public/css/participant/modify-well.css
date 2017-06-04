@@ -1,14 +1,17 @@
-.team-list-content > div.row{
+.well-custom {
     color:#e3e3e3;
     border: 1px solid #5f6471;
     background: linear-gradient(to right, #2f313a, #2f3341);
-    box-shadow: 5px 5px 12px 5px rgba(0,0,0,0.5);
+    box-shadow: 5px 5px 12px 5px rgba(0,0,0,0.2);
     border-radius: 3px;
-    margin-bottom: 5px;
-    padding: 10px 0px;
+    display: block;
 }
-.team-list-content:hover > div.row {
+.well-custom:hover {
     background: linear-gradient(to right, #323645,#3d3f4b);
+    color: #fff;
+    text-decoration: none;
+}
+.well-custom:focus {
     color: #fff;
     text-decoration: none;
 }
