@@ -5,6 +5,7 @@
 @section('style')
     <link href="{{ asset('css/participant/footer.css') }}" rel="stylesheet">
     <link href="{{ asset('css/participant/tab-pages.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/participant/modify-table.css') }}" rel="stylesheet">
     <style type="text/css">
         #tournament-container {
             min-height: 536px;
@@ -43,7 +44,7 @@
             padding-left: 20px;
         }
         #tournament-header-registration {
-            border: 1px solid black;
+            border-color:#a5a5a5;
             display: inline-block;
             height: 100%;
             margin-left: 15px;
@@ -80,15 +81,14 @@
             margin-bottom: 15px;
             padding: 6px 12px;
             width: 200px;
+            color:#fc4028;
         }
 
         #tournament-body {
+            margin-top:10px;
             padding: 0px 15px;
         }
         #tournament-body > div.well {
-            background-color: #fff;
-            border: 1px solid #000;
-            border-radius: 0;
             min-height: 386px;
         }
         .well-title {
@@ -110,6 +110,7 @@
             margin-bottom: 0;
             margin-top: 20px;
         }
+
         table.table-tournament-detail > tbody > tr > td:first-child {
             font-weight: bold;
         }
@@ -123,12 +124,15 @@
             min-height: 384px;
             overflow-x: hidden;
             overflow-y: auto;
+            color:#e3e3e3;
         }
         .prizes-container {
             margin-top: 20px;
         }
         .prizes-content {
-            border: 1px solid #000;
+            color:#e3e3e3;
+            border: 1px solid #5f6471;
+            background: linear-gradient(to right, #2f313a, #2f3341);
             display: flex;
             display: -webkit-flex;
             flex-direction: row;
@@ -152,6 +156,7 @@
             width: 125px;
         }
         .prizes-rank > h1 {
+            color: #232323;
             font-size: 78px;
             transform: translate(7px, -32px) rotateZ(-15deg);
             -webkit-transform: translate(7px, -32px) rotateZ(-15deg);
@@ -173,7 +178,6 @@
             background-color: #b87333;
         }
         .prizes-detail-container {
-            background-color: #eee;
             height: 100%;
             width: 675px;
         }
@@ -204,21 +208,21 @@
             </div>
             <div id="tournament-header-detail">
                 <h1 id="tournament-header-detail-name">{{ $tournament->name }}</h1>
-                <p class="tournament-header-detail-other">Organized By : {{ $tournament->owner->name }}</p>
-                <p class="tournament-header-detail-other">Event Date : {{ date('d F Y', strtotime($tournament->start_date)) }} - {{ date('d F Y', strtotime($tournament->end_date)) }}</p>
+                <p class="tournament-header-detail-other" style="color: #afaeae;">Organized By : {{ $tournament->owner->name }}</p>
+                <p class="tournament-header-detail-other" style="color: #afaeae;">Event Date : {{ date('d F Y', strtotime($tournament->start_date)) }} - {{ date('d F Y', strtotime($tournament->end_date)) }}</p>
             </div>
-            <div id="tournament-header-registration">
+            <div id="tournament-header-registration" class="well-transparent">
                 <div id="tournament-header-registration-container">
-                    <div id="tournament-header-registration-content">
+                    <div id="tournament-header-registration-content" >
                         @if ($tournament->registration_closed >= date('Y-m-d H:i:s'))
                             <h4 id="tournament-header-registration-status">REGISTRATION IS OPEN!</h4>
                         @else
                             <h4 id="tournament-header-registration-status">REGISTRATION IS CLOSED!</h4>
                         @endif
-                        <p id="tournament-header-registration-closed">Registration Ends : {{ date('d F Y H:i', strtotime($tournament->registration_closed)) }}</p>
+                        <p id="tournament-header-registration-closed" style="color: #afaeae;">Registration Ends : {{ date('d F Y H:i', strtotime($tournament->registration_closed)) }}</p>
                         @if ($tournament->registration_closed >= date('Y-m-d H:i:s'))
                             @if ($participant)
-                                <a href="{{ url('tournament/'.$tournament->id.'/register') }}" id="tournament-header-registration-action" class="btn btn-default">REGISTER</a>
+                                <a href="{{ url('tournament/'.$tournament->id.'/register') }}" id="tournament-header-registration-action" class="btn btn-default btn-custom">REGISTER</a>
                             @else
                                 <span id="tournament-header-alert">SIGN IN TO REGISTER</span>
                             @endif
@@ -230,25 +234,23 @@
             </div>
         </div>
         <div id="tournament-body">
-            <div class="well well-lg">
-                <h4 class="well-title">Overview</h4>
-                <p>{!! $tournament->description !!}</p>
-                <div class="panel with-nav-tabs panel-default">
-                    
-                        <ul class="nav nav-tabs" style="border:none">
-                            <li class="active"><a href="#details-tab" data-toggle="tab">Details</a></li>
-                            <li><a href="#rules-tab" data-toggle="tab">Rules</a></li>
-                            <li><a href="#prizes-tab" data-toggle="tab">Prizes</a></li>
-                            <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
-                            <li><a href="#bracket-tab" data-toggle="tab">Bracket</a></li>
-                            <li><a href="#live-match-tab" data-toggle="tab">Live Match</a></li>
-                        </ul>
-                    
+            <div class="well well-lg well-transparent">
+                <h3 class="well-title">Overview</h3>
+                <p style="color:#e3e3e3;">{!! $tournament->description !!}</p>
+                <div class="panel with-nav-tabs panel-default" style="margin-top:20px;">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#details-tab" data-toggle="tab">Details</a></li>
+                        <li><a href="#rules-tab" data-toggle="tab">Rules</a></li>
+                        <li><a href="#prizes-tab" data-toggle="tab">Prizes</a></li>
+                        <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
+                        <li><a href="#bracket-tab" data-toggle="tab">Bracket</a></li>
+                        <li><a href="#live-match-tab" data-toggle="tab">Live Match</a></li>
+                    </ul>
                     <div class="panel-body">
                         <div class="tab-content">
                             <div class="tab-pane fade in active" id="details-tab">
                                 <h4 class="tab-pane-title">Details</h4>
-                                <table class="table table-striped table-tournament-detail">
+                                <table class="table table-striped table-hover table-custom table-tournament-detail">
                                     <tbody>
                                         <tr>
                                             <td>Event Type</td>

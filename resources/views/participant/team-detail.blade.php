@@ -140,51 +140,53 @@
             </div>
         </div>
         <div class="row">
-            <div class="panel with-nav-tabs panel-default">
-                <ul class="nav nav-tabs" style="border:none">
-                    <li class="active"><a href="#teams-tab" data-toggle="tab">Members</a></li>
-                    <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
-                    <li><a href="#registration-status-tab" data-toggle="tab">Tournaments</a></li>
-                </ul>
-                <div class="panel-body">
-                    <div class="tab-content">
-                        <div class="tab-pane fade in active" id="teams-tab" style="min-height: 400px;">
-                            <div style="width: 450px;margin-left: 25px;">
-                                @foreach ($team->details as $detail)
-                                    <div class="row well-custom" style="padding: 15px 0px;margin-bottom: 10px;">
-                                        <div class="col-xs-4">
-                                            <div class="thumbnail" style="height: 110px;width: 110px;margin: 0px auto;">
-                                                @if ($detail->picture_file_name)
-                                                    <img src="{{ asset('storage/member/'.$detail->picture_file_name) }}" style="height: 100px;width: 100px;">
-                                                @else
-                                                    <img src="{{ asset('img/default-profile.jpg') }}" style="height: 100px;width: 100px;">
+            <div class="well well-lg well-transparent">
+                <div class="panel with-nav-tabs panel-default">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#teams-tab" data-toggle="tab">Members</a></li>
+                        <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
+                        <li><a href="#registration-status-tab" data-toggle="tab">Tournaments</a></li>
+                    </ul>
+                    <div class="panel-body">
+                        <div class="tab-content">
+                            <div class="tab-pane fade in active" id="teams-tab" style="min-height: 400px;">
+                                <div style="width: 450px;margin-left: 25px;">
+                                    @foreach ($team->details as $detail)
+                                        <div class="row well-custom" style="padding: 15px 0px;margin-bottom: 10px;">
+                                            <div class="col-xs-4">
+                                                <div class="thumbnail" style="height: 110px;width: 110px;margin: 0px auto;">
+                                                    @if ($detail->picture_file_name)
+                                                        <img src="{{ asset('storage/member/'.$detail->picture_file_name) }}" style="height: 100px;width: 100px;">
+                                                    @else
+                                                        <img src="{{ asset('img/default-profile.jpg') }}" style="height: 100px;width: 100px;">
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-8" style="position: relative;">
+                                                <h3 style="margin-top: 15px;">{{ $detail->name }}</h3>
+                                                <p>{{ $detail->steam32_id ?: '-' }}</p>
+                                                <p style="color: #afaeae;">Joined on {{ date('d F Y', strtotime($detail->created_at)) }}</p>
+                                                @if ($detail->members_privilege == 1 && $inTeam && $isTeamLeader)
+                                                    <div style="position: absolute;right: 10px;top: -5px;">
+                                                        <a role="button" class="btn-kick-member" data-member-id="{{ $detail->id }}" data-member-name="{{ $detail->name }}">
+                                                            <i class="glyphicon glyphicon-remove-sign" style="font-size: 24px;"></i>
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                                @if ($detail->members_privilege == 2)
+                                                    <p style="position: absolute;right: 5px;bottom: -25px;font-size: 12px;color: #afaeae;"><strong>Captain</strong></p>
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="col-xs-8" style="position: relative;">
-                                            <h3 style="margin-top: 15px;">{{ $detail->name }}</h3>
-                                            <p>{{ $detail->steam32_id ?: '-' }}</p>
-                                            <p style="color: #afaeae;">Joined on {{ date('d F Y', strtotime($detail->created_at)) }}</p>
-                                            @if ($detail->members_privilege == 1 && $inTeam && $isTeamLeader)
-                                                <div style="position: absolute;right: 10px;top: -5px;">
-                                                    <a role="button" class="btn-kick-member" data-member-id="{{ $detail->id }}" data-member-name="{{ $detail->name }}">
-                                                        <i class="glyphicon glyphicon-remove-sign" style="font-size: 24px;"></i>
-                                                    </a>
-                                                </div>
-                                            @endif
-                                            @if ($detail->members_privilege == 2)
-                                                <p style="position: absolute;right: 0;bottom: -25px;font-size: 16px;color: #afaeae;"><strong>Captain</strong></p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endforeach
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
-                        <div class="tab-pane fade" id="schedule-tab">
-                            Default 2
-                        </div>
-                        <div class="tab-pane fade" id="registration-status-tab">
-                            Default 3
+                            <div class="tab-pane fade" id="schedule-tab">
+                                Default 2
+                            </div>
+                            <div class="tab-pane fade" id="registration-status-tab">
+                                Default 3
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -225,12 +227,12 @@
                                             <span class="fileinput-exists">Change</span>
                                             <input type="file" name="picture" accept="image/jpeg, image/png" required="required">
                                         </span>
-                                        <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput" style="width: 74px;float: right;">Remove</a>
+                                        <a href="#" class="btn btn-default btn-custom fileinput-exists" data-dismiss="fileinput" style="width: 74px;float: right;">Remove</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group form-group-margin-bottom-0">
-                                <button type="submit" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-save-form-profile-picture">
+                                <button type="submit" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-save-form-profile-picture">
                                     <span class="ladda-label">Save</span>
                                 </button>
                             </div>
@@ -276,7 +278,7 @@
                                         @endif
                                     </label>
                                 </div>
-                                <button type="submit" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-save-form-team-settings" style="display: inline-block;">
+                                <button type="submit" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-save-form-team-settings" style="display: inline-block;">
                                     <span class="ladda-label">Save</span>
                                 </button>
                             </div>

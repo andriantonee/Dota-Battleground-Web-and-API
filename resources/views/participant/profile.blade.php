@@ -90,41 +90,39 @@
                         </a>
                     </h2>
                     <h4>
-                        <span id="editable-email-value">{{ $participant->email }}</span>&nbsp;&nbsp;
+                        <span id="editable-email-value" style="color: #afaeae;">{{ $participant->email }}</span>&nbsp;&nbsp;
                         <a role="button" id="editable-email" class="editable-bottom-border-none">
                             <i class="glyphicon glyphicon-pencil"></i>
                         </a>
                     </h4>
                     <h6>
-                        <span id="editable-steam32_id-value">{{ $participant->steam32_id ?: '-' }}</span>&nbsp;&nbsp;
+                        <span id="editable-steam32_id-value" style="color: #afaeae;">{{ $participant->steam32_id ?: '-' }}</span>&nbsp;&nbsp;
                         <a role="button" id="editable-steam32_id" class="editable-bottom-border-none">
                             <i class="glyphicon glyphicon-pencil"></i>
                         </a>
                     </h6>
                     <a role="button" class="btn btn-default" data-toggle="modal" data-target="#settings-modal" style="position: absolute;right: 0;top: 30px;">
-                        <i class="glyphicon glyphicon-cog"></i>&nbsp;&nbsp;Settings
+                        <i class="glyphicon glyphicon-cog" style="color:#fff"></i>&nbsp;&nbsp;Settings
                     </a>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="well well-lg" style="background-color: #ffffff;border: 1px solid #000000;border-radius: 0px;">
+            <div class="well well-lg well-transparent">
                 <div class="panel with-nav-tabs panel-default" style="border: none;">
-                    <div class="panel-heading" style="background-color: transparent;border-color: #000000;">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#teams-tab" data-toggle="tab">Teams</a></li>
-                            <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
-                            <li><a href="#registration-status-tab" data-toggle="tab">Registration Status</a></li>
-                            <li><a href="#my-tournaments-tab" data-toggle="tab">My Tournaments</a></li>
-                        </ul>
-                    </div>
-                    <div class="panel-body" style="border: 1px solid #000000;border-top: none;">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#teams-tab" data-toggle="tab">Teams</a></li>
+                        <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
+                        <li><a href="#registration-status-tab" data-toggle="tab">Registration Status</a></li>
+                        <li><a href="#my-tournaments-tab" data-toggle="tab">My Tournaments</a></li>
+                    </ul>
+                    <div class="panel-body">
                         <div class="tab-content">
                             <div class="tab-pane fade in active" id="teams-tab">
                                 <div id="team-list-container">
                                     @foreach ($teams as $team)
-                                        <a class="team-list-content" href="{{ url('/team/'.$team->id) }}">
-                                            <div class="row" style="padding: 15px 5px;border: 1px solid #000000;margin: 0px;margin-bottom: 15px;">
+                                        <a class="team-list-content well-custom" href="{{ url('/team/'.$team->id) }}">
+                                            <div class="row" style="padding: 15px 5px;margin: 0px;margin-bottom: 15px;">
                                                 <div class="col-xs-2">
                                                     <div class="thumbnail" style="margin: 0px auto;width: 75px;height: 75px;">
                                                         <img src="{{ asset($team->picture_file_name ? '/storage/team/'.$team->picture_file_name : 'img/default-group.png') }}" style="width: 65px;height: 65px;">
@@ -132,16 +130,16 @@
                                                 </div>
                                                 <div class="col-xs-10">
                                                     <h3 style="margin-top: 12px;">{{ $team->name }}</h3>
-                                                    <h5>{{ $team->details_count }} Member</h5>
+                                                    <h5 style="color: #afaeae;">{{ $team->details_count }} Member</h5>
                                                 </div>
                                             </div>
                                         </a>
                                     @endforeach
                                 </div>
                                 <div style="margin: 25px 0px;text-align: center;">
-                                    <a role="button" class="btn btn-default" data-toggle="modal" data-target="#create-team-modal" style="border-radius: 0px;border-color: #000000;">
+                                    <a role="button" class="btn btn-default btn-custom" data-toggle="modal" data-target="#create-team-modal" >
                                         <div>
-                                            <i class="glyphicon glyphicon-plus-sign" style="font-size: 24px;"></i>
+                                            <i class="glyphicon glyphicon-plus-sign" style="font-size: 24px;color:#fff"></i>
                                         </div>
                                         <span style="width: 100%;text-align: center;">Create New Team</span>
                                     </a>
@@ -166,7 +164,7 @@
     <!-- Profile Picture Modal -->
     <div class="modal modal-remove-padding-right" id="profile-picture-modal" tabindex="-1" role="dialog" aria-labelledby="profile-picture-modal-label">
         <div class="modal-dialog modal-dialog-fixed-width-320" role="document">
-            <div class="modal-content">
+            <div class="modal-content modal-content-custom">
                 <div class="modal-header modal-header-border-bottom-custom">
                     <h1 class="modal-title modal-title-align-center" id="profile-picture-modal-label">Profile Picture</h1>
                 </div>
@@ -195,12 +193,12 @@
                                         <span class="fileinput-exists">Change</span>
                                         <input type="file" name="profile_picture" accept="image/jpeg, image/png" required="required">
                                     </span>
-                                    <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput" style="width: 74px;float: right;">Remove</a>
+                                    <a href="#" class="btn btn-default btn-custom fileinput-exists" data-dismiss="fileinput" style="width: 74px;float: right;">Remove</a>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group form-group-margin-bottom-0">
-                            <button type="submit" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-save-form-profile-picture">
+                            <button type="submit" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-save-form-profile-picture">
                                 <span class="ladda-label">Save</span>
                             </button>
                         </div>
@@ -213,7 +211,7 @@
     <!-- Settings Modal -->
     <div class="modal modal-remove-padding-right" id="settings-modal" tabindex="-1" role="dialog" aria-labelledby="settings-modal-label">
         <div class="modal-dialog modal-dialog-fixed-width-400" role="document">
-            <div class="modal-content">
+            <div class="modal-content modal-content-custom">
                 <div class="modal-header modal-header-border-bottom-custom">
                     <h1 class="modal-title modal-title-align-center" id="settings-modal-label">Settings</h1>
                 </div>
@@ -242,12 +240,12 @@
                                         <span class="fileinput-exists">Change</span>
                                         <input type="file" name="identity_card" accept="image/jpeg, image/png" required="required">
                                     </span>
-                                    <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput" style="width: 168px;float: right;">Remove</a>
+                                    <a href="#" class="btn btn-default btn-custom fileinput-exists" data-dismiss="fileinput" style="width: 168px;float: right;">Remove</a>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group text-right form-group-margin-bottom-0">
-                            <button type="submit" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-save-form-settings">
+                            <button type="submit" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-save-form-settings">
                                 <span class="ladda-label">Save</span>
                             </button>
                         </div>
@@ -260,7 +258,7 @@
     <!-- Create Team Modal -->
     <div class="modal modal-remove-padding-right" id="create-team-modal" tabindex="-1" role="dialog" aria-labelledby="create-team-modal-label">
         <div class="modal-dialog modal-dialog-fixed-width-350" role="document">
-            <div class="modal-content">
+            <div class="modal-content modal-content-custom">
                 <div class="modal-header modal-header-border-bottom-custom">
                     <h1 class="modal-title modal-title-align-center" id="create-team-modal-label">Create Team</h1>
                 </div>
@@ -285,7 +283,7 @@
                                             <span class="fileinput-exists">Change</span>
                                             <input type="file" name="picture" accept="image/jpeg, image/png">
                                         </span>
-                                        <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput" style="width: 75px;">Remove</a>
+                                        <a href="#" class="btn btn-default btn-custom fileinput-exists" data-dismiss="fileinput" style="width: 75px;">Remove</a>
                                     </div>
                                 </div>
                             </div>
@@ -298,7 +296,7 @@
                                             <input type="checkbox" name="with_join_password" id="ckbox-join-password" value="1" checked="checked"> Join Code
                                         </label>
                                     </div>
-                                    <button type="submit" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-create-form-create-team" style="display: inline-block;">
+                                    <button type="submit" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-create-form-create-team" style="display: inline-block;">
                                         <span class="ladda-label">Create</span>
                                     </button>
                                 </div>

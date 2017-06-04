@@ -2,7 +2,7 @@
     color:#e3e3e3;
     border: 1px solid #5f6471;
     background: linear-gradient(to right, #2f313a, #2f3341);
-    box-shadow: 5px 5px 12px 5px rgba(0,0,0,0.2);
+    box-shadow: 5px 5px 12px 5px rgba(0,0,0,0.1);
     border-radius: 3px;
     display: block;
 }
@@ -14,4 +14,9 @@
 .well-custom:focus {
     color: #fff;
     text-decoration: none;
+}
+.well-transparent{
+    background :transparent;
+    border:1px solid #2e323d;
+    box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.3);
 }

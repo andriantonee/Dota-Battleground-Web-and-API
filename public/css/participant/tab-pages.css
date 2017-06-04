@@ -1,6 +1,9 @@
 .with-nav-tabs{
     background:transparent;border:none;
 }
+.with-nav-tabs > ul.nav-tabs{
+    border:none;
+}
 .with-nav-tabs > .panel-body{
     box-shadow: 5px 5px 12px 5px rgba(0,0,0,0.2);
     background-color: #292E3A;
@@ -8,7 +11,7 @@
 .with-nav-tabs > .nav-tabs > li.active > a{
     margin: 0px;
     font-weight: bold;
-    border-color: rgb(95, 100, 114);
+    border-color: #5f6472;
     border: none; 
     border-top: 3px solid #5f6472;
     background-color: #292E3A;
