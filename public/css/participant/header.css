@@ -22,16 +22,26 @@
 }
 
 .dropdown-notifications .dropdown-toolbar{
-	background-color:#39424b;
+	background-color:#272d33;
     border: 1px solid #5f6471;
     color:#fff;
 }
-.notification.active{
+.notification{
 	background: linear-gradient(to right, #2f313a, #2f3341);
-	color:#e3e3e3;
+	color:#757474;
 	border: 1px solid #5f6471;
 }
+
+.notification.active{
+	color:#e3e3e3;
+}
 .notification.active:hover{
-	color: #fff;
-	border: 1px solid #919191;
+	background:#39424b;
+	border: 1px solid #5f6471;
+	border-bottom:none;
+}
+.notification:hover{
+	border: 1px solid #5f6471;
+	background:#39424b;
+	border-bottom:none;
 }

@@ -22,7 +22,7 @@
                                 <i class="glyphicon glyphicon-bell"></i>
                             @endif
                         </a>
-                        <div class="dropdown-container" style="background-color: #292E3A;right: 0;left: auto;margin-top: 0px;">
+                        <div class="dropdown-container" style="right: 0;left: auto;margin-top: 0px;">
                             <div class="dropdown-toolbar">
                                 <h3 class="dropdown-toolbar-title" style="line-height: 1.5;">
                                     @if ($unread_notifications)
