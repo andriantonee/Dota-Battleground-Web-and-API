@@ -23,10 +23,10 @@
 @section('content')
     <div id="wrapper">
         <div id="page-wrapper">
-            <div class="container-fluid">
-                <div class="row" style="border-bottom: 1px solid black;">
+            <div class="container-fluid well well-transparent">
+                <div class="row" style="border-bottom: 1px solid #e3e3e3;">
                     <div class="col-xs-12">
-                        <h2 style="margin-top: 0px;">Create New Tournament</h2>
+                        <h2 style="margin-top: 0px;color:#fff">Create New Tournament</h2>
                     </div>
                 </div>
                 <div class="row" style="margin-top: 5px;">
@@ -189,7 +189,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12 text-center">
-                            <button type="submit" id="btn-tournament-create" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9">
+                            <button type="submit" id="btn-tournament-create" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9">
                                 <span class="ladda-label">Create</span>
                             </button>
                         </div>

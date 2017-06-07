@@ -11,9 +11,10 @@
 
         #tournament-register-header {
             padding: 0 15px;
+            color:#fff;
         }
         #tournament-register-header > div.col-xs-12 {
-            border-bottom: 1px solid black;
+            border-bottom: 1px solid #fff;
         }
         #tournament-register-header h3 {
             margin-top: 0;
@@ -25,20 +26,21 @@
             padding: 0 15px;
         }
         #tournament-register-body > div:last-child {
-            border-left: 1px solid black;
+            border-left: 1px solid #5f6472;
             min-height: 469px;
         }
         p.tournament-register-body-title {
+            color:#fff;
             margin-bottom: 5px;
         }
         h3.tournament-register-body-title {
-            border-bottom: 1px solid black;
+            color:#fff;
+            border-bottom: 1px solid #c9c9c9;
             margin-bottom: 0;
             margin-top: 0;
             padding-bottom: 5px;
         }
         .list-group-team {
-            border: 1px solid black;
             max-height: 104px;
             margin-bottom: 10px;
             min-height: 104px;
@@ -47,7 +49,6 @@
             overflow-y: auto;
         }
         .list-group-team-item {
-            border: 1px solid black;
             padding: 5px;
             user-select: none;
             -webkit-user-select: none;
@@ -105,7 +106,7 @@
             display: inline-block;
         }
         .no-team-available {
-            color: #eee;
+            color:#ba3f3f;
             font-size: 20px;
             margin: 0;
         }
@@ -114,7 +115,7 @@
         }
 
         .list-group-member {
-            border: 1px solid black;
+            border:1px solid #5f6471;
             max-height: 212px;
             min-height: 212px;
             padding: 10px 30px;
@@ -148,8 +149,8 @@
         .list-group-member-item-detail {
             display: inline-block;
             margin: 0 10px;
-            min-width: 234px;
-            max-width: 234px;
+            min-width: 200px;
+            max-width: 200px;
             vertical-align: middle;
         }
         .list-group-member-item-detail > p {
@@ -173,16 +174,17 @@
             margin: 0;
         }
         .selected-member-container {
-            border: 1px solid black;
+            border: 1px solid #5f6471;
             border-top: 0;
             margin-bottom: 10px;
         }
         .selected-member-container p:first-child {
-            border-right: 1px solid black;
+            border-right: 1px solid #5f6471;
             padding-left: 30px;
             width: 304px;
         }
         .selected-member-container p {
+            color:#fff;
             display: inline-block;
             font-size: large;
             font-weight: bold;
@@ -190,7 +192,7 @@
             padding: 5px;
         }
         .no-team-selected {
-            color: #eee;
+            color:#ba3f3f;
             font-size: 32px;
         }
         .no-team-selected > i.fa.fa-times {
@@ -205,6 +207,7 @@
             margin-top: 20px;
         }
         .payment-tutorial-container li {
+            color:#fff;
             padding: 0 15px;
         }
         .list-group-bank-container {
@@ -220,11 +223,11 @@
             margin-right: 32px;
         }
         .list-group-bank-item {
-            border: 1px solid black;
+            border: 1px solid #5f6471;
             width: 180px;
         }
         .list-group-bank-item img {
-            border-bottom: 1px solid black;
+            border-bottom: 1px solid #5f6471;
             height: 50px;
             padding: 5px;
             width: 100%;
@@ -259,10 +262,10 @@
                 <form id="form-tournament-register" data-tournament-name="{{ $tournament->name }}">
                     <p class="tournament-register-body-title">Select Your Team</p>
                     <input type="hidden" name="team" value="" id="team">
-                    <div class="list-group-team">
+                    <div class="list-group-team well well-transparent">
                         @if (count($teams) > 0)
                             @foreach ($teams as $team)
-                                <div class="list-group-team-item" data-team-id="{{ $team->id }}">
+                                <div class="list-group-team-item well-custom" data-team-id="{{ $team->id }}">
                                     <div class="list-group-team-item-img">
                                         @if ($team->picture_file_name)
                                             <img src="{{ asset('storage/team/'.$team->picture_file_name) }}">
@@ -272,7 +275,7 @@
                                     </div>
                                     <div class="list-group-team-item-detail">
                                         <h4>{{ $team->name }}</h4>
-                                        <p>{{ $team->details_count }} Member</p>
+                                        <p style="color:#5f6472">{{ $team->details_count }} Member</p>
                                     </div>
                                     <div class="list-group-team-item-mark">
                                         <span class="text-success fa fa-check"></span>
@@ -287,19 +290,21 @@
                         @endif
                     </div>
                     <p class="tournament-register-body-title">Choose Your Player</p>
-                    <div id="list-member-container" class="list-group-member">
-                        <div class="text-center">
-                            <p class="no-team-selected"><i class="fa fa-times"></i></p>
-                            <p class="no-team-selected">No Team Selected</p>
+                    <div class="well well-transparent">
+                        <div id="list-member-container" class="list-group-member">
+                            <div class="text-center">
+                                <p class="no-team-selected"><i class="fa fa-times" ></i></p>
+                                <p class="no-team-selected" >No Team Selected</p>
+                            </div>
+                        </div>
+                        <div class="selected-member-container">
+                            <p>Player Left</p>
+                            <p id="player-left">5</p>
                         </div>
                     </div>
-                    <div class="selected-member-container">
-                        <p>Player Left</p>
-                        <p id="player-left">5</p>
-                    </div>
                     <div class="button-container text-center">
-                        <button type="submit" id="btn-tournament-register" class="btn btn-success" disabled="disabled">Save</button>
-                        <a href="{{ url('tournament/'.$tournament->id) }}" class="btn btn-danger">Cancel</a>
+                        <button type="submit" id="btn-tournament-register" class="btn btn-default btn-accept" disabled="disabled">Save</button>
+                        <a href="{{ url('tournament/'.$tournament->id) }}" class="btn btn-default btn-reject">Cancel</a>
                     </div>
                 </form>
             </div>
@@ -312,7 +317,7 @@
                             <div class="list-group-bank-container">
                                 <div class="list-group-bank">
                                     <div class="list-group-bank-item">
-                                        <img src="{{ asset('img/bank/bca.png') }}">
+                                        <img style="filter: brightness(1.5);" src="{{ asset('img/bank/bca2.png') }}">
                                         <div class="list-group-bank-item-detail">
                                             <h3>BCA</h3>
                                             <p>
@@ -324,7 +329,7 @@
                                 </div>
                                 <div class="list-group-bank">
                                     <div class="list-group-bank-item">
-                                        <img src="{{ asset('img/bank/bri.png') }}">
+                                        <img style="filter: brightness(2);" src="{{ asset('img/bank/bri.png') }}">
                                         <div class="list-group-bank-item-detail">
                                             <h3>BRI</h3>
                                             <p>

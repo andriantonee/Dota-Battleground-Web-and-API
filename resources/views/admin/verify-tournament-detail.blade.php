@@ -6,7 +6,8 @@
     <link href="{{ asset('css/organizer/sidebar.css') }}" rel="stylesheet">
     <style type="text/css">
         .verify-tournament-detail-header {
-            border-bottom: 1px solid black;
+            border-bottom: 1px solid #e3e3e3;
+            color:#fff;
         }
         .verify-tournament-detail-header h2 {
             margin-top: 0;
@@ -43,7 +44,7 @@
 @section('content')
     <div id="wrapper">
         <div id="page-wrapper">
-            <div class="container-fluid">
+            <div class="container-fluid well well-transparent">
                 <div class="row verify-tournament-detail-header">
                     <div class="col-xs-12">
                         <h2>{{ $tournament->name }}</h2>

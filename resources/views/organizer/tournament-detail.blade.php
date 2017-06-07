@@ -8,6 +8,15 @@
     <link href="{{ asset('css/participant/tab-pages.css') }}" rel="stylesheet">
     <link href="{{ asset('css/participant/modify-modal.css') }}" rel="stylesheet">
     <style type="text/css">
+        .pending{
+            color : #5F89A3;/*blue*/
+        }
+        .reject{
+            color:#ba3f3f;/*red*/
+        }
+        .in-progress{
+            color:#20bc36;/*green*/
+        }
         .text-left {
             text-align: left !important;
         }
@@ -40,64 +49,62 @@
 @section('content')
     <div id="wrapper">
         <div id="page-wrapper">
-            <div class="container-fluid">
-                <div class="row" style="border-bottom: 1px solid black;">
+            <div class="container-fluid well well-transparent">
+                <div class="row" style="border-bottom: 1px solid #e3e3e3;">
                     <div class="col-xs-6">
-                        <h2 style="margin-top: 0px;">{{ $tournament->name }}</h2>
+                        <h2 style="margin-top: 0px;color:#fff">{{ $tournament->name }}</h2>
                     </div>
                     <div class="col-xs-6 text-right">
                         @if ($tournament->approval)
                             @if ($tournament->approval->accepted == 1)
                                 @if (date('Y-m-d H:i:s') <= $tournament->registration_closed)
-                                    <h4>Status : Registration Open</h4>
+                                    <h4>Status : <span class="in-progress">Registration Open</span></h4>
                                 @else
                                     @if ($tournament->start == 0)
                                         @if (count($tournament->registrations) >= 2)
                                             <h4 style="margin: 0;">
-                                                Status : Registration Closed
-                                                <button id="btn-tournament-start" class="btn btn-default" style="margin-left: 15px;">
+                                                Status : <span class="in-progress">Registration Closed</span>
+                                                <button id="btn-tournament-start" class="btn btn-default btn-custom" style="margin-left: 15px;">
                                                     <i class="fa fa-play"></i>&nbsp;&nbsp;Start
                                                 </button>
                                             </h4>
                                         @else
                                             <h4 style="margin: 0;">
-                                                Status : Registration Closed
-                                                <button id="btn-tournament-end" class="btn btn-default" style="margin-left: 15px;">
+                                                Status : <span class="in-progress">Registration Closed </span>
+                                                <button id="btn-tournament-end" class="btn btn-default btn-custom" style="margin-left: 15px;">
                                                     <i class="fa fa-stop"></i>&nbsp;&nbsp;End
                                                 </button>
                                             </h4>
                                         @endif
                                     @else
                                         @if ($tournament->complete == 0)
-                                            <h4>Status : In Progress</h4>
+                                            <h4>Status : <span class="in-progress">In Progress </span></h4>
                                         @else
-                                            <h4>Status : Complete</h4>
+                                            <h4>Status : <span class="in-progress">Complete </span></h4>
                                         @endif
                                     @endif
                                 @endif
                             @elseif ($tournament->approval->accepted == 0)
-                                <h4>Status : Rejected</h4>
+                                <h4>Status : <span class="reject">Rejected</span></h4>
                             @endif
                         @else
-                            <h4>Status : Pending</h4>
+                            <h4>Status : <span class="pending">Pending</span></h4>
                         @endif
                     </div>
                 </div>
                 <div style="margin-top: 25px;margin-bottom: 25px;">
-                    <div class="panel with-nav-tabs panel-default" style="border: none;">
-                        <div class="panel-heading" style="background-color: transparent;border-color: #000000;">
-                            <ul class="nav nav-tabs">
-                                <li class="active"><a href="#settings-tab" data-toggle="tab">Settings</a></li>
-                                <li><a href="#participants-tab" data-toggle="tab">Participants</a></li>
-                                <li><a href="#brackets-tab" data-toggle="tab">Brackets</a></li>
-                                @if ($tournament->start && count($tournament->registrations) >= 2)
-                                    <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
-                                    <li><a href="#report-match-tab" data-toggle="tab">Report Match</a></li>
-                                    <li><a href="#live-match-tab" data-toggle="tab">Live Match</a></li>
-                                @endif
-                            </ul>
-                        </div>
-                        <div class="panel-body" style="border: 1px solid #000000;border-top: none;">
+                    <div class="panel with-nav-tabs panel-default">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#settings-tab" data-toggle="tab">Settings</a></li>
+                            <li><a href="#participants-tab" data-toggle="tab">Participants</a></li>
+                            <li><a href="#brackets-tab" data-toggle="tab">Brackets</a></li>
+                            @if ($tournament->start && count($tournament->registrations) >= 2)
+                                <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
+                                <li><a href="#report-match-tab" data-toggle="tab">Report Match</a></li>
+                                <li><a href="#live-match-tab" data-toggle="tab">Live Match</a></li>
+                            @endif
+                        </ul>
+                        <div class="panel-body">
                             <div class="tab-content">
                                 <div class="tab-pane fade in active" id="settings-tab">
                                     <div class="row">
@@ -255,7 +262,7 @@
                                         </div>
                                         <div class="form-group" style="margin-bottom: 0;">
                                             <div class="col-xs-offset-5 col-xs-5 text-right">
-                                                <button type="submit" id="btn-tournament-settings" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9">
+                                                <button type="submit" id="btn-tournament-settings" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9">
                                                     <span class="ladda-label">Update</span>
                                                 </button>
                                             </div>
@@ -263,11 +270,11 @@
                                     </form>
                                 </div>
                                 <div class="tab-pane fade" id="participants-tab">
-                                    <h2 style="border-bottom: 1px solid black;margin: 0;padding-bottom: 10px;">Registered <span style="float: right;"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;{{ count($tournament->registrations) }}/{{ $tournament->max_participant }}</span></h2>
+                                    <h2 style="border-bottom: 1px solid #e3e3e3;margin: 0;padding-bottom: 10px;">Registered <span style="float: right;"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;{{ count($tournament->registrations) }}/{{ $tournament->max_participant }}</span></h2>
                                     @if (count($tournament->registrations) > 0)
                                         <div class="participants-group-list" style="margin-top: 15px;">
                                             @foreach ($tournament->registrations as $registration)
-                                                <div class="participants-group-list-item" style="background-color: #e6e6e6;border: 1px solid black;padding: 10px;">
+                                                <div class="participants-group-list-item well-custom" style="padding: 10px;">
                                                     <div style="margin-bottom: 10px;">
                                                         <div style="display: inline-block;vertical-align: middle;">
                                                             @if ($registration->team->picture_file_name)
@@ -277,12 +284,12 @@
                                                             @endif
                                                         </div>
                                                         <div style="display: inline-block;margin-left: 15px;vertical-align: middle;">
-                                                            <h3 style="margin: 0;">{{ $registration->team->name }}</h3>
+                                                            <h3 style="margin: 0;color:#fff">{{ $registration->team->name }}</h3>
                                                         </div>
                                                     </div>
                                                     <div>
                                                         <div style="padding-left: 79px;width: 600px;">
-                                                            <table class="table table-striped" style="background-color: #c7c7c7;margin-bottom: 0;">
+                                                            <table class="table table-striped table-hover table-custom" style="margin-bottom: 0;">
                                                                 <tbody>
                                                                     @foreach ($registration->members as $member)
                                                                         <tr>
@@ -358,13 +365,13 @@
                                         </div>
                                         <div class="form-group" style="margin-bottom: 0;">
                                             <div class="col-xs-offset-5 col-xs-5 text-right">
-                                                <button type="submit" id="btn-tournament-brackets" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9">
+                                                <button type="submit" id="btn-tournament-brackets" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9">
                                                     <span class="ladda-label">Generate</span>
                                                 </button>
                                             </div>
                                         </div>
                                     </form>
-                                    <h2 style="border-bottom: 1px solid black;margin-bottom: 15px;padding-bottom: 10px;padding-left: 25px;">Preview</h2>
+                                    <h2 style="border-bottom: 1px solid #e3e3e3;margin-bottom: 15px;padding-bottom: 10px;padding-left: 25px;">Preview</h2>
                                     @if (count($tournament->registrations) >= 2)
                                         <div style="width: 100%;text-align: center;">
                                             <iframe id="tournament-brackets-iframe" src="http://challonge.com/{{ $tournament->challonges_url }}/module" width="90%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
@@ -380,7 +387,7 @@
                                 @if ($tournament->start && count($tournament->registrations) >= 2)
                                     <div class="tab-pane fade" id="schedule-tab">
                                         @if ($tournament->type == 1)
-                                            <table class="table table-bordered table-content-centered" style="margin-bottom: 0;">
+                                            <table class="table table-bordered table-striped table-content-centered table-schedule" style="margin-bottom: 0;">
                                                 <thead>
                                                     <tr>
                                                         <th style="width: 201px;">Round</th>
@@ -397,7 +404,7 @@
                                                         @foreach ($tournament->matches[$round_id] as $key_match => $match)
                                                             <tr>
                                                                 @if ($key_match == 0)
-                                                                    <td id="round-{{ $round_id }}-title" rowspan="{{ count($tournament->matches[$round_id]) }}">
+                                                                    <td class="round" id="round-{{ $round_id }}-title" rowspan="{{ count($tournament->matches[$round_id]) }}">
                                                                         @if ($round_id < $tournament->max_round - 1)
                                                                             Round {{ $round_id }}
                                                                         @elseif ($round_id == $tournament->max_round - 1)
@@ -441,7 +448,7 @@
                                                     @if (isset($tournament->matches[0]))
                                                         @if (isset($tournament->matches[0][0]))
                                                             <tr>
-                                                                <td id="round-0-title" rowspan="1">Bronze Match</td>
+                                                                <td class="round" id="round-0-title" rowspan="1">Bronze Match</td>
                                                                 <td>1</td>
                                                                 <td>
                                                                     @if (isset($tournament->matches[0][0]->participants[0]))
@@ -476,8 +483,8 @@
                                                 </tbody>
                                             </table>
                                         @elseif ($tournament->type == 2)
-                                            {{-- <h2 style="border-bottom: 1px solid black;margin-bottom: 15px;margin-top: 0;padding-bottom: 10px;">Upper Bracket</h2>
-                                            <table class="table table-bordered">
+                                            {{-- <h2 style="border-bottom: 1px solid #e3e3e3; margin-bottom: 15px;margin-top: 0;padding-bottom: 10px;">Upper Bracket</h2>
+                                            <table class="table table-bordered table-striped table-schedule">
                                                 <thead>
                                                     <tr>
                                                         <th>Round</th>
@@ -490,7 +497,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td rowspan="3" style="text-align: center;vertical-align: middle;">Round 1</td>
+                                                        <td class="round" rowspan="3" style="text-align: center;vertical-align: middle;">Round 1</td>
                                                         <td>1</td>
                                                         <td>Team A</td>
                                                         <td>vs</td>
@@ -513,8 +520,8 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            <h2 style="border-bottom: 1px solid black;margin-bottom: 15px;margin-top: 0;padding-bottom: 10px;">Lower Bracket</h2>
-                                            <table class="table table-bordered" style="margin-bottom: 0;">
+                                            <h2 style="border-bottom: 1px solid #e3e3e3;margin-bottom: 15px;margin-top: 0;padding-bottom: 10px;">Lower Bracket</h2>
+                                            <table class="table table-bordered table-striped table-schedule" style="margin-bottom: 0;">
                                                 <thead>
                                                     <tr>
                                                         <th>Round</th>
@@ -527,7 +534,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td rowspan="3" style="text-align: center;vertical-align: middle;">Round 1</td>
+                                                        <td class="round" rowspan="3" style="text-align: center;vertical-align: middle;">Round 1</td>
                                                         <td>1</td>
                                                         <td>Team A</td>
                                                         <td>vs</td>
@@ -570,7 +577,7 @@
     <!-- Schedule Modal -->
     <div class="modal modal-remove-padding-right" id="schedule-modal" tabindex="-1" role="dialog" aria-labelledby="schedule-modal-label">
         <div class="modal-dialog modal-dialog-fixed-width-500" role="document">
-            <div class="modal-content">
+            <div class="modal-content modal-content-custom">
                 <div class="modal-header modal-header-border-bottom-custom">
                     <h3 id="schedule-round-match-title" class="text-center" style="margin: 0;">Round 1 - Match 2</h3>
                     <h3 id="schedule-versus-title" class="text-center" style="margin: 0;margin-top: 5px;">Team C VS Team D</h3>
@@ -598,7 +605,7 @@
                             </div>
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-schedule">
+                            <button type="submit" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-schedule">
                                 <span class="ladda-label">Save</span>
                             </button>
                         </div>

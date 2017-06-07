@@ -1,15 +1,32 @@
+.table-hover tbody tr:hover td, 
+.table-hover tbody tr:hover th {
+  background-color: #39424b;
+}
+
+/*table-custom*/
 .table-custom{
     background-color:#242f39;
 }
 
 .table-custom.table-striped> tbody > tr:nth-child(2n+1) > td, 
 .table-custom.table-striped > tbody > tr:nth-child(2n+1) > th {
-   background-color:#363b49;
+   background-color:#444b5e;
 }
 
+.table-custom > tbody > tr > td, 
+.table-custom > tbody > tr > th, 
+.table-custom > tfoot > tr > td, 
+.table-custom > tfoot > tr > th, 
+.table-custom > thead > tr > td, 
+.table > thead > tr > th {
+    border-top: none;
+}
+
+/*table-match*/
 .table-match{
     box-shadow: 5px 5px 12px 5px rgba(0,0,0,0.3);
 }
+
 .table-match.table-radiant.table-striped> tbody > tr:nth-child(2n+1) > td, 
 .table-match.table-radiant.table-striped > tbody > tr:nth-child(2n+1) > th {
    background-color: #313d36;
@@ -27,14 +44,6 @@
 .table-match > thead{
     background-color:rgba(0,0,0,0.4);
 }
-.table-custom > tbody > tr > td, 
-.table-custom > tbody > tr > th, 
-.table-custom > tfoot > tr > td, 
-.table-custom > tfoot > tr > th, 
-.table-custom > thead > tr > td, 
-.table > thead > tr > th {
-    border-top: none;
-}
 
 .table-match > tbody > tr > td{
     vertical-align:middle;
@@ -49,11 +58,6 @@
     display:inline-block;
 }
 
-.table-hover.table-striped tbody tr:hover td, 
-.table-hover.table-striped tbody tr:hover th {
-  background-color: #39424b;
-}
-
 .table-ability > tbody > tr >td{
     padding:2px;text-align:center;
 }
@@ -64,4 +68,26 @@
 
 .table-ability > thead > tr > th{
     text-align:center;
+}
+
+/*table-schedule*/
+.table-schedule.table-bordered,
+.table-schedule.table-bordered > thead > tr > th,
+.table-schedule.table-bordered > tbody > tr > th,
+.table-schedule.table-bordered > tfoot > tr > th,
+.table-schedule.table-bordered > thead > tr > td,
+.table-schedule.table-bordered > tbody > tr > td,
+.table-schedule.table-bordered > tfoot > tr > td {
+   border: 1px solid #5f6471;
+}
+
+.table-schedule.table-striped> tbody > tr:nth-child(2n+1) > td, 
+.table-schedule.table-striped > tbody > tr:nth-child(2n+1) > th {
+   background-color:#333847;
+}
+.table-schedule.table-striped> tbody > tr:nth-child(2n+1) > td.round{
+  background-color:#292E3A;
+}
+.table-schedule > thead{
+  background: linear-gradient(to right, #232520, #272A30);
 }

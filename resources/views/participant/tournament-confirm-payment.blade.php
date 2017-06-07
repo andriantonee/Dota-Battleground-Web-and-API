@@ -13,7 +13,7 @@
             padding: 0 15px;
         }
         #tournament-confirm-payment-header > div.col-xs-12 {
-            border-bottom: 1px solid black;
+            border-bottom: 1px solid #fff;
         }
         #tournament-confirm-payment-header h3 {
             margin-top: 0;
@@ -52,7 +52,7 @@
     <div id="tournament-confirm-payment-container" class="container">
         <div id="tournament-confirm-payment-header" class="row">
             <div class="col-xs-12">
-                <h3>Confirm Payment - {{ $tournament_registration->tournament->name }}</h3>
+                <h3 style="color:#fff">Confirm Payment - {{ $tournament_registration->tournament->name }}</h3>
             </div>
         </div>
         <div id="tournament-confirm-payment-body" class="row">
@@ -143,7 +143,7 @@
                             </tr>
                             <tr>
                                 <td class="text-right" colspan="2">
-                                    <button type="submit" id="btn-tournament-confirm-payment" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9">
+                                    <button type="submit" id="btn-tournament-confirm-payment" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9">
                                         <span class="ladda-label">Confirm</span>
                                     </button>
                                 </td>

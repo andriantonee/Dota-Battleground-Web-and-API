@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse" style="min-width: 1024px;border-radius: 0px;margin-bottom: 0px;">
+<nav class="navbar navbar-inverse navbar-custom" style="min-width: 1024px;border-radius: 0px;margin-bottom: 0px;">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" style="display: table-cell;vertical-align: middle;height: 50px;padding: 0px;padding-right: 15px;float: none;" href="{{ url('/') }}">

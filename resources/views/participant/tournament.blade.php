@@ -137,7 +137,7 @@
                     <div class="collapse in list-group-item-detail" id="filter-prices">
                         <div class="radio" style="margin-top: 0;">
                             <label>
-                                <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-1" value="1">&nbsp;Dibawah Rp. 50.000
+                                <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-1" value="1">&nbsp;Below Rp. 50.000
                             </label>
                         </div>
                         <div class="radio">
@@ -152,7 +152,7 @@
                         </div>
                         <div class="radio" style="margin-bottom: 0;">
                             <label>
-                                <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-4" value="4">&nbsp;Diatas Rp. 150.000
+                                <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-4" value="4">&nbsp;Above Rp. 150.000
                             </label>
                         </div>
                     </div>

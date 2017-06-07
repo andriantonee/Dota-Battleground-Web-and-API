@@ -40,7 +40,6 @@
             padding: 0px 15px;
         }
         .container-login-header-img {
-            background-color: black;
             display: inline-block;
             margin-top: 10px;
             padding: 5px;
@@ -86,7 +85,7 @@
                         <!-- All message that want to deliver to the user -->
                     </ul>
                 </div>
-                <div class="container-login">
+                <div class="container-login well-transparent">
                     <div class="container-login-header">
                         <div class="container-login-header-img">
                             <img src="{{ asset('/img/dota-2-logo.png') }}">
@@ -112,7 +111,7 @@
                             </div>
                         </div>
                         <div class="container-login-footer">
-                            <button type="submit" id="btn-admin-login" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9">
+                            <button type="submit" id="btn-admin-login" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9">
                                 <span class="ladda-label">Sign In</span>
                             </button>
                         </div>

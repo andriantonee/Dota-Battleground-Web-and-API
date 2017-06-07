@@ -6,6 +6,11 @@
 	color:#fff;
 	background-color: #39424b;
 }
+.btn-default:focus{
+    background-color: #292E3A;
+    color:#fff;
+    outline:none;
+}
 .btn-custom {
     color: #D8D8D8;
     background : linear-gradient(to bottom, #a43827, #c64823);
@@ -40,3 +45,4 @@
     border-color:#d14f4f;
     background : linear-gradient(to bottom, #9b1b1b, #b74747);
 }
+

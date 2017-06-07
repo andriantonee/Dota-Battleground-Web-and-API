@@ -13,10 +13,10 @@
 @section('content')
     <div id="wrapper">
         <div id="page-wrapper">
-            <div class="container-fluid">
-                <div class="row" style="border-bottom: 1px solid black;">
+            <div class="container-fluid well well-transparent">
+                <div class="row" style="border-bottom: 1px solid #e3e3e3;">
                     <div class="col-xs-4">
-                        <h2 style="margin-top: 0px;">Change Password</h2>
+                        <h2 style="margin-top: 0px;color:#fff">Change Password</h2>
                     </div>
                 </div>
                 <div style="margin-top: 25px;">
@@ -47,7 +47,7 @@
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <button type="submit" class="btn btn-default ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-organizer-password">
+                                    <button type="submit" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-organizer-password">
                                         <span class="ladda-label">Change</span>
                                     </button>
                                 </div>

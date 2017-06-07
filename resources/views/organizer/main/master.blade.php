@@ -15,11 +15,21 @@
         <link href="{{ asset('vendor/sweetalert/dist/sweetalert.css') }}" rel="stylesheet">
         <link href="{{ asset('vendor/ladda-bootstrap/dist/ladda-themeless.min.css') }}" rel="stylesheet">
         <link href="{{ asset('css/non-responsive.css') }}" rel="stylesheet">
+
+        <link href="{{ asset('css/participant/modify-button.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/participant/modify-well.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/participant/modify-icon.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/participant/header.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/participant/modify-table.css') }}" rel="stylesheet">
         <style type="text/css">
             .divider-vertical {
                 height: 30px;
                 margin: 10px 2px;
                 border-right: 1px solid #FFF;
+            }
+            body{
+                color: #D8D8D8;
+                background-color: #272A33;
             }
         </style>
         @yield('style')
