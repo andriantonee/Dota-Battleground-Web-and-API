@@ -53,6 +53,7 @@ Route::group(['prefix' => 'organizer', 'namespace' => 'Organizer'], function() {
         Route::put('/tournament/{id}/start', 'TournamentController@start');
         Route::put('/tournament/{id}/end', 'TournamentController@end');
         Route::put('/match/{id}/schedule', 'MatchController@updateSchedule');
+        Route::put('/match/{id}/score', 'MatchController@updateScore');
     });
 });
 
@@ -64,6 +65,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function() {
         Route::post('/tournament/{id}/decline', 'TournamentController@decline');
         Route::post('/tournament-payment/{id}/approve', 'TournamentController@approvePayment');
         Route::post('/tournament-payment/{id}/decline', 'TournamentController@declinePayment');
+
+        Route::put('/dota-2/abilities', 'Dota2Controller@updateAbilities');
+        Route::put('/dota-2/heroes', 'Dota2Controller@updateHeroes');
+        Route::put('/dota-2/items', 'Dota2Controller@updateItems');
     });
 });
 

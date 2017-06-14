@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Match;
 use App\Team;
 use App\Tournament;
 use GuzzleHttp\Client as GuzzleClient;
@@ -190,6 +191,48 @@ class GuzzleHelper
             $xml_obj = simplexml_load_string($response->getBody()->__toString());
             $obj = json_decode(json_encode((array) $xml_obj), false);
             return $obj;
+        } catch (RequestException $e) {
+            return null;
+        }
+    }
+
+    public static function requestDota2MatchDetails($dota2_match_id)
+    {
+        $http = new GuzzleClient();
+
+        try {
+            $response = $http->get('http://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/v1', [
+                'query' => [
+                    'key' => env('DOTA2_API_KEY', ''),
+                    'match_id' => $dota2_match_id
+                ]
+            ]);
+
+            return json_decode($response->getBody()->__toString(), false);
+        } catch (RequestException $e) {
+            return null;
+        }
+    }
+
+    public static function updateTournamentMatchScore(Tournament $tournament, Match $match, $scores_csv, $winner_id)
+    {
+        $http = new GuzzleClient();
+
+        try {
+            $challonge_tournament_id = $tournament->challonges_id;
+            $challonge_match_id = $match->challonges_match_id;
+
+            $response = $http->put('https://api.challonge.com/v1/tournaments/'.$challonge_tournament_id.'/matches/'.$challonge_match_id.'.json', [
+                'query' => [
+                    'api_key' => env('CHALLONGE_API_KEY', ''),
+                    'match' => [
+                        'scores_csv' => $scores_csv,
+                        'winner_id' => $winner_id
+                    ]
+                ]
+            ]);
+
+            return json_decode($response->getBody()->__toString(), false);
         } catch (RequestException $e) {
             return null;
         }

@@ -436,7 +436,7 @@
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"75"
+		"ItemCost"						"70"
 		"ItemShopTags"					"armor"
 		"ItemQuality"					"consumable"
 		"ItemAliases"					"faerie fire"
@@ -741,6 +741,11 @@
 				"var_type"				"FIELD_INTEGER"
 				"consumed_bonus"	"60"
 			}
+			"04"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"consumed_bonus_night_vision"	"150"
+			}
 		}
 	}
 
@@ -789,7 +794,6 @@
 		"ItemShopTags"					"agi"
 		"ItemQuality"					"component"
 		"ItemAliases"					"slippers of agility"
-		"SideShop"						"1"
 
 		// Special	
 		//-------------------------------------------------------------------------------------------------------------
@@ -1152,7 +1156,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"1200"
+		"ItemCost"						"1100"
 		"ItemShopTags"					"unique"
 		"ItemQuality"					"component"
 		"ItemAliases"					"morbid mask"
@@ -1165,7 +1169,7 @@
 			"01"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_damage"		"15"
+				"bonus_damage"		"10"
 			}
 			"02"
 			{
@@ -1577,7 +1581,7 @@
 		
 		// Stats
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCooldown"				"25.0"		 
+		"AbilityCooldown"				"20.0"		 
 		"AbilitySharedCooldown"			"ethereal"
 		
 		// Item Info
@@ -1674,7 +1678,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"110"
+		"ItemCost"						"100"
 		"ItemShopTags"					"consumable"
 		"ItemQuality"					"consumable"
 		"ItemAliases"					"enchanted mango"
@@ -1684,6 +1688,7 @@
 		"SideShop"						"0"
 		"ItemHideCharges"				"1"
 		"IsTempestDoubleClonable"		"0"
+		"ItemSellable"					"0"
 
 		// Special	
 		//-------------------------------------------------------------------------------------------------------------
@@ -1828,7 +1833,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"660"
+		"ItemCost"						"650"
 		"ItemShopTags"					"consumable"
 		"ItemQuality"					"consumable"
 		"ItemAliases"					"bottle"
@@ -1889,7 +1894,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"65"
+		"ItemCost"						"60"
 		"ItemShopTags"					"consumable"
 		"ItemQuality"					"consumable"
 		"ItemAliases"					"observer ward"
@@ -2043,13 +2048,12 @@
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"165"
+		"ItemCost"						"160"
 		"ItemQuality"					"common"
 		"ItemAliases"					"ward"
 		"ItemShareability"				"ITEM_FULLY_SHAREABLE_STACKING"
 		"ItemPurchasable"				"0"
-		"ItemDeclarations"				"DECLARE_PURCHASES_TO_SPECTATORS"
-		"ItemDisassembleRule"				"DOTA_ITEM_DISASSEMBLE_NEVER"
+		"ItemDisassembleRule"			"DOTA_ITEM_DISASSEMBLE_NEVER"
 		"IsTempestDoubleClonable"		"0"
 		
 		// Stats
@@ -2099,7 +2103,7 @@
 			"08"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"observer_duration_minutes_tooltip"		"6"
+				"observer_duration_minutes_tooltip"		"8"
 			}
 			"09"
 			{
@@ -2588,7 +2592,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"2400"
+		"ItemCost"						"2200"
 		"ItemShopTags"					"damage"
 		"ItemQuality"					"secret_shop"
 		"ItemAliases"					"demon edge"
@@ -2601,7 +2605,7 @@
 			"01"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_damage"			"46"
+				"bonus_damage"			"42"
 			}
 		}
 	}
@@ -2980,7 +2984,7 @@
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_stat"			"9"
+				"bonus_stat"			"10"
 			}	
 			"03"
 			{
@@ -3007,7 +3011,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"1550"	
+		"ItemCost"						"1650"	
 		"ItemShopTags"					""
 		"ItemAliases"					"hom"
 		
@@ -3043,7 +3047,7 @@
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityManaCost"				"0"
-		"ItemCost"						"2050"
+		"ItemCost"						"2150"
 		"ItemShopTags"					"attack_speed;hard_to_tag"
 		"ItemQuality"					"common"
 		"ItemAliases"					"hand of midas"
@@ -3061,12 +3065,12 @@
 			"02"
 			{
 				"var_type"				"FIELD_FLOAT"
-				"xp_multiplier"			"2.5"
+				"xp_multiplier"			"1.85"
 			}
 			"03"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_gold"			"190"
+				"bonus_gold"			"200"
 			}
 			"04"
 			{
@@ -3296,7 +3300,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"190"	
+		"ItemCost"						"175"	
 		"ItemShopTags"					""
 		
 		// Recipe
@@ -3321,7 +3325,7 @@
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"505"
+		"ItemCost"						"490"
 		"ItemShopTags"					"damage;int;agi;str"
 		"ItemQuality"					"common"
 		"ItemAliases"					"bracer"
@@ -3627,7 +3631,7 @@
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"2375"
+		"ItemCost"						"2275"
 		"ItemShopTags"					"lifesteal;damage;armor;regen_mana"
 		"ItemQuality"					"rare"
 		"ItemAliases"					"vladmir's offering;vlads"
@@ -4008,7 +4012,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"250"	
+		"ItemCost"						"310"	
 		"ItemShopTags"					""
 		
 		// Recipe
@@ -4017,7 +4021,7 @@
 		"ItemResult"					"item_urn_of_shadows"
 		"ItemRequirements"
 		{
-			"01"						"item_sobi_mask;item_gauntlets;item_gauntlets"
+			"01"						"item_infused_raindrop;item_circlet;item_ring_of_protection"
 		}
 	}
 	
@@ -4049,6 +4053,7 @@
 		"ItemDisplayCharges"			"1"
 		"ItemStackable"					"0"
 		"ItemPermanent"					"1"
+		"ItemDisassembleRule"				"DOTA_ITEM_DISASSEMBLE_NEVER"
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
@@ -4064,55 +4069,60 @@
 		{
 			"01"
 			{
-				"var_type"				"FIELD_INTEGER"
-				"mana_regen"			"50"
+				"var_type"				"FIELD_FLOAT"
+				"mana_regen"			"1.0"
 			}
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_strength"		"6"
+				"bonus_all_stats"		"2"
 			}
 			"03"
 			{
-				"var_type"				"FIELD_INTEGER"
-				"soul_radius"			"1400"
+				"var_type"				"FIELD_FLOAT"
+				"bonus_armor"			"2"
 			}
 			"04"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"soul_initial_charge"	"2"
+				"soul_radius"			"1400"
 			}
 			"05"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"soul_additional_charges"	"1"
+				"soul_initial_charge"	"2"
 			}
 			"06"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"soul_additional_charges"	"1"
+			}
+			"07"
 			{
 				"var_type"				"FIELD_FLOAT"
 				"soul_heal_interval"	"0.25"
 			}
-			"07"
+			"08"
 			{
 				"var_type"				"FIELD_INTEGER"
 				"soul_heal_amount"		"400"
 			}			
-			"08"
+			"09"
 			{
 				"var_type"				"FIELD_INTEGER"
 				"soul_damage_amount"	"150"
 			}
-			"09"
+			"10"
 			{
 				"var_type"				"FIELD_FLOAT"
 				"soul_heal_duration"	"8.0"
 			}
-			"10"
+			"11"
 			{
 				"var_type"				"FIELD_FLOAT"
 				"soul_damage_duration"	"8.0"
 			}
-			"11"
+			"12"
 			{
 				"var_type"				"FIELD_INTEGER"
 				"soul_release_range_tooltip"	"950"
@@ -4231,7 +4241,7 @@
 
 		// Stats		
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCooldown"				"25.0"
+		"AbilityCooldown"				"22.0"
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
@@ -4413,7 +4423,7 @@
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityCastRange"				"900"
 		"AbilityCastPoint"				"0.0"
-		"AbilityCooldown"				"14.0"
+		"AbilityCooldown"				"18.0"
 		"AbilitySharedCooldown"			"orchid"
 
 		// Item Info
@@ -4688,7 +4698,7 @@
 		"ItemResult"					"item_aether_lens"
 		"ItemRequirements"
 		{
-			"01"						"item_energy_booster;item_ring_of_health"
+			"01"						"item_energy_booster;item_void_stone"
 		}
 	}
 	
@@ -4723,7 +4733,7 @@
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_health_regen"	"8"
+				"bonus_mana_regen"		"100"
 			}
 			"03"
 			{
@@ -4733,7 +4743,7 @@
 			"04"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"spell_amp"				"5"
+				"spell_amp"				"6"
 			}
 		}
 	}
@@ -4750,7 +4760,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"900"	
+		"ItemCost"						"400"	
 		"ItemShopTags"					""
 		
 		// Recipe
@@ -4759,7 +4769,7 @@
 		"ItemResult"					"item_force_staff"
 		"ItemRequirements"
 		{
-			"01"						"item_staff_of_wizardry;item_ring_of_regen"
+			"01"						"item_staff_of_wizardry;item_ring_of_health"
 		}
 	}
 	
@@ -4786,7 +4796,7 @@
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityManaCost"				"25"
-		"ItemCost"						"2225"
+		"ItemCost"						"2250"
 		"ItemShopTags"					"int;damage;attack_speed;hard_to_tag"
 		"ItemQuality"					"rare"
 		"ItemAliases"					"fs;force staff"
@@ -4804,7 +4814,7 @@
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_health_regen"	"4"
+				"bonus_health_regen"	"6"
 			}
 			"03"
 			{
@@ -4826,7 +4836,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"250"	
+		"ItemCost"						"500"	
 		"ItemShopTags"					""
 		
 		// Recipe
@@ -4862,7 +4872,7 @@
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityManaCost"				"25"
-		"ItemCost"						"4375"
+		"ItemCost"						"4650"
 		"ItemShopTags"					"int;damage;attack_speed;hard_to_tag"
 		"ItemQuality"					"epic"
 		"ItemAliases"					"fs;force staff"
@@ -4880,7 +4890,7 @@
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_health_regen"	"4"
+				"bonus_health_regen"	"6"
 			}
 			"03"
 			{
@@ -5502,7 +5512,7 @@
 			"03"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"summon_duration"		"40"
+				"summon_duration"		"45"
 			}			
 			"04"
 			{
@@ -5612,7 +5622,7 @@
 			"03"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"summon_duration"		"40"
+				"summon_duration"		"45"
 			}			
 			"04"
 			{
@@ -5719,7 +5729,7 @@
 			"03"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"summon_duration"		"40"
+				"summon_duration"		"45"
 			}			
 			"04"
 			{
@@ -6020,7 +6030,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"1400"	
+		"ItemCost"						"0"	
 		"ItemShopTags"					""
 		
 		// Recipe
@@ -6029,7 +6039,7 @@
 		"ItemResult"					"item_heart"
 		"ItemRequirements"
 		{
-			"01"						"item_reaver;item_vitality_booster"
+			"01"						"item_reaver;item_vitality_booster;item_vitality_booster"
 		}
 	}
 	
@@ -6049,7 +6059,7 @@
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"5500"
+		"ItemCost"						"5200"
 		"ItemShopTags"					"str;regen_health;health_pool"
 		"ItemQuality"					"epic"
 		"ItemAliases"					"hot;heart of tarrasque"
@@ -6062,12 +6072,12 @@
 			"01"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_strength"		"45"
+				"bonus_strength"		"40"
 			}
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_health"			"250"
+				"bonus_health"			"500"
 			}
 			"03"
 			{
@@ -6230,7 +6240,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"600"	
+		"ItemCost"						"650"	
 		"ItemShopTags"					""
 		
 		// Recipe
@@ -6262,7 +6272,7 @@
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityManaCost"				"100"
-		"ItemCost"						"4700"
+		"ItemCost"						"4750"
 		"ItemShopTags"					"int;armor;hard_to_tag"
 		"ItemQuality"					"epic"
 		"ItemAliases"					"shiva's guard;shivas"
@@ -6365,7 +6375,7 @@
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"4900"
+		"ItemCost"						"4850"
 		"ItemShopTags"					"regen_health;regen_mana;mana_pool;health_pool"
 		"ItemQuality"					"epic"
 		"ItemAliases"					"bs;bloodstone"
@@ -6787,7 +6797,7 @@
 			"09"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"duration"	"10"
+				"duration"	"12"
 			}		
 			"10"
 			{
@@ -6850,7 +6860,7 @@
 
 		// Stats		
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCooldown"				"18.0"
+		"AbilityCooldown"				"20.0"
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
@@ -7065,7 +7075,7 @@
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"6200"
+		"ItemCost"						"6000"
 		"ItemShopTags"					"damage"
 		"ItemQuality"					"epic"
 		"ItemAliases"					"divine rapier"
@@ -7126,7 +7136,7 @@
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"5400"
+		"ItemCost"						"5200"
 		"ItemShopTags"					"damage;attack_speed;hard_to_tag"
 		"ItemQuality"					"epic"
 		"ItemAliases"					"mkb;monkey king bar"
@@ -7212,22 +7222,22 @@
 				"var_type"				"FIELD_INTEGER"
 				"bonus_damage"			"65"
 			}
-			"02"
+			"03"
 			{
 				"var_type"				"FIELD_INTEGER"
 				"aura_damage"			"60"
 			}
-			"03"
+			"04"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"aura_damage_illusions"	"40"
+				"aura_damage_illusions"	"35"
 			}
-			"04"
+			"05"
 			{
 				"var_type"				"FIELD_INTEGER"
 				"blind_pct"				"17"
 			}
-			"05"
+			"06"
 			{
 				"var_type"				"FIELD_INTEGER"
 				"aura_radius"			"700"
@@ -7356,7 +7366,7 @@
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"5520"
+		"ItemCost"						"5320"
 		"ItemShopTags"					"damage;crit"
 		"ItemQuality"					"epic"
 		"ItemAliases"					"daedalus"
@@ -7369,7 +7379,7 @@
 			"01"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_damage"			"76"
+				"bonus_damage"			"80"
 			}
 			"02"
 			{
@@ -7597,7 +7607,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"800"	
+		"ItemCost"						"900"	
 		"ItemShopTags"					""
 		
 		// Recipe
@@ -8074,7 +8084,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"300"	
+		"ItemCost"						"700"	
 		"ItemShopTags"					""
 		
 		// Recipe
@@ -8107,7 +8117,7 @@
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityManaCost"				"75"
-		"ItemCost"						"5150"
+		"ItemCost"						"5550"
 		"ItemShopTags"					"damage;attack_speed;movespeed;hard_to_tag"
 		"ItemQuality"					"epic"
 		"ItemAliases"					"sb;invis;shadow blade"
@@ -8202,7 +8212,7 @@
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"4100"
+		"ItemCost"						"3900"
 		"ItemShopTags"					"damage;str;agi;attack_speed;unique"
 		"ItemQuality"					"artifact"
 		"ItemAliases"					"sny;s&y;sy;sange and yasha"
@@ -8241,7 +8251,7 @@
 			"06"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"maim_chance"			"35"
+				"maim_chance"			"40"
 			}
 			"07"
 			{
@@ -8313,7 +8323,7 @@
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"5800"
+		"ItemCost"						"5700"
 		"ItemShopTags"					"damage;str;armor;unique;hard_to_tag"
 		"ItemQuality"					"artifact"
 		"ItemAliases"					"satanic"
@@ -8592,7 +8602,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"600"	
+		"ItemCost"						"500"	
 		"ItemShopTags"					""
 		
 		// Recipe
@@ -8617,7 +8627,7 @@
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"2050"
+		"ItemCost"						"1950"
 		"ItemShopTags"					"damage;str;unique"
 		"ItemQuality"					"artifact"
 		"ItemAliases"					"sange"
@@ -8680,7 +8690,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"800"	
+		"ItemCost"						"0"	
 		"ItemShopTags"					""
 		
 		// Recipe
@@ -8689,7 +8699,7 @@
 		"ItemResult"					"item_helm_of_the_dominator"
 		"ItemRequirements"
 		{
-			"01"						"item_gloves;item_headdress;"
+			"01"						"item_gloves;item_headdress;item_ring_of_health"
 		}
 	}
 	
@@ -8715,7 +8725,7 @@
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityManaCost"				"0"
-		"ItemCost"						"1975"
+		"ItemCost"						"2025"
 		"ItemShopTags"					"damage;armor;unique;hard_to_tag"
 		"ItemQuality"					"artifact"
 		"ItemAliases"					"hotd;helm of the dominator"
@@ -8742,7 +8752,7 @@
 			"04"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"hp_regen_aura"			"8"
+				"hp_regen_aura"			"10"
 			}
 			"05"
 			{
@@ -8928,7 +8938,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"600"	
+		"ItemCost"						"500"	
 		"ItemShopTags"					""
 		
 		// Recipe
@@ -8953,7 +8963,7 @@
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"2050"
+		"ItemCost"						"1950"
 		"ItemShopTags"					"agi;attack_speed;move_speed"
 		"ItemQuality"					"artifact"
 		"ItemAliases"					"yasha"
@@ -8970,7 +8980,7 @@
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_attack_speed"	"15"
+				"bonus_attack_speed"	"10"
 			}
 			"03"
 			{
@@ -8992,7 +9002,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"700"	
+		"ItemCost"						"0"	
 		"ItemShopTags"					""
 		
 		// Recipe
@@ -9001,7 +9011,7 @@
 		"ItemResult"					"item_mask_of_madness"
 		"ItemRequirements"
 		{
-			"01"						"item_lifesteal"
+			"01"						"item_lifesteal;item_quarterstaff"
 		}
 	}
 	
@@ -9023,10 +9033,11 @@
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityManaCost"				"25"
-		"ItemCost"						"1900"
+		"ItemCost"						"1975"
 		"ItemShopTags"					"unique;hard_to_tag"
 		"ItemQuality"					"artifact"
 		"ItemAliases"					"mom;mask of madness"
+		"ItemDisassembleRule"			"DOTA_ITEM_DISASSEMBLE_ALWAYS"
 		"ItemDeclarations"				"DECLARE_PURCHASES_TO_TEAMMATES | DECLARE_PURCHASES_TO_SPECTATORS"
 		
 		// Special	
@@ -9036,29 +9047,34 @@
 			"01"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_damage"		"15"
+				"bonus_damage"			"20"
 			}
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"lifesteal_percent"		"15"
+				"bonus_attack_speed"	"10"
 			}
 			"03"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"berserk_bonus_attack_speed"	"120"
+				"lifesteal_percent"		"15"
 			}
 			"04"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"berserk_bonus_movement_speed"	"17"
+				"berserk_bonus_attack_speed"	"110"
 			}
 			"05"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"berserk_armor_reduction"	"5"
+				"berserk_bonus_movement_speed"	"17"
 			}
 			"06"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"berserk_armor_reduction"	"5"
+			}
+			"07"
 			{
 				"var_type"				"FIELD_FLOAT"
 				"berserk_duration"		"8.0"
@@ -9445,7 +9461,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"150"	
+		"ItemCost"						"0"	
 		"ItemShopTags"					""
 		
 		// Recipe
@@ -9454,7 +9470,7 @@
 		"ItemResult"					"item_soul_ring"
 		"ItemRequirements"
 		{
-			"01"						"item_ring_of_regen;item_sobi_mask"
+			"01"						"item_ring_of_regen;item_sobi_mask;item_enchanted_mango"
 		}
 	}	
 
@@ -9475,7 +9491,7 @@
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityManaCost"				"0"
-		"ItemCost"						"800"
+		"ItemCost"						"750"
 		"ItemShopTags"					"regen_health;boost_mana"
 		"ItemQuality"					"common"
 		"ItemAliases"					"soul ring"
@@ -9707,7 +9723,7 @@
 			"01"
 			{
 				"var_type"				"FIELD_FLOAT"
-				"poison_damage"			"3.0"
+				"poison_damage"			"5.0"
 			}
 			"02"
 			{
@@ -9722,7 +9738,7 @@
 			"04"
 			{
 				"var_type"				"FIELD_FLOAT"
-				"poison_duration"		"4.0"
+				"poison_duration"		"3.0"
 			}			
 		}
 	}
@@ -9806,7 +9822,7 @@
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"1655"
+		"ItemCost"						"1640"
 		"ItemShopTags"					"str;agi;int;damage;move_speed;attack_speed;hard_to_tag"
 		"ItemQuality"					"rare"
 		"ItemAliases"					"drum of endurance"
@@ -10016,7 +10032,7 @@
 			"01"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_armor"			"12"
+				"bonus_armor"			"10"
 			}
 			"02"
 			{
@@ -10031,34 +10047,14 @@
 			"04"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"allied_armor"			"12"
+				"truestrike_chance"		"25"
 			}
 			"05"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"allied_evasion"			"25"
-			}
-			"06"
-			{
-				"var_type"				"FIELD_INTEGER"
-				"armor_reduction"		"-12"
-			}
-			"07"
-			{
-				"var_type"				"FIELD_INTEGER"
-				"enemy_armor_reduction_tooltip"		"12"
-			}
-			"08"
-			{
-				"var_type"				"FIELD_INTEGER"
-				"miss_chance"			"25"
-			}
-			"09"
-			{
-				"var_type"				"FIELD_INTEGER"
 				"duration"				"7"
 			}
-			"10"
+			"06"
 			{
 				"var_type"				"FIELD_INTEGER"
 				"valor_cast_range_tooltip"				"1000"
@@ -10425,7 +10421,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"0"	
+		"ItemCost"						"1100"	
 		"ItemShopTags"					""
 		
 		// Recipe
@@ -10434,7 +10430,7 @@
 		"ItemResult"					"item_rod_of_atos"
 		"ItemRequirements"
 		{
-			"01"						"item_vitality_booster;item_staff_of_wizardry;item_staff_of_wizardry"
+			"01"						"item_staff_of_wizardry;item_bracer;item_bracer"
 		}
 	}
 	
@@ -10462,7 +10458,7 @@
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityManaCost"				"50"
-		"ItemCost"						"3100"
+		"ItemCost"						"3080"
 		"ItemShopTags"					"int;regen_health"
 		"ItemQuality"					"rare"
 		"ItemAliases"					"rod of atos"
@@ -10471,18 +10467,28 @@
 		// Special	
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilitySpecial"
-		{			
+		{		
 			"01"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_intellect"		"30"
+				"bonus_intellect"		"20"
 			}
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_health"				"350"
+				"bonus_strength"		"15"
 			}
 			"03"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_agility"			"6"
+			}
+			"04"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_damage"			"6"
+			}
+			"05"
 			{
 				"var_type"				"FIELD_FLOAT"
 				"duration"				"2.0"
@@ -10754,7 +10760,7 @@
 
 		// Stats		
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCooldown"				"22"
+		"AbilityCooldown"				"18"
 		"AbilityCastRange"				"600"
 		"AbilityCastPoint"				"0.0"
 
@@ -10762,7 +10768,7 @@
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityManaCost"				"100"
-		"ItemCost"						"3500"
+		"ItemCost"						"3400"
 		"ItemShopTags"					"str;damage;evasion"
 		"ItemQuality"					"artifact"
 		"ItemAliases"					"heaven's halberd"
@@ -10954,7 +10960,7 @@
 		"ItemResult"					"item_tranquil_boots"
 		"ItemRequirements"
 		{
-			"01"						"item_boots;item_ring_of_protection;item_ring_of_regen"
+			"01"						"item_boots;item_wind_lace;item_ring_of_regen"
 		}
 	}
 	
@@ -10975,7 +10981,7 @@
 		
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"900"
+		"ItemCost"						"975"
 		"ItemShopTags"					"move_speed;regen_health;armor"
 		"ItemQuality"					"rare"
 		"ItemAliases"					"tranquil boots"
@@ -10989,17 +10995,17 @@
 			"01"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_movement_speed"	"85"
+				"bonus_movement_speed"	"90"
 			}
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_armor"			"3"
+				"bonus_armor"			"0"
 			}
 			"03"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_health_regen"	"12"
+				"bonus_health_regen"	"14"
 			}
 			"04"
 			{
@@ -11034,7 +11040,7 @@
 			"10"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"broken_movement_speed"	"55"
+				"broken_movement_speed"	"65"
 			}
 		}
 	}

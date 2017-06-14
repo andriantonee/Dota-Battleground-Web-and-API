@@ -39,6 +39,10 @@
             text-align: center;
             vertical-align: middle !important;
         }
+
+        #report-match-enter-scores-title {
+            margin-top: 0;
+        }
     </style>
 @endsection
 
@@ -395,8 +399,7 @@
                                                         <th style="width: 185px;"></th>
                                                         <th style="width: 25px;"></th>
                                                         <th style="width: 185px;"></th>
-                                                        <th style="width: 260px;border-right: 0;">Schedule</th>
-                                                        <th style="width: 30px;border-left: 0;"></th>
+                                                        <th style="width: 260px;" colspan="2">Schedule</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -560,7 +563,60 @@
                                         @endif
                                     </div>
                                     <div class="tab-pane fade" id="report-match-tab" style="min-height: 600px;">
-                                        Default 5
+                                        @if ($tournament->type == 1)
+                                            <table class="table table-bordered table-striped table-content-centered table-schedule" style="margin-bottom: 0;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 201px;">Round</th>
+                                                        <th style="width: 75px;">Match #</th>
+                                                        <th style="width: 185px;"></th>
+                                                        <th style="width: 25px;"></th>
+                                                        <th style="width: 185px;"></th>
+                                                        <th style="width: 30px;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (count($tournament->available_matches_report) > 0)
+                                                        @foreach ($tournament->available_matches_report as $round_id => $round)
+                                                            @foreach ($round as $key_match => $match)
+                                                                <tr>
+                                                                    @if ($key_match == 0)
+                                                                        <td class="round" id="round-{{ $round_id }}-title" rowspan="{{ count($round) }}">
+                                                                            @if ($round_id == 0)
+                                                                                Bronze Match
+                                                                            @elseif ($round_id < $tournament->max_round - 1)
+                                                                                Round {{ $round_id }}
+                                                                            @elseif ($round_id == $tournament->max_round - 1)
+                                                                                Semifinals
+                                                                            @else
+                                                                                Finals
+                                                                            @endif
+                                                                        </td>
+                                                                    @endif
+                                                                    <td>{{ $key_match + 1 }}</td>
+                                                                    <td>
+                                                                        {{ $match->participants[0]->team->name }}
+                                                                    </td>
+                                                                    <td>VS</td>
+                                                                    <td>
+                                                                        {{ $match->participants[1]->team->name }}
+                                                                    </td>
+                                                                    <td>
+                                                                        <button class="btn btn-default btn-xs btn-report-match" data-match-id="{{ $match->id }}" data-round-id={{ $round_id }} data-toggle="modal" data-target="#report-match-modal">
+                                                                            <i class="fa fa-pencil-square-o"></i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        @endforeach
+                                                    @else
+                                                        <tr>
+                                                            <td colspan="6">No Data Available</td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                        @endif
                                     </div>
                                     <div class="tab-pane fade" id="live-match-tab" style="min-height: 600px;">
                                         Default 6
@@ -579,8 +635,8 @@
         <div class="modal-dialog modal-dialog-fixed-width-500" role="document">
             <div class="modal-content modal-content-custom">
                 <div class="modal-header modal-header-border-bottom-custom">
-                    <h3 id="schedule-round-match-title" class="text-center" style="margin: 0;">Round 1 - Match 2</h3>
-                    <h3 id="schedule-versus-title" class="text-center" style="margin: 0;margin-top: 5px;">Team C VS Team D</h3>
+                    <h3 id="schedule-round-match-title" class="text-center" style="margin: 0;">Round # - Match #</h3>
+                    <h3 id="schedule-versus-title" class="text-center" style="margin: 0;margin-top: 5px;">- VS -</h3>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-success" role="alert" style="margin-left: 5px;margin-right: 5px;display: none;">
@@ -607,6 +663,54 @@
                         <div class="text-center">
                             <button type="submit" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-schedule">
                                 <span class="ladda-label">Save</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Match Modal -->
+    <div class="modal modal-remove-padding-right" id="report-match-modal" tabindex="-1" role="dialog" aria-labelledby="report-match-modal-label">
+        <div class="modal-dialog modal-dialog-fixed-width-500" role="document">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-border-bottom-custom">
+                    <h3 id="report-match-round-match-title" class="text-center" style="margin: 0;">Round # - Match #</h3>
+                    <h3 id="report-match-versus-title" class="text-center" style="margin: 0;margin-top: 5px;">- VS -</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success" role="alert" style="margin-left: 5px;margin-right: 5px;display: none;">
+                        <ul id="report-match-alert-container">
+                            <!-- All message that want to deliver to the user -->
+                        </ul>
+                    </div>
+                    <h4 id="report-match-enter-scores-title">Enter Scores</h4>
+                    <form id="form-report-match">
+                        <table class="table table-bordered table-striped table-content-centered table-schedule" style="margin-bottom: 0;">
+                            <tbody>
+                                <tr>
+                                    <td id="side-1" style="border-right: 0;padding-left: 15px;text-align: left;width: 375px;">Team A</td>
+                                    <td style="border-left: 0;">
+                                        <input type="number" class="form-control" id="side-1-score" name="side_1_score" min="0" max="3" step="1" value="0" required="required">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="side-2" style="border-right: 0;padding-left: 15px;text-align: left;width: 375px;">Team B</td>
+                                    <td style="border-left: 0;">
+                                        <input type="number" class="form-control" id="side-2-score" name="side_2_score" min="0" max="3" step="1" value="0" required="required">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="ckbox-final-score" name="ckbox_final_score" value="1"> Check this if the score is the final score
+                            </label>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" id="btn-submit-report-match">
+                                <span class="ladda-label">Submit</span>
                             </button>
                         </div>
                     </form>

@@ -17,6 +17,7 @@ Route::group(['middleware' => ['exchange:participant,1', 'notification'], 'names
     Route::get('/tournament/{id}', 'TournamentController@show');
     Route::get('/team', 'TeamController@index');
     Route::get('/team/{id}', 'TeamController@show');
+    Route::get('/dota-2/match/{id}', 'Dota2MatchController@show');
 
     Route::group(['middleware' => ['authorize:participant']], function() {
         Route::get('/profile', 'ProfileController@index');
@@ -54,3 +55,5 @@ Route::group(['prefix' => 'admin', 'middleware' => ['exchange:admin,3'], 'namesp
         Route::post('/logout', 'AuthController@webLogout');
     });
 });
+
+Route::get('/test', 'Admin\Dota2Controller@test');

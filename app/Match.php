@@ -33,4 +33,9 @@ class Match extends Model
     {
         return $this->belongsToMany('App\Match', 'matches_qualifications_details', 'parent_matches_id', 'child_matches_id');
     }
+
+    public function parents()
+    {
+        return $this->belongsToMany('App\Match', 'matches_qualifications_details', 'child_matches_id', 'parent_matches_id');
+    }
 }

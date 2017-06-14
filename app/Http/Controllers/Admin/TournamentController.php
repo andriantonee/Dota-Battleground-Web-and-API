@@ -8,6 +8,8 @@ use App\TournamentApproval;
 use App\TournamentRegistrationConfirmation;
 use DB;
 use Illuminate\Http\Request;
+use PHPQRCode\QRcode;
+use Storage;
 
 class TournamentController extends BaseController
 {
@@ -126,6 +128,22 @@ class TournamentController extends BaseController
             $tournament_registration = $tournament_registration_confirmation->registration;
             $tournament = $tournament_registration->tournament;
             $team = $tournament_registration->team;
+            $qr_identifiers = [];
+            if ($tournament->need_identifications) {
+                $members = $tournament_registration->members;
+                $qr_pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                foreach ($members as $member) {
+                    $qr_identifier = substr(str_shuffle(str_repeat($qr_pool, 5)), 0, 20);
+                    $tournament_registration->members()->updateExistingPivot($member->id, [
+                        'qr_identifier' => $qr_identifier
+                    ]);
+
+                    $qr_data = base64_encode($qr_identifier);
+                    $qr_file_name = md5($qr_identifier);
+                    QRcode::png($qr_data, storage_path('app/public/tournament/qr/').$qr_file_name.'.png', 'H', 4);
+                    array_push($qr_identifiers, $qr_file_name);
+                }
+            }
             $challonge_participant = GuzzleHelper::createTournamentChallongeParticipant($tournament, $team);
             if ($challonge_participant) {
                 $tournament_registration->challonges_participants_id = $challonge_participant->participant->id;
@@ -139,10 +157,16 @@ class TournamentController extends BaseController
                 return response()->json(['code' => 200, 'message' => ['Approve tournament payment success.']]);
             } else {
                 DB::rollBack();
+                foreach ($qr_identifiers as $qr_identifier) {
+                    Storage::delete('public/tournament/qr/'.$qr_identifier.'.png');
+                }
                 return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
             }
         } catch (\Exception $e) {
             DB::rollBack();
+            foreach ($qr_identifiers as $qr_identifier) {
+                Storage::delete('public/tournament/qr/'.$qr_identifier.'.png');
+            }
             return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
         }
     }

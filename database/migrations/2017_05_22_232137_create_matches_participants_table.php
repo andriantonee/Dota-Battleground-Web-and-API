@@ -17,6 +17,7 @@ class CreateMatchesParticipantsTable extends Migration
             $table->unsignedBigInteger('matches_id');
             $table->unsignedBigInteger('tournaments_registrations_id');
             $table->unsignedTinyInteger('side');
+            $table->unsignedTinyInteger('score');
             $table->unsignedTinyInteger('matches_result')->nullable();
             $table->timestamps();
 

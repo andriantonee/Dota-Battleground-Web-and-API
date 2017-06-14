@@ -66,11 +66,24 @@ class Team extends Model
         return $teams->get();
     }
 
-    public static function getListsForTournaments($member_id, $tournament_id)
+    public static function getListsForTournaments($member_id, $tournament_id, $team_details_with_identifications)
     {
-        $teams = self::select('id', 'name', 'picture_file_name')
-            ->withCount('details')
-            ->whereHas('details', function($details) use($member_id) {
+        $teams = self::select('id', 'name', 'picture_file_name');
+        if ($team_details_with_identifications) {
+            $teams = $teams->withCount([
+                'details' => function($details) {
+                    $details->whereNotNull('steam32_id')
+                        ->whereHas('identifications');
+                }
+            ]);
+        } else {
+            $teams = $teams->withCount([
+                'details' => function($details) {
+                    $details->whereNotNull('steam32_id');
+                }
+            ]);
+        }
+        $teams = $teams->whereHas('details', function($details) use($member_id) {
                 $details->where('members_id', $member_id)
                     ->where('members_privilege', 2);
             })

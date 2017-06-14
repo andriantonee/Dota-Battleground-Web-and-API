@@ -145,26 +145,50 @@ class TournamentController extends BaseController
                                     $approval->where('status', 1);
                                 });
                             });
-                    },
-                    'matches' => function($matches) {
-                        $matches->select('id', 'tournaments_id', 'scheduled_time', 'round')
-                            ->with([
-                                'participants' => function($participants) {
-                                    $participants->select('tournaments_registrations.id', 'tournaments_registrations.teams_id')
-                                        ->withPivot('side', 'matches_result')
-                                        ->with([
-                                            'team' => function($team) {
-                                                $team->select('id', 'name', 'picture_file_name');
-                                            }
-                                        ])
-                                        ->orderBy('matches_participants.side');
-                                }
-                            ]);
                     }
                 ]);
-                $tournament->max_round = $tournament->matches->max('round');
-                $tournament->min_round = $tournament->matches->min('round');
-                $tournament->matches = $tournament->matches->groupBy('round');
+                $tournament->matches = $tournament->matches()
+                    ->select('id', 'tournaments_id', 'scheduled_time', 'round')
+                    ->with([
+                        'participants' => function($participants) {
+                            $participants->select('tournaments_registrations.id AS id', 'tournaments_registrations.teams_id AS teams_id', 'matches_participants.matches_result AS matches_result')
+                                ->with([
+                                    'team' => function($team) {
+                                        $team->select('id', 'name', 'picture_file_name');
+                                    }
+                                ])
+                                ->orderBy('matches_participants.side');
+                        }
+                    ])
+                    ->get()
+                    ->groupBy('round');
+                $tournament->max_round = $tournament->matches()->max('round');
+                $tournament->min_round = $tournament->matches()->min('round');
+                $tournament->available_matches_report = $tournament->matches()
+                    ->select('id', 'tournaments_id', 'round')
+                    ->with([
+                        'participants' => function($participants) {
+                            $participants->select('tournaments_registrations.id AS id', 'tournaments_registrations.teams_id AS teams_id', 'matches_participants.matches_result AS matches_result')
+                                ->with([
+                                    'team' => function($team) {
+                                        $team->select('id', 'name', 'picture_file_name');
+                                    }
+                                ])
+                                ->orderBy('matches_participants.side');
+                        }
+                    ])
+                    ->whereHas('participants', function($participants) {
+                        $participants->select('matches_participants.matches_id AS matches_id')
+                            ->whereNull('matches_participants.matches_result')
+                            ->where(function($side) {
+                                $side->where('matches_participants.side', 1)
+                                    ->orWhere('matches_participants.side', 2);
+                            })
+                            ->groupBy('matches_participants.matches_id')
+                            ->havingRaw('COUNT(*) = 2');
+                    })
+                    ->get()
+                    ->groupBy('round');
                 $cities = City::select('id', 'name')->get();
 
                 return view('organizer.tournament-detail', compact('tournament', 'cities'));
@@ -294,6 +318,8 @@ class TournamentController extends BaseController
 
     public function start($id, Request $request)
     {
+        set_time_limit(0);
+
         $tournament = Tournament::whereHas('approval', function($approval) {
                 $approval->where('tournaments_approvals.accepted', 1);
             })

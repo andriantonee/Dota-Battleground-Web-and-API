@@ -305,4 +305,78 @@ $(document).ready(function(e) {
                 btn_update.stop();
             });
     });
+
+    $("#report-match-modal").on("show.bs.modal", function(e) {
+        var btn_trigger = $(e.relatedTarget);
+        var tr_child = btn_trigger.parent().parent().children();
+        var tr_child_length = tr_child.length;
+
+        var match_id = btn_trigger.data("match-id");
+        var round_id = btn_trigger.data("round-id");
+        var round = $("#round-" + round_id + "-title").html().trim();
+        var match = tr_child.eq(tr_child_length - 5).html().trim();
+        var player_1 = tr_child.eq(tr_child_length - 4).html().trim();
+        var player_2 = tr_child.eq(tr_child_length - 2).html().trim();
+
+        $("#report-match-round-match-title").html(round + " - Match " + match);
+        $("#report-match-versus-title").html(player_1 + " VS " + player_2);
+        $("#btn-submit-report-match").data("match-id", match_id);
+        $("#side-1").html(player_1);
+        $("#side-1-score").val(0);
+        $("#side-2").html(player_2);
+        $("#side-2-score").val(0);
+        $("#ckbox-final-score").prop("checked", false);
+
+        $("#report-match-alert-container").parent().hide();
+        $("#report-match-alert-container").empty();
+    });
+
+    $("#form-report-match").on("submit", function(e) {
+        e.preventDefault();
+
+        var match_id = $("#btn-submit-report-match").data("match-id");
+        var data = $(this).serialize();
+        var btn_submit = Ladda.create(document.querySelector("#btn-submit-report-match"));
+
+        $.ajax({
+            "type" : "PUT",
+            "url" : api_url + "match/" + match_id + "/score",
+            "headers" : {
+                "Accept" : "application/json",
+                "Authorization" : "Bearer " + document.cookie.replace(/(?:(?:^|.*;\s*)organizer_token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
+            },
+            "data" : data,
+            "beforeSend" : function() {
+                $("#report-match-alert-container").parent().hide();
+                $("#report-match-alert-container").empty();
+                btn_submit.start();
+            }
+        })
+            .done(function(data) {
+                var li_message = "";
+                $.each(data.message, function(index, value) {
+                    li_message += "<li>" + value + "</li>";
+                });
+                if (data.code == 200) {
+                    $("#report-match-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-success");
+                } else {
+                    $("#report-match-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-danger");
+                }
+                $("#report-match-alert-container").parent().show();
+                $("#report-match-alert-container").append(li_message);
+
+                if (data.code == 200) {
+                    var child_length = $("button.btn-edit-schedule[data-match-id=\"" + match_id + "\"]").parent().parent().children().length;
+                    $("button.btn-edit-schedule[data-match-id=\"" + match_id + "\"]").parent().parent().children().eq(child_length - 2).html(moment($("#schedule-date-and-time").val(), "DD/MM/YYYY HH:mm:ss").format("dddd, DD MMMM YYYY HH:mm:ss"));
+                }
+            })
+            .fail(function() {
+                $("#report-match-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-danger");
+                $("#report-match-alert-container").parent().show();
+                $("#report-match-alert-container").append("<li>Something went wrong. Please try again.</li>");
+            })
+            .always(function() {
+                btn_submit.stop();
+            });
+    });
 });

@@ -428,7 +428,7 @@ class ValidatorHelper
         }
     }
 
-    public static function validateTournamentRegisterRequest(array $data, $leader_id, $tournament_id)
+    public static function validateTournamentRegisterRequest(array $data, $leader_id, $tournament_id, $must_have_identifications)
     {
         $rule = [
             'team' => 'required|integer',
@@ -455,7 +455,18 @@ class ValidatorHelper
                 if ($team_leader) {
                     if ($team_leader->pivot->members_privilege == 2) {
                         foreach ($data['members'] as $member_id) {
-                            if (!$team->details()->where('members.id', $member_id)->exists()) {
+                            $team_member = $team->details()->find($member_id);
+                            if ($team_member) {
+                                if ($team_member->steam32_id) {
+                                    if ($must_have_identifications) {
+                                        if (!$team_member->identifications()->exists()) {
+                                            return ['Each member must upload an identity card.'];
+                                        }
+                                    }
+                                } else {
+                                    return ['Each member must assign their Steam ID 32-bit.'];
+                                }
+                            } else {
                                 return ['Each member must be a part of the team.'];
                             }
                         }
@@ -543,6 +554,41 @@ class ValidatorHelper
             return $validator->errors()->all();
         } else {
             return null;
+        }
+    }
+
+    public static function validateMatchScoreUpdateRequest(array $data)
+    {
+        $rule = [
+            'side_1_score' => 'required|integer|min:0|max:3',
+            'side_2_score' => 'required|integer|min:0|max:3',
+            'final_score' => 'required|integer|in:0,1'
+        ];
+        $message = [
+            'side_1_score.required' => 'Player 1 Score is required.',
+            'side_1_score.integer' => 'Player 1 Score must be an integer.',
+            'side_1_score.min' => 'Player 1 Score has a minimum :min value.',
+            'side_1_score.max' => 'Player 1 Score has a maximum :max value.',
+            'side_2_score.required' => 'Player 2 Score is required.',
+            'side_2_score.integer' => 'Player 2 Score must be an integer.',
+            'side_2_score.min' => 'Player 2 Score has a minimum :min value.',
+            'side_2_score.max' => 'Player 2 Score has a maximum :max value.',
+            'final_score.required' => 'Final Score Parameter is required.',
+            'final_score.integer' => 'Final Score Parameter must be an integer.',
+            'final_score.in' => 'Final Score Parameter can support 0 or 1 only.'
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            if ($data['final_score'] == 1) {
+                if ($data['side_1_score'] == $data['side_2_score']) {
+                    return ['There are no winner for this score. This must not be a final score.'];
+                }
+            } else {
+                return null;
+            }
         }
     }
 }

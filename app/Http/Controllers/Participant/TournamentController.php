@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Participant;
 
 use App\City;
 use App\Helpers\ValidatorHelper;
+use App\Member;
 use App\Team;
 use App\Tournament;
 use App\TournamentRegistration;
@@ -84,7 +85,7 @@ class TournamentController extends BaseController
 
     public function registerIndex($id, Request $request)
     {
-        $tournament = Tournament::select('id', 'name', 'registration_closed')
+        $tournament = Tournament::select('id', 'name', 'registration_closed', 'need_identifications')
             ->whereHas('approval', function($approval) {
                 $approval->where('tournaments_approvals.accepted', 1);
             })
@@ -101,7 +102,7 @@ class TournamentController extends BaseController
         }
 
         $member = $request->input('participant_model');
-        $teams = Team::getListsForTournaments($member->id, $tournament->id);
+        $teams = Team::getListsForTournaments($member->id, $tournament->id, (boolean) $tournament->need_identifications);
 
         return view('participant.tournament-register', compact('tournament', 'teams'));
     }
@@ -129,7 +130,7 @@ class TournamentController extends BaseController
             'team' => $request->input('team'),
             'members' => $request->input('members')
         ];
-        if (!$validatorResponse = ValidatorHelper::validateTournamentRegisterRequest($data, $member->id, $tournament->id)) {
+        if (!$validatorResponse = ValidatorHelper::validateTournamentRegisterRequest($data, $member->id, $tournament->id, (boolean) $tournament->need_identifications)) {
             DB::beginTransaction();
             try {
                 $team = Team::find($data['team']);
@@ -140,7 +141,10 @@ class TournamentController extends BaseController
                 $tournament_registration->save();
 
                 foreach ($data['members'] as $member_id) {
+                    $member = Member::select('id', 'steam32_id')->find($member_id);
                     $tournament_registration->members()->attach($member_id, [
+                        'steam32_id' => $member->steam32_id,
+                        'identification_file_name' => $tournament->need_identifications ? $member->identifications()->orderBy('created_at', 'DESC')->select('identification_file_name')->first()->identification_file_name : null,
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now()
                     ]);
@@ -150,6 +154,7 @@ class TournamentController extends BaseController
                 return response()->json(['code' => 201, 'message' => ['Your team "'.$team->name.'" success joining tournament "'.$tournament->name.'"'], 'url' => url('tournament/confirm-payment/'.$tournament_registration->id)]);
             } catch (\Exception $e) {
                 DB::rollBack();
+                return response()->json(['code' => 500, 'message' => [$e->getMessage()]]);
                 return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
             }
         } else {

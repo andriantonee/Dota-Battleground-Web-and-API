@@ -8,6 +8,7 @@ use App\Notification;
 use App\NotificationMemberJoinTeam;
 use App\NotificationTeamInvitation;
 use App\Team;
+use App\Tournament;
 use Carbon;
 use DB;
 use Illuminate\Http\Request;
@@ -617,10 +618,36 @@ class TeamController extends BaseController
             return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
         }
 
-        $details = $team->details()
-            ->select('id', 'name', 'picture_file_name')
-            ->orderBy('name', 'ASC')
-            ->get();
+        $tournament_id = $request->input('tournament_id') ? (!is_array($request->input('tournament_id')) ? $request->input('tournament_id') : null) : null;
+        if ($tournament_id) {
+            $tournament = Tournament::find($tournament_id);
+            if ($tournament) {
+                if ($tournament->need_identifications) {
+                    $must_have_identification = true;
+                } else {
+                    $must_have_identification = false;
+                }
+            } else {
+                $must_have_identification = false;
+            }
+        } else {
+            $must_have_identification = false;
+        }
+
+        if ($must_have_identification) {
+            $details = $team->details()
+                ->select('id', 'name', 'picture_file_name')
+                ->whereNotNull('steam32_id')
+                ->whereHas('identifications')
+                ->orderBy('name', 'ASC')
+                ->get();
+        } else {
+            $details = $team->details()
+                ->select('id', 'name', 'picture_file_name')
+                ->whereNotNull('steam32_id')
+                ->orderBy('name', 'ASC')
+                ->get();
+        }
 
         $details = $details->map(function($detail, $key) {
             if ($detail->picture_file_name) {

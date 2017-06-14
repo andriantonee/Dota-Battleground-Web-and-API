@@ -10,6 +10,9 @@ $(document).ready(function() {
                     "Accept" : "application/json",
                     "Authorization" : "Bearer " + document.cookie.replace(/(?:(?:^|.*;\s*)participant_token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
                 },
+                "data" : {
+                    "tournament_id" : location.pathname.split("/")[2]
+                },
                 "beforeSend" : function() {
                     swal({
                         "title" : "Fetching Member...",

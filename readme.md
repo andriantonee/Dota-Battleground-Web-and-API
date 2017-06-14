@@ -47,3 +47,5 @@ $ bower install
 $ php artisan storage:link
 ```
 13. Generate **Challonge Developer API Key** and change **CHALLONGE_API_KEY** variable inside **_.env_** file.
+14. Generate **Dota 2 API Key** and change **DOTA2_API_KEY** variable inside **_.env_** file.
+15. Create **Pusher Project** and change **PUSHER_APP_ID**, **PUSHER_KEY** and **PUSHER_SECRET** variable inside **_.env_** file.

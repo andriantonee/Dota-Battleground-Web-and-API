@@ -1,5 +1,0 @@
-Copy ".env.example" file and rename to ".env"
-composer install
-php artisan migrate
-php artisan passport:client --password --name="Laravel Password Grant Client"
-Change .env PASSPORT_CLIENT_ID & PASSPORT_CLIENT_SECRET from passport client above
