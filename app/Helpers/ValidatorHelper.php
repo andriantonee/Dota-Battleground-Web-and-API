@@ -591,4 +591,23 @@ class ValidatorHelper
             }
         }
     }
+
+    public static function validateDota2LiveMatchPostCommentRequest(array $data)
+    {
+        $rule = [
+            'comment' => 'required|string|max:65535'
+        ];
+        $message = [
+            'comment.required' => 'Comment is required.',
+            'comment.string' => 'Comment must be a string.',
+            'comment.max' => 'Comment has a maximum :max characters only.',
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            return null;
+        }
+    }
 }

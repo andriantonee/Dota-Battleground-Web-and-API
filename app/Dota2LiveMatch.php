@@ -33,4 +33,9 @@ class Dota2LiveMatch extends Model
     {
         return $this->hasMany('App\Dota2LiveMatchDurationLog', 'dota2_live_matches_id', 'id');
     }
+
+    public function comments()
+    {
+        return $this->hasMany('App\Dota2LiveMatchComment', 'dota2_live_matches_id', 'id');
+    }
 }

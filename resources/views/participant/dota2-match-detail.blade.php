@@ -3,6 +3,7 @@
 @section('title', 'Tournament')
 
 @section('style')
+    <link href="{{ asset('css/jquery.scrollbar.css') }}" rel="stylesheet">
     <link href="{{ asset('css/participant/footer.css') }}" rel="stylesheet">
     <style type="text/css">
         .radiant-color {
@@ -343,6 +344,109 @@
             white-space: nowrap;
             overflow: hidden;
             width: 100px;
+        }
+        .comment-open {
+            overflow: hidden;
+        }
+        .comment-backdrop.in {
+            opacity: .5;
+        }
+        .comment-backdrop {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1040;
+            background-color: #000;
+        }
+        .comment-container {
+            position: fixed;
+            top: 0;
+            right: -425px;
+            bottom: 0;
+            z-index: 1052;
+            background-color: #292E3A;
+            width: 425px;
+            padding: 15px 0;
+            transition: all 1s ease;
+            -webkit-transition: all 1s ease;
+            -moz-transition: all 1s ease;
+            -o-transition: all 1s ease;
+            -ms-transition: all 1s ease;
+        }
+        .comment-open-action {
+            position: absolute;
+            top: 72px;
+            left: -41px;
+            border: 1px solid #5f6471;
+            border-right: 0;
+            border-radius: 50% 0 0 50%;
+            padding: 10px 0px 10px 15px;
+            cursor: pointer;
+            background-color: #292E3A;
+        }
+        .comment-open-action:hover {
+            background: linear-gradient(to right, #323645,#3d3f4b);
+        }
+        .comment-close-action {
+            position: absolute;
+            top: 72px;
+            left: -41px;
+            border: 1px solid #5f6471;
+            border-right: 0;
+            border-radius: 50% 0 0 50%;
+            padding: 10px 0px 10px 15px;
+            cursor: pointer;
+            background-color: #292E3A;
+        }
+        .comment-close-action:hover {
+            background: linear-gradient(to right, #323645,#3d3f4b);
+        }
+        .comment-open-action > img,
+        .comment-close-action > img {
+            width: 25px;
+            height: 150px;
+        }
+        .comment-container-scroll {
+            max-height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        form#post-comment {
+            margin: 0 15px;
+        }
+        form#post-comment > * {
+            margin: 0;
+            margin-bottom: 5px;
+        }
+        form#post-comment > *:last-child {
+            margin: 0;
+        }
+        form#post-comment textarea {
+            resize: none;
+        }
+        .comment-content {
+            margin: 0 15px;
+            padding: 15px 10px;
+            border-bottom: 1px solid #5f6471;
+        }
+        .comment-profile {
+            display: inline-block;
+            vertical-align: top;
+        }
+        .comment-profile-img {
+            height: 55px;
+            width: 55px;
+        }
+        .comment-detail {
+            display: inline-block;
+            vertical-align: top;
+            margin-left: 10px;
+            max-width: 289px;
+        }
+        .comment-detail p {
+            margin: 5px 0;
         }
     </style>
 @endsection
@@ -1163,6 +1267,43 @@
             </div>
         </div>
     </div>
+
+    <div class="comment-container">
+        <div class="comment-open-action">
+            <img src="{{ asset('img/dota-2-logo.png') }}">
+        </div>
+        <div class="comment-close-action" style="display: none;">
+            <img src="{{ asset('img/google-play-store.png') }}">
+        </div>
+        <div class="comment-container-scroll scrollbar-macosx">
+            <form id="post-comment">
+                <h4>Leave a comment</h4>
+                <textarea class="form-control" id="comment" name="comment" rows="4" placeholder="Leave a comment here..." required="required"></textarea>
+                <div class="text-right">
+                    <button type="submit" id="btn-post-comment" class="btn btn-primary ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9">
+                        <span class="ladda-label"><i class="fa fa-paper-plane"></i> Post Comment</span>
+                    </button>
+                </div>
+            </form>
+            <div id="comment-main" class="comment-main">
+                @foreach ($dota2_live_match_comments as $dota2_live_match_comment)
+                    <div class="comment-content">
+                        <div class="comment-profile">
+                            @if ($dota2_live_match_comment->member->picture_file_name)
+                                <img class="comment-profile-img" src="{{ asset('storage/member/'.$dota2_live_match_comment->member->picture_file_name) }}">
+                            @else
+                                <img class="comment-profile-img" src="{{ asset('img/default-profile.jpg') }}">
+                            @endif
+                        </div>
+                        <div class="comment-detail">
+                            <p>{{ $dota2_live_match_comment->member->name }}</p>
+                            <p>{!! str_replace(PHP_EOL, '<br />', $dota2_live_match_comment->detail) !!}</p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('footer')
@@ -1197,6 +1338,7 @@
         var dire_statistics = {!! json_encode($dire_statistics) !!};
     </script>
     <script src="https://js.pusher.com/4.0/pusher.min.js"></script>
+    <script src="{{ asset('js/jquery.scrollbar.min.js') }}"></script>
     <script src="{{ asset('vendor/moment/min/moment.min.js') }}"></script>
     <script src="{{ asset('vendor/chart.js/dist/Chart.min.js') }}"></script>
     <script src="{{ asset('js/participant/dota2-match-detail.js') }}"></script>

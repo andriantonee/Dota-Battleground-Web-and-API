@@ -38,6 +38,7 @@ Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function
         Route::get('/team/{id}/member', 'TeamController@member');
         Route::post('/tournament/{id}/register', 'TournamentController@register');
         Route::post('/tournament/confirm-payment/{id}', 'TournamentController@confirmPayment');
+        Route::post('/dota-2/match/{id}/comment', 'Dota2MatchController@postComment');
     });
 });
 

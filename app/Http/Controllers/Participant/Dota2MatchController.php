@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Participant;
 
 use App\Dota2LiveMatch;
+use App\Dota2LiveMatchComment;
+use App\Events\Dota2LiveMatchCommentUpdated;
+use App\Helpers\ValidatorHelper;
+use DB;
 use Illuminate\Http\Request;
 
 class Dota2MatchController extends BaseController
@@ -147,9 +151,53 @@ class Dota2MatchController extends BaseController
                 ];
             }
 
-            return view('participant.dota2-match-detail', compact('dota2_live_match', 'duration', 'radiant', 'dire', 'radiant_statistics', 'dire_statistics'));
+            $dota2_live_match_comments = $dota2_live_match->comments()
+                ->with([
+                    'member' => function($member) {
+                        $member->select('id', 'name', 'picture_file_name');
+                    }
+                ])
+                ->orderBy('created_at', 'DESC')
+                ->get();
+
+            return view('participant.dota2-match-detail', compact('dota2_live_match', 'duration', 'radiant', 'dire', 'radiant_statistics', 'dire_statistics', 'dota2_live_match_comments'));
         } else {
             abort(404);
+        }
+    }
+
+    public function postComment($id, Request $request)
+    {
+        $dota2_live_match = Dota2LiveMatch::find($id);
+        if ($dota2_live_match) {
+            $data = [
+                'comment' => $request->input('comment')
+            ];
+
+            if (!$validatorResponse = ValidatorHelper::validateDota2LiveMatchPostCommentRequest($data)) {
+                DB::beginTransaction();
+                try {
+                    $dota2_live_match_comment = new Dota2LiveMatchComment([
+                        'detail' => $data['comment']
+                    ]);
+                    $dota2_live_match_comment->dota2_live_match()->associate($dota2_live_match);
+                    $dota2_live_match_comment->member()->associate($request->user());
+                    $dota2_live_match_comment->save();
+
+                    DB::commit();
+
+                    event(new Dota2LiveMatchCommentUpdated($dota2_live_match_comment));
+
+                    return response()->json(['code' => 200, 'message' => ['Comment has been post.']]);
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
+                }
+            } else {
+                return response()->json(['code' => 400, 'message' => $validatorResponse]);
+            }
+        } else {
+            return response()->json(['code' => 404, 'message' => ['Dota 2 Live Match ID is invalid.']]);
         }
     }
 }

@@ -1,4 +1,6 @@
 $(document).ready(function(e) {
+    $(".scrollbar-macosx").scrollbar();
+
     var timestamp_label = [];
     var radiant_net_worth = [];
     var radiant_experience = [];
@@ -733,5 +735,74 @@ $(document).ready(function(e) {
                 }
             }
         }
+    });
+
+    $(".comment-open-action").on("click", function(e) {
+        $("body").addClass("comment-open");
+        $("body").append("<div class=\"comment-backdrop in\"></div>");
+        $(".comment-container").css("right", "0");
+        $(this).hide();
+        $(".comment-close-action").show();
+    });
+
+    $(".comment-close-action").on("click", function(e) {
+        $("body").removeClass("comment-open");
+        $(".comment-backdrop.in").remove();
+        $(".comment-container").css("right", "-425px");
+        $(this).hide();
+        $(".comment-open-action").show();
+    });
+
+    $("#post-comment").on("submit", function(e) {
+        e.preventDefault();
+
+        var data = $(this).serialize();
+        var btn_post_comment = Ladda.create(document.querySelector("#btn-post-comment"));
+
+        $.ajax({
+            "type" : "POST",
+            "url" : api_url + "dota-2/match/" + location.pathname.split("/")[3] + "/comment",
+            "headers" : {
+                "Accept" : "application/json",
+                "Authorization" : "Bearer " + document.cookie.replace(/(?:(?:^|.*;\s*)participant_token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
+            },
+            "data" : data,
+            "beforeSend" : function() {
+                btn_post_comment.start();
+            }
+        })
+            .done(function(data) {
+                if (data.code == 200) {
+                    $("#comment").val("");
+                }
+            })
+            .fail(function() {
+                
+            })
+            .always(function() {
+                btn_post_comment.stop();
+            });
+    });
+
+    dota2_live_match_channel.bind('comment_update', function(data) {
+        var comment_html = "" +
+            "<div class=\"comment-content\">" +
+                "<div class=\"comment-profile\">";
+        if (data.comment.member.picture_file_name !== null) {
+            comment_html = comment_html +
+                    "<img class=\"comment-profile-img\" src=\"/storage/member/" + data.comment.member.picture_file_name + "\">";
+        } else {
+            comment_html = comment_html +
+                    "<img class=\"comment-profile-img\" src=\"/img/default-profile.jpg\">";
+        }
+        comment_html = comment_html +
+                "</div> " +
+                "<div class=\"comment-detail\">" +
+                    "<p>" + data.comment.member.name + "</p>" +
+                    "<p>" + data.comment.detail + "</p>" +
+                "</div>" +
+            "</div>";
+
+        $("#comment-main").prepend(comment_html);
     });
 });

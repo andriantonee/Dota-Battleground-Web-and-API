@@ -15,8 +15,6 @@ class Dota2LiveMatchDirePlayersUpdated implements ShouldBroadcast
     use InteractsWithSockets, SerializesModels;
 
     public $match;
-    // public $golds;
-    // public $xps;
     public $abilities;
 
     /**
@@ -24,12 +22,9 @@ class Dota2LiveMatchDirePlayersUpdated implements ShouldBroadcast
      *
      * @return void
      */
-    // public function __construct(Dota2LiveMatch $match, array $golds, array $xps, array $abilities)
     public function __construct(Dota2LiveMatch $match, array $abilities)
     {
         $this->match = $match;
-        // $this->golds = $golds;
-        // $this->xps = $xps;
         $this->abilities = $abilities;
     }
 
@@ -73,14 +68,10 @@ class Dota2LiveMatchDirePlayersUpdated implements ShouldBroadcast
             ])
             ->get();
 
-        // $golds = $this->golds;
-        // $xps = $this->xps;
         $abilities = $this->abilities;
 
         return [
             'players' => $dire_players,
-            // 'golds' => $golds,
-            // 'xps' => $xps,
             'abilities' => $abilities
         ];
     }
