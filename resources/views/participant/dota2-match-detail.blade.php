@@ -521,6 +521,8 @@
             </div>
         </div>
         <div class="row" style="background-color: #292E3A;box-shadow: 5px 5px 12px 5px rgba(0,0,0,0.3);margin-bottom: 15px;margin-top: 15px;padding-bottom: 15px;padding-top: 15px;">
+            <!-- winner section -->
+            <h2 class="radiant-color" style="text-align:center;margin: 0;margin-bottom:5px;font-weight: 800 !important;text-shadow: 1px 1px 5px black;">RADIANT VICTORY</h2>
             <div class="col-xs-12" style="text-align: center;">
                 <div style="display: inline-block;text-align: right;vertical-align: middle;">
                     @if ($radiant->tournament_registration)
@@ -1270,17 +1272,17 @@
 
     <div class="comment-container">
         <div class="comment-open-action">
-            <img src="{{ asset('img/dota-2-logo.png') }}">
+            <img src="{{ asset('img/open-comment.png') }}">
         </div>
         <div class="comment-close-action" style="display: none;">
-            <img src="{{ asset('img/google-play-store.png') }}">
+            <img src="{{ asset('img/close-comment.png') }}">
         </div>
         <div class="comment-container-scroll scrollbar-macosx">
             <form id="post-comment">
                 <h4>Leave a comment</h4>
                 <textarea class="form-control" id="comment" name="comment" rows="4" placeholder="Leave a comment here..." required="required"></textarea>
                 <div class="text-right">
-                    <button type="submit" id="btn-post-comment" class="btn btn-primary ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9">
+                    <button type="submit" id="btn-post-comment" class="btn btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9">
                         <span class="ladda-label"><i class="fa fa-paper-plane"></i> Post Comment</span>
                     </button>
                 </div>
@@ -1296,8 +1298,8 @@
                             @endif
                         </div>
                         <div class="comment-detail">
-                            <p>{{ $dota2_live_match_comment->member->name }}</p>
-                            <p>{!! str_replace(PHP_EOL, '<br />', $dota2_live_match_comment->detail) !!}</p>
+                            <p style="color: #9d9d9d;font-weight:bold;">{{ $dota2_live_match_comment->member->name }}</p>
+                            <p style="color: #fff">{!! str_replace(PHP_EOL, '<br />', $dota2_live_match_comment->detail) !!}</p>
                         </div>
                     </div>
                 @endforeach
