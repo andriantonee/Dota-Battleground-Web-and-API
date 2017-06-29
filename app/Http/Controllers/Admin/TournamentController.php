@@ -118,7 +118,26 @@ class TournamentController extends BaseController
     {
         $tournament_registration_confirmation = TournamentRegistrationConfirmation::whereDoesntHave('approval')->find($id);
         if ($tournament_registration_confirmation) {
-            // Continue
+            $tournament = $tournament_registration_confirmation->registration->tournament()->select('*')
+                ->withCount([
+                    'registrations' => function($registrations) {
+                        $registrations->whereHas('confirmation', function($confirmation) {
+                            $confirmation->whereHas('approval', function($approval) {
+                                $approval->where('status', 1);
+                            });
+                        });
+                    }
+                ])
+                ->first();
+            if ($tournament->start == 0) {
+                if ($tournament->registrations_count < $tournament->max_participant) {
+                    // Continue
+                } else {
+                    return response()->json(['code' => 400, 'message' => ['Tournament has reach the maximum participant. Cannot approve any confirmation from this tournament anymore.']]);
+                }
+            } else {
+                return response()->json(['code' => 400, 'message' => ['Tournament has been started. Cannot approve any confirmation from this tournament anymore.']]);
+            }
         } else {
             return response()->json(['code' => 404, 'message' => ['Tournament Registration Confirmation ID is invalid.']]);
         }

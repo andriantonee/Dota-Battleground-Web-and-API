@@ -16,7 +16,7 @@ class TournamentController extends BaseController
     public function index(Request $request)
     {
         $organizer = $request->input('organizer_model');
-        $tournaments = Tournament::select('id', 'name', 'logo_file_name', 'challonges_url', 'max_participant', 'type', 'entry_fee', 'registration_closed', 'start_date', 'end_date', 'created_at')
+        $tournaments = Tournament::select('id', 'name', 'logo_file_name', 'challonges_url', 'max_participant', 'type', 'entry_fee', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'created_at')
             ->withCount([
                 'registrations' => function($registrations) {
                     $registrations->whereHas('confirmation', function($confirmation) {
@@ -65,6 +65,7 @@ class TournamentController extends BaseController
             'league_id' => $request->input('league_id'),
             'address' => $request->input('address'),
             'max_participant' => $request->input('max_participant'),
+            'team_size' => $request->input('team_size'),
             'rules' => $request->input('rules'),
             'prize_1st' => $request->input('prize_1st'),
             'prize_2nd' => $request->input('prize_2nd'),
@@ -94,6 +95,7 @@ class TournamentController extends BaseController
                     'leagues_id' => $data['league_id'] ?: null,
                     'address' => $data['address'] ?: null,
                     'max_participant' => $data['max_participant'],
+                    'team_size' => $data['team_size'],
                     'rules' => $data['rules'],
                     'prize_1st' => $data['prize_1st'] ?: null,
                     'prize_2nd' => $data['prize_2nd'] ?: null,
@@ -160,10 +162,10 @@ class TournamentController extends BaseController
                                 ->orderBy('matches_participants.side');
                         }
                     ])
-                    ->get()
-                    ->groupBy('round');
-                $tournament->max_round = $tournament->matches()->max('round');
-                $tournament->min_round = $tournament->matches()->min('round');
+                    ->get();
+                $tournament->max_round = $tournament->matches->max('round');
+                $tournament->min_round = $tournament->matches->min('round');
+                $tournament->matches = $tournament->matches->groupBy('round');
                 $tournament->available_matches_report = $tournament->matches()
                     ->select('id', 'tournaments_id', 'round')
                     ->with([
@@ -187,8 +189,42 @@ class TournamentController extends BaseController
                             ->groupBy('matches_participants.matches_id')
                             ->havingRaw('COUNT(*) = 2');
                     })
-                    ->get()
-                    ->groupBy('round');
+                    ->get();
+                $tournament->available_matches_report_max_round = $tournament->available_matches_report->max('round');
+                $tournament->available_matches_report_min_round = $tournament->available_matches_report->min('round');
+                $tournament->available_matches_report = $tournament->available_matches_report->groupBy('round');
+                $tournament->live_matches = $tournament->matches()
+                    ->select('id')
+                    // ->whereHas('dota2_live_matches')
+                    ->whereHas('dota2_live_matches', function($dota2_live_matches) {
+                        $dota2_live_matches->whereHas('dota2_live_match_teams', function($dota2_live_match_teams) {
+                            $dota2_live_match_teams->whereNull('matches_result');
+                        });
+                    })
+                    ->with([
+                        'dota2_live_matches' => function($dota2_live_matches) {
+                            $dota2_live_matches->select('id', 'matches_id', 'series_type', 'spectators', 'duration')
+                                ->with([
+                                    'dota2_live_match_teams' => function($dota2_live_match_teams) {
+                                        $dota2_live_match_teams->select('id', 'dota2_teams_name', 'dota2_teams_logo', 'tournaments_registrations_id', 'dota2_live_matches_id', 'series_wins', 'score', 'side')
+                                            ->with([
+                                                'tournament_registration' => function($tournament_registration) {
+                                                    $tournament_registration->select('id', 'teams_id')
+                                                        ->with([
+                                                            'team' => function($team) {
+                                                                $team->select('id', 'name', 'picture_file_name');
+                                                            }
+                                                        ]);
+                                                }
+                                            ])
+                                            ->where('side', 1)
+                                            ->orWhere('side', 2)
+                                            ->orderBy('side', 'ASC');
+                                    }
+                                ]);
+                        }
+                    ])
+                    ->get();
                 $cities = City::select('id', 'name')->get();
 
                 return view('organizer.tournament-detail', compact('tournament', 'cities'));
@@ -301,7 +337,7 @@ class TournamentController extends BaseController
                 return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
             }
 
-            if ($data['type'] == 1) {
+            if ($data['randomize'] == 1) {
                 $challonge_seed = GuzzleHelper::updateTournamentChallongeParticipantSeed($tournament);
                 if ($challonge_seed) {
                     // Continue
@@ -430,7 +466,7 @@ class TournamentController extends BaseController
                     if (!$tournament->start) {
                         // Continue
                     } else {
-                        return response()->json(['code' => 400, 'message' => ['Tournament already started. Cannot start it anymore.']]);
+                        return response()->json(['code' => 400, 'message' => ['Tournament already started. Cannot end it anymore.']]);
                     }
                 } else {
                     return response()->json(['code' => 400, 'message' => ['Tournament Registration is still open.']]);
@@ -465,6 +501,62 @@ class TournamentController extends BaseController
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
+        }
+    }
+
+    public function finalize($id, Request $request)
+    {
+        $tournament = Tournament::find($id);
+        $organizer = $request->user();
+        if ($tournament) {
+            if ($tournament->owner()->find($organizer->id)) {
+                if ($tournament->start) {
+                    if (!$tournament->complete) {
+                        // Continue
+                    } else {
+                        return response()->json(['code' => 400, 'message' => ['Cannot finalize this Tournament twice.']]);
+                    }
+                } else {
+                    return response()->json(['code' => 400, 'message' => ['Cannot finalize this Tournament unless it is started.']]);
+                }
+            } else {
+                return response()->json(['code' => 404, 'message' => ['Member is not an owner of this Tournament.']]);
+            }
+        } else {
+            return response()->json(['code' => 404, 'message' => ['Tournament ID is invalid.']]);
+        }
+
+        $available_matches_report_count =  $tournament->matches()
+            ->whereHas('participants', function($participants) {
+                $participants->select('matches_participants.matches_id AS matches_id')
+                    ->whereNull('matches_participants.matches_result')
+                    ->where(function($side) {
+                        $side->where('matches_participants.side', 1)
+                            ->orWhere('matches_participants.side', 2);
+                    })
+                    ->groupBy('matches_participants.matches_id')
+                    ->havingRaw('COUNT(*) = 2');
+            })
+            ->count();
+        if ($available_matches_report_count > 0) {
+            return response()->json(['code' => 400, 'message' => ['This Tournament have a matches that not reported.']]);
+        }
+
+        DB::beginTransaction();
+        try {
+            if ($success_finalize = GuzzleHelper::finalizeTournamentChallonge($tournament)) {
+                $tournament->complete = 1;
+                $tournament->save();
+
+                DB::commit();
+                return response()->json(['code' => 200, 'message' => ['Tournament has been finalize.']]);
+            } else {
+                DB::rollBack();
+                return response()->json(['code' => 404, 'message' => ['Something went wrong. Please try again.']]);
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['code' => 404, 'message' => ['Something went wrong. Please try again.']]);
         }
     }
 }

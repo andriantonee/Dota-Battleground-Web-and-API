@@ -299,7 +299,7 @@
                         </div>
                         <div class="selected-member-container">
                             <p>Player Left</p>
-                            <p id="player-left">5</p>
+                            <p id="player-left">{{ $tournament->team_size }}</p>
                         </div>
                     </div>
                     <div class="button-container text-center">
@@ -355,5 +355,8 @@
 @endsection
 
 @section('script')
+    <script type="text/javascript">
+        var max = {{ $tournament->team_size }};
+    </script>
     <script src="{{ asset('js/participant/tournament-register.js') }}"></script>
 @endsection

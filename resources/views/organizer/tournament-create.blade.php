@@ -103,14 +103,15 @@
                                 <label class="control-label text-left" style="font-weight: normal;">Teams</label>
                             </div>
                         </div>
-                        {{-- <div class="form-group">
+                        <div class="form-group">
                             <label for="team-size" class="col-xs-offset-2 col-xs-3 control-label text-left">Team Size</label>
-                            <div class="col-xs-3">
+                            <div class="col-xs-2">
                                 <select class="form-control" id="team-size" name="team_size">
-                                    <option value="5" selected="selected">5 Vs 5</option>
+                                    <option value="5" selected="selected">5 VS 5</option>
+                                    <option value="1">1 VS 1</option>
                                 </select>
                             </div>
-                        </div> --}}
+                        </div>
                         <div class="form-group">
                             <label for="rules" class="col-xs-offset-2 col-xs-3 control-label text-left">Tournament Rules*</label>
                             <div class="col-xs-5">

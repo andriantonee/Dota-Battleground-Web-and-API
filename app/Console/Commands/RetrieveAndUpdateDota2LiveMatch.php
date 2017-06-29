@@ -224,7 +224,90 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                             $radiant_players_hero_indicator = [];
                                             $radiant_golds = [];
                                             $radiant_xps = [];
-                                            foreach ($game->scoreboard->radiant->players->player as $player_idx => $player) {
+                                            if (is_array($game->scoreboard->radiant->players->player)) {
+                                                foreach ($game->scoreboard->radiant->players->player as $player_idx => $player) {
+                                                    $radiant_player = null;
+                                                    if (isset($radiant_players_exists_in_db[$player->account_id])) {
+                                                        $radiant_player = $radiant_players_exists_in_db[$player->account_id][0];
+                                                    }
+
+                                                    if ($radiant_player) {
+                                                        $radiant_player->kills = $player->kills;
+                                                        $radiant_player->death = $player->death;
+                                                        $radiant_player->assists = $player->assists;
+                                                        $radiant_player->last_hits = $player->last_hits;
+                                                        $radiant_player->denies = $player->denies;
+                                                        $radiant_player->gold = $player->gold;
+                                                        $radiant_player->level = $player->level;
+                                                        $radiant_player->gold_per_min = $player->gold_per_min;
+                                                        $radiant_player->xp_per_min = $player->xp_per_min;
+                                                        $radiant_player->respawn_timer = $player->respawn_timer;
+                                                        $radiant_player->position_x = $player->position_x;
+                                                        $radiant_player->position_y = $player->position_y;
+                                                        $radiant_player->net_worth = $player->net_worth;
+                                                        if ($player->hero_id != 0) {
+                                                            $radiant_player->hero()->associate(Dota2Hero::find($player->hero_id));
+                                                        }
+                                                        $radiant_player->save();
+
+                                                        $radiant_player->items()->detach();
+                                                        for ($item_idx = 0; $item_idx < 6; $item_idx++) {
+                                                            if ($player->{'item'.$item_idx} != 0) {
+                                                                $radiant_player->items()->attach($player->{'item'.$item_idx}, [
+                                                                    'item_order' => $item_idx + 1,
+                                                                    'created_at' => Carbon::now(),
+                                                                    'updated_at' => Carbon::now()
+                                                                ]);
+                                                            }
+                                                        }
+
+                                                        if ($timelapse > 0) {
+                                                            $last_gold = $radiant_player->golds()->where('duration', $old_duration)->first();
+                                                            if ($last_gold) {
+                                                                $last_gold = $last_gold->gold;
+                                                            } else {
+                                                                $last_gold = 625;
+                                                            }
+                                                            $radiant_player_gold = new Dota2LiveMatchPlayerGold([
+                                                                'gold_per_min' => $player->gold_per_min,
+                                                                'gold' => $last_gold + ($timelapse * $player->gold_per_min / 60),
+                                                                'net_worth' => $player->net_worth,
+                                                                'duration' => $duration
+                                                            ]);
+                                                            $radiant_player->golds()->save($radiant_player_gold);
+                                                            array_push($radiant_golds, (object) [
+                                                                'id' => $radiant_player->id,
+                                                                'net_worth' => $player->net_worth
+                                                            ]);
+
+                                                            $last_xp = $radiant_player->xps()->where('duration', $old_duration)->first();
+                                                            if ($last_xp) {
+                                                                $last_xp = $last_xp->xp;
+                                                            } else {
+                                                                $last_xp = 0;
+                                                            }
+                                                            $radiant_player_xp = new Dota2LiveMatchPlayerXP([
+                                                                'xp_per_min' => $player->xp_per_min,
+                                                                'xp' => $last_xp + ($timelapse * $player->xp_per_min / 60),
+                                                                'duration' => $duration
+                                                            ]);
+                                                            $radiant_player->xps()->save($radiant_player_xp);
+                                                            array_push($radiant_xps, (object) [
+                                                                'id' => $radiant_player->id,
+                                                                'xp' => $last_xp + ($timelapse * $player->xp_per_min / 60)
+                                                            ]);
+                                                        }
+
+                                                        $radiant_players[$player_idx] = $radiant_player;
+                                                        if ($player->hero_id != 0) {
+                                                            $radiant_players_hero_indicator[$player->hero_id] = $player->player_slot - 1;
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                $player_idx = 0;
+                                                $player = $game->scoreboard->radiant->players->player;
+
                                                 $radiant_player = null;
                                                 if (isset($radiant_players_exists_in_db[$player->account_id])) {
                                                     $radiant_player = $radiant_players_exists_in_db[$player->account_id][0];
@@ -250,7 +333,7 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                                     $radiant_player->save();
 
                                                     $radiant_player->items()->detach();
-                                                    for ($item_idx = 0; $item_idx < 6; $item_idx++) { 
+                                                    for ($item_idx = 0; $item_idx < 6; $item_idx++) {
                                                         if ($player->{'item'.$item_idx} != 0) {
                                                             $radiant_player->items()->attach($player->{'item'.$item_idx}, [
                                                                 'item_order' => $item_idx + 1,
@@ -620,7 +703,90 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                             $dire_players_hero_indicator = [];
                                             $dire_golds = [];
                                             $dire_xps = [];
-                                            foreach ($game->scoreboard->dire->players->player as $player_idx => $player) {
+                                            if (is_array($game->scoreboard->dire->players->player)) {
+                                                foreach ($game->scoreboard->dire->players->player as $player_idx => $player) {
+                                                    $dire_player = null;
+                                                    if (isset($dire_players_exists_in_db[$player->account_id])) {
+                                                        $dire_player = $dire_players_exists_in_db[$player->account_id][0];
+                                                    }
+
+                                                    if ($dire_player) {
+                                                        $dire_player->kills = $player->kills;
+                                                        $dire_player->death = $player->death;
+                                                        $dire_player->assists = $player->assists;
+                                                        $dire_player->last_hits = $player->last_hits;
+                                                        $dire_player->denies = $player->denies;
+                                                        $dire_player->gold = $player->gold;
+                                                        $dire_player->level = $player->level;
+                                                        $dire_player->gold_per_min = $player->gold_per_min;
+                                                        $dire_player->xp_per_min = $player->xp_per_min;
+                                                        $dire_player->respawn_timer = $player->respawn_timer;
+                                                        $dire_player->position_x = $player->position_x;
+                                                        $dire_player->position_y = $player->position_y;
+                                                        $dire_player->net_worth = $player->net_worth;
+                                                        if ($player->hero_id != 0) {
+                                                            $dire_player->hero()->associate(Dota2Hero::find($player->hero_id));
+                                                        }
+                                                        $dire_player->save();
+
+                                                        $dire_player->items()->detach();
+                                                        for ($item_idx = 0; $item_idx < 6; $item_idx++) {
+                                                            if ($player->{'item'.$item_idx} != 0) {
+                                                                $dire_player->items()->attach($player->{'item'.$item_idx}, [
+                                                                    'item_order' => $item_idx + 1,
+                                                                    'created_at' => Carbon::now(),
+                                                                    'updated_at' => Carbon::now()
+                                                                ]);
+                                                            }
+                                                        }
+
+                                                        if ($timelapse > 0) {
+                                                            $last_gold = $dire_player->golds()->where('duration', $old_duration)->first();
+                                                            if ($last_gold) {
+                                                                $last_gold = $last_gold->gold;
+                                                            } else {
+                                                                $last_gold = 625;
+                                                            }
+                                                            $dire_player_gold = new Dota2LiveMatchPlayerGold([
+                                                                'gold_per_min' => $player->gold_per_min,
+                                                                'gold' => $last_gold + ($timelapse * $player->gold_per_min / 60),
+                                                                'net_worth' => $player->net_worth,
+                                                                'duration' => $duration
+                                                            ]);
+                                                            $dire_player->golds()->save($dire_player_gold);
+                                                            array_push($dire_golds, (object) [
+                                                                'id' => $dire_player->id,
+                                                                'net_worth' => $player->net_worth
+                                                            ]);
+
+                                                            $last_xp = $dire_player->xps()->where('duration', $old_duration)->first();
+                                                            if ($last_xp) {
+                                                                $last_xp = $last_xp->xp;
+                                                            } else {
+                                                                $last_xp = 0;
+                                                            }
+                                                            $dire_player_xp = new Dota2LiveMatchPlayerXP([
+                                                                'xp_per_min' => $player->xp_per_min,
+                                                                'xp' => $last_xp + ($timelapse * $player->xp_per_min / 60),
+                                                                'duration' => $duration
+                                                            ]);
+                                                            $dire_player->xps()->save($dire_player_xp);
+                                                            array_push($dire_xps, (object) [
+                                                                'id' => $dire_player->id,
+                                                                'xp' => $last_xp + ($timelapse * $player->xp_per_min / 60)
+                                                            ]);
+                                                        }
+
+                                                        $dire_players[$player_idx] = $dire_player;
+                                                        if ($player->hero_id != 0) {
+                                                            $dire_players_hero_indicator[$player->hero_id] = $player->player_slot - 1;
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                $player_idx = 0;
+                                                $player = $game->scoreboard->dire->players->player;
+
                                                 $dire_player = null;
                                                 if (isset($dire_players_exists_in_db[$player->account_id])) {
                                                     $dire_player = $dire_players_exists_in_db[$player->account_id][0];
@@ -646,7 +812,7 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                                     $dire_player->save();
 
                                                     $dire_player->items()->detach();
-                                                    for ($item_idx = 0; $item_idx < 6; $item_idx++) { 
+                                                    for ($item_idx = 0; $item_idx < 6; $item_idx++) {
                                                         if ($player->{'item'.$item_idx} != 0) {
                                                             $dire_player->items()->attach($player->{'item'.$item_idx}, [
                                                                 'item_order' => $item_idx + 1,
@@ -1048,7 +1214,68 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                         $radiant_players = [];
                                         $radiant_players_hero_indicator = [];
                                         $radiant_players_steam32_id = [];
-                                        foreach ($game->scoreboard->radiant->players->player as $player_idx => $player) {
+                                        if (is_array($game->scoreboard->radiant->players->player)) {
+                                            foreach ($game->scoreboard->radiant->players->player as $player_idx => $player) {
+                                                $radiant_player = new Dota2LiveMatchPlayer([
+                                                    'steam32_id' => $player->account_id,
+                                                    'name' => $players[$player->account_id],
+                                                    'kills' => $player->kills,
+                                                    'death' => $player->death,
+                                                    'assists' => $player->assists,
+                                                    'last_hits' => $player->last_hits,
+                                                    'denies' => $player->denies,
+                                                    'gold' => $player->gold,
+                                                    'level' => $player->level,
+                                                    'gold_per_min' => $player->gold_per_min,
+                                                    'xp_per_min' => $player->xp_per_min,
+                                                    'respawn_timer' => $player->respawn_timer,
+                                                    'position_x' => $player->position_x,
+                                                    'position_y' => $player->position_y,
+                                                    'net_worth' => $player->net_worth,
+                                                    'player_order' => $player->player_slot
+                                                ]);
+                                                if ($player->hero_id != 0) {
+                                                    $radiant_player->hero()->associate(Dota2Hero::find($player->hero_id));
+                                                }
+                                                $radiant->dota2_live_match_players()->save($radiant_player);
+
+                                                for ($item_idx = 0; $item_idx < 6; $item_idx++) {
+                                                    if ($player->{'item'.$item_idx} != 0) {
+                                                        $radiant_player->items()->attach($player->{'item'.$item_idx}, [
+                                                            'item_order' => $item_idx + 1,
+                                                            'created_at' => Carbon::now(),
+                                                            'updated_at' => Carbon::now()
+                                                        ]);
+                                                    }
+                                                }
+
+                                                $last_gold = 625;
+                                                $radiant_player_gold = new Dota2LiveMatchPlayerGold([
+                                                    'gold_per_min' => $player->gold_per_min,
+                                                    'gold' => $last_gold + ($timelapse * $player->gold_per_min / 60),
+                                                    'net_worth' => $player->net_worth,
+                                                    'duration' => $duration
+                                                ]);
+                                                $radiant_player->golds()->save($radiant_player_gold);
+
+                                                $last_xp = 0;
+                                                $radiant_player_xp = new Dota2LiveMatchPlayerXP([
+                                                    'xp_per_min' => $player->xp_per_min,
+                                                    'xp' => $last_xp + ($timelapse * $player->xp_per_min / 60),
+                                                    'duration' => $duration
+                                                ]);
+                                                $radiant_player->xps()->save($radiant_player_xp);
+
+                                                $radiant_players[$player_idx] = $radiant_player;
+                                                array_push($radiant_players_steam32_id, $player->account_id);
+                                                if ($player->hero_id != 0) {
+                                                    $radiant_players_hero_indicator[$player->hero_id] = $player->player_slot - 1;
+                                                }
+                                            }
+                                        } else {
+                                            $player_idx = 0;
+                                            $player = $game->scoreboard->radiant->players->player;
+
                                             $radiant_player = new Dota2LiveMatchPlayer([
                                                 'steam32_id' => $player->account_id,
                                                 'name' => $players[$player->account_id],
@@ -1072,7 +1299,7 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                             }
                                             $radiant->dota2_live_match_players()->save($radiant_player);
 
-                                            for ($item_idx = 0; $item_idx < 6; $item_idx++) { 
+                                            for ($item_idx = 0; $item_idx < 6; $item_idx++) {
                                                 if ($player->{'item'.$item_idx} != 0) {
                                                     $radiant_player->items()->attach($player->{'item'.$item_idx}, [
                                                         'item_order' => $item_idx + 1,
@@ -1327,7 +1554,68 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                         $dire_players = [];
                                         $dire_players_hero_indicator = [];
                                         $dire_players_steam32_id = [];
-                                        foreach ($game->scoreboard->dire->players->player as $player_idx => $player) {
+                                        if (is_array($game->scoreboard->dire->players->player)) {
+                                            foreach ($game->scoreboard->dire->players->player as $player_idx => $player) {
+                                                $dire_player = new Dota2LiveMatchPlayer([
+                                                    'steam32_id' => $player->account_id,
+                                                    'name' => $players[$player->account_id],
+                                                    'kills' => $player->kills,
+                                                    'death' => $player->death,
+                                                    'assists' => $player->assists,
+                                                    'last_hits' => $player->last_hits,
+                                                    'denies' => $player->denies,
+                                                    'gold' => $player->gold,
+                                                    'level' => $player->level,
+                                                    'gold_per_min' => $player->gold_per_min,
+                                                    'xp_per_min' => $player->xp_per_min,
+                                                    'respawn_timer' => $player->respawn_timer,
+                                                    'position_x' => $player->position_x,
+                                                    'position_y' => $player->position_y,
+                                                    'net_worth' => $player->net_worth,
+                                                    'player_order' => $player->player_slot
+                                                ]);
+                                                if ($player->hero_id != 0) {
+                                                    $dire_player->hero()->associate(Dota2Hero::find($player->hero_id));
+                                                }
+                                                $dire->dota2_live_match_players()->save($dire_player);
+
+                                                for ($item_idx = 0; $item_idx < 6; $item_idx++) {
+                                                    if ($player->{'item'.$item_idx} != 0) {
+                                                        $dire_player->items()->attach($player->{'item'.$item_idx}, [
+                                                            'item_order' => $item_idx + 1,
+                                                            'created_at' => Carbon::now(),
+                                                            'updated_at' => Carbon::now()
+                                                        ]);
+                                                    }
+                                                }
+
+                                                $last_gold = 625;
+                                                $dire_player_gold = new Dota2LiveMatchPlayerGold([
+                                                    'gold_per_min' => $player->gold_per_min,
+                                                    'gold' => $last_gold + ($timelapse * $player->gold_per_min / 60),
+                                                    'net_worth' => $player->net_worth,
+                                                    'duration' => $duration
+                                                ]);
+                                                $dire_player->golds()->save($dire_player_gold);
+
+                                                $last_xp = 0;
+                                                $dire_player_xp = new Dota2LiveMatchPlayerXP([
+                                                    'xp_per_min' => $player->xp_per_min,
+                                                    'xp' => $last_xp + ($timelapse * $player->xp_per_min / 60),
+                                                    'duration' => $duration
+                                                ]);
+                                                $dire_player->xps()->save($dire_player_xp);
+
+                                                $dire_players[$player_idx] = $dire_player;
+                                                array_push($dire_players_steam32_id, $player->account_id);
+                                                if ($player->hero_id != 0) {
+                                                    $dire_players_hero_indicator[$player->hero_id] = $player->player_slot - 1;
+                                                }
+                                            }
+                                        } else {
+                                            $player_idx = 0;
+                                            $player = $game->scoreboard->dire->players->player;
+
                                             $dire_player = new Dota2LiveMatchPlayer([
                                                 'steam32_id' => $player->account_id,
                                                 'name' => $players[$player->account_id],
@@ -1351,7 +1639,7 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                             }
                                             $dire->dota2_live_match_players()->save($dire_player);
 
-                                            for ($item_idx = 0; $item_idx < 6; $item_idx++) { 
+                                            for ($item_idx = 0; $item_idx < 6; $item_idx++) {
                                                 if ($player->{'item'.$item_idx} != 0) {
                                                     $dire_player->items()->attach($player->{'item'.$item_idx}, [
                                                         'item_order' => $item_idx + 1,
@@ -1687,7 +1975,90 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                         $radiant_players_hero_indicator = [];
                                         $radiant_golds = [];
                                         $radiant_xps = [];
-                                        foreach ($game->scoreboard->radiant->players->player as $player_idx => $player) {
+                                        if (is_array($game->scoreboard->radiant->players->player)) {
+                                            foreach ($game->scoreboard->radiant->players->player as $player_idx => $player) {
+                                                $radiant_player = null;
+                                                if (isset($radiant_players_exists_in_db[$player->account_id])) {
+                                                    $radiant_player = $radiant_players_exists_in_db[$player->account_id][0];
+                                                }
+
+                                                if ($radiant_player) {
+                                                    $radiant_player->kills = $player->kills;
+                                                    $radiant_player->death = $player->death;
+                                                    $radiant_player->assists = $player->assists;
+                                                    $radiant_player->last_hits = $player->last_hits;
+                                                    $radiant_player->denies = $player->denies;
+                                                    $radiant_player->gold = $player->gold;
+                                                    $radiant_player->level = $player->level;
+                                                    $radiant_player->gold_per_min = $player->gold_per_min;
+                                                    $radiant_player->xp_per_min = $player->xp_per_min;
+                                                    $radiant_player->respawn_timer = $player->respawn_timer;
+                                                    $radiant_player->position_x = $player->position_x;
+                                                    $radiant_player->position_y = $player->position_y;
+                                                    $radiant_player->net_worth = $player->net_worth;
+                                                    if ($player->hero_id != 0) {
+                                                        $radiant_player->hero()->associate(Dota2Hero::find($player->hero_id));
+                                                    }
+                                                    $radiant_player->save();
+
+                                                    $radiant_player->items()->detach();
+                                                    for ($item_idx = 0; $item_idx < 6; $item_idx++) {
+                                                        if ($player->{'item'.$item_idx} != 0) {
+                                                            $radiant_player->items()->attach($player->{'item'.$item_idx}, [
+                                                                'item_order' => $item_idx + 1,
+                                                                'created_at' => Carbon::now(),
+                                                                'updated_at' => Carbon::now()
+                                                            ]);
+                                                        }
+                                                    }
+
+                                                    if ($timelapse > 0) {
+                                                        $last_gold = $radiant_player->golds()->where('duration', $old_duration)->first();
+                                                        if ($last_gold) {
+                                                            $last_gold = $last_gold->gold;
+                                                        } else {
+                                                            $last_gold = 625;
+                                                        }
+                                                        $radiant_player_gold = new Dota2LiveMatchPlayerGold([
+                                                            'gold_per_min' => $player->gold_per_min,
+                                                            'gold' => $last_gold + ($timelapse * $player->gold_per_min / 60),
+                                                            'net_worth' => $player->net_worth,
+                                                            'duration' => $duration
+                                                        ]);
+                                                        $radiant_player->golds()->save($radiant_player_gold);
+                                                        array_push($radiant_golds, (object) [
+                                                            'id' => $radiant_player->id,
+                                                            'net_worth' => $player->net_worth
+                                                        ]);
+
+                                                        $last_xp = $radiant_player->xps()->where('duration', $old_duration)->first();
+                                                        if ($last_xp) {
+                                                            $last_xp = $last_xp->xp;
+                                                        } else {
+                                                            $last_xp = 0;
+                                                        }
+                                                        $radiant_player_xp = new Dota2LiveMatchPlayerXP([
+                                                            'xp_per_min' => $player->xp_per_min,
+                                                            'xp' => $last_xp + ($timelapse * $player->xp_per_min / 60),
+                                                            'duration' => $duration
+                                                        ]);
+                                                        $radiant_player->xps()->save($radiant_player_xp);
+                                                        array_push($radiant_xps, (object) [
+                                                            'id' => $radiant_player->id,
+                                                            'xp' => $last_xp + ($timelapse * $player->xp_per_min / 60)
+                                                        ]);
+                                                    }
+
+                                                    $radiant_players[$player_idx] = $radiant_player;
+                                                    if ($player->hero_id != 0) {
+                                                        $radiant_players_hero_indicator[$player->hero_id] = $player->player_slot - 1;
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            $player_idx = 0;
+                                            $player = $game->scoreboard->radiant->players->player;
+
                                             $radiant_player = null;
                                             if (isset($radiant_players_exists_in_db[$player->account_id])) {
                                                 $radiant_player = $radiant_players_exists_in_db[$player->account_id][0];
@@ -1713,7 +2084,7 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                                 $radiant_player->save();
 
                                                 $radiant_player->items()->detach();
-                                                for ($item_idx = 0; $item_idx < 6; $item_idx++) { 
+                                                for ($item_idx = 0; $item_idx < 6; $item_idx++) {
                                                     if ($player->{'item'.$item_idx} != 0) {
                                                         $radiant_player->items()->attach($player->{'item'.$item_idx}, [
                                                             'item_order' => $item_idx + 1,
@@ -2083,7 +2454,90 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                         $dire_players_hero_indicator = [];
                                         $dire_golds = [];
                                         $dire_xps = [];
-                                        foreach ($game->scoreboard->dire->players->player as $player_idx => $player) {
+                                        if (is_array($game->scoreboard->dire->players->player)) {
+                                            foreach ($game->scoreboard->dire->players->player as $player_idx => $player) {
+                                                $dire_player = null;
+                                                if (isset($dire_players_exists_in_db[$player->account_id])) {
+                                                    $dire_player = $dire_players_exists_in_db[$player->account_id][0];
+                                                }
+
+                                                if ($dire_player) {
+                                                    $dire_player->kills = $player->kills;
+                                                    $dire_player->death = $player->death;
+                                                    $dire_player->assists = $player->assists;
+                                                    $dire_player->last_hits = $player->last_hits;
+                                                    $dire_player->denies = $player->denies;
+                                                    $dire_player->gold = $player->gold;
+                                                    $dire_player->level = $player->level;
+                                                    $dire_player->gold_per_min = $player->gold_per_min;
+                                                    $dire_player->xp_per_min = $player->xp_per_min;
+                                                    $dire_player->respawn_timer = $player->respawn_timer;
+                                                    $dire_player->position_x = $player->position_x;
+                                                    $dire_player->position_y = $player->position_y;
+                                                    $dire_player->net_worth = $player->net_worth;
+                                                    if ($player->hero_id != 0) {
+                                                        $dire_player->hero()->associate(Dota2Hero::find($player->hero_id));
+                                                    }
+                                                    $dire_player->save();
+
+                                                    $dire_player->items()->detach();
+                                                    for ($item_idx = 0; $item_idx < 6; $item_idx++) {
+                                                        if ($player->{'item'.$item_idx} != 0) {
+                                                            $dire_player->items()->attach($player->{'item'.$item_idx}, [
+                                                                'item_order' => $item_idx + 1,
+                                                                'created_at' => Carbon::now(),
+                                                                'updated_at' => Carbon::now()
+                                                            ]);
+                                                        }
+                                                    }
+
+                                                    if ($timelapse > 0) {
+                                                        $last_gold = $dire_player->golds()->where('duration', $old_duration)->first();
+                                                        if ($last_gold) {
+                                                            $last_gold = $last_gold->gold;
+                                                        } else {
+                                                            $last_gold = 625;
+                                                        }
+                                                        $dire_player_gold = new Dota2LiveMatchPlayerGold([
+                                                            'gold_per_min' => $player->gold_per_min,
+                                                            'gold' => $last_gold + ($timelapse * $player->gold_per_min / 60),
+                                                            'net_worth' => $player->net_worth,
+                                                            'duration' => $duration
+                                                        ]);
+                                                        $dire_player->golds()->save($dire_player_gold);
+                                                        array_push($dire_golds, (object) [
+                                                            'id' => $dire_player->id,
+                                                            'net_worth' => $player->net_worth
+                                                        ]);
+
+                                                        $last_xp = $dire_player->xps()->where('duration', $old_duration)->first();
+                                                        if ($last_xp) {
+                                                            $last_xp = $last_xp->xp;
+                                                        } else {
+                                                            $last_xp = 0;
+                                                        }
+                                                        $dire_player_xp = new Dota2LiveMatchPlayerXP([
+                                                            'xp_per_min' => $player->xp_per_min,
+                                                            'xp' => $last_xp + ($timelapse * $player->xp_per_min / 60),
+                                                            'duration' => $duration
+                                                        ]);
+                                                        $dire_player->xps()->save($dire_player_xp);
+                                                        array_push($dire_xps, (object) [
+                                                            'id' => $dire_player->id,
+                                                            'xp' => $last_xp + ($timelapse * $player->xp_per_min / 60)
+                                                        ]);
+                                                    }
+
+                                                    $dire_players[$player_idx] = $dire_player;
+                                                    if ($player->hero_id != 0) {
+                                                        $dire_players_hero_indicator[$player->hero_id] = $player->player_slot - 1;
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            $player_idx = 0;
+                                            $player = $game->scoreboard->dire->players->player;
+
                                             $dire_player = null;
                                             if (isset($dire_players_exists_in_db[$player->account_id])) {
                                                 $dire_player = $dire_players_exists_in_db[$player->account_id][0];
@@ -2109,7 +2563,7 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                                 $dire_player->save();
 
                                                 $dire_player->items()->detach();
-                                                for ($item_idx = 0; $item_idx < 6; $item_idx++) { 
+                                                for ($item_idx = 0; $item_idx < 6; $item_idx++) {
                                                     if ($player->{'item'.$item_idx} != 0) {
                                                         $dire_player->items()->attach($player->{'item'.$item_idx}, [
                                                             'item_order' => $item_idx + 1,
@@ -2511,7 +2965,68 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                     $radiant_players = [];
                                     $radiant_players_hero_indicator = [];
                                     $radiant_players_steam32_id = [];
-                                    foreach ($game->scoreboard->radiant->players->player as $player_idx => $player) {
+                                    if (is_array($game->scoreboard->radiant->players->player)) {
+                                        foreach ($game->scoreboard->radiant->players->player as $player_idx => $player) {
+                                            $radiant_player = new Dota2LiveMatchPlayer([
+                                                'steam32_id' => $player->account_id,
+                                                'name' => $players[$player->account_id],
+                                                'kills' => $player->kills,
+                                                'death' => $player->death,
+                                                'assists' => $player->assists,
+                                                'last_hits' => $player->last_hits,
+                                                'denies' => $player->denies,
+                                                'gold' => $player->gold,
+                                                'level' => $player->level,
+                                                'gold_per_min' => $player->gold_per_min,
+                                                'xp_per_min' => $player->xp_per_min,
+                                                'respawn_timer' => $player->respawn_timer,
+                                                'position_x' => $player->position_x,
+                                                'position_y' => $player->position_y,
+                                                'net_worth' => $player->net_worth,
+                                                'player_order' => $player->player_slot
+                                            ]);
+                                            if ($player->hero_id != 0) {
+                                                $radiant_player->hero()->associate(Dota2Hero::find($player->hero_id));
+                                            }
+                                            $radiant->dota2_live_match_players()->save($radiant_player);
+
+                                            for ($item_idx = 0; $item_idx < 6; $item_idx++) {
+                                                if ($player->{'item'.$item_idx} != 0) {
+                                                    $radiant_player->items()->attach($player->{'item'.$item_idx}, [
+                                                        'item_order' => $item_idx + 1,
+                                                        'created_at' => Carbon::now(),
+                                                        'updated_at' => Carbon::now()
+                                                    ]);
+                                                }
+                                            }
+
+                                            $last_gold = 625;
+                                            $radiant_player_gold = new Dota2LiveMatchPlayerGold([
+                                                'gold_per_min' => $player->gold_per_min,
+                                                'gold' => $last_gold + ($timelapse * $player->gold_per_min / 60),
+                                                'net_worth' => $player->net_worth,
+                                                'duration' => $duration
+                                            ]);
+                                            $radiant_player->golds()->save($radiant_player_gold);
+
+                                            $last_xp = 0;
+                                            $radiant_player_xp = new Dota2LiveMatchPlayerXP([
+                                                'xp_per_min' => $player->xp_per_min,
+                                                'xp' => $last_xp + ($timelapse * $player->xp_per_min / 60),
+                                                'duration' => $duration
+                                            ]);
+                                            $radiant_player->xps()->save($radiant_player_xp);
+
+                                            $radiant_players[$player_idx] = $radiant_player;
+                                            array_push($radiant_players_steam32_id, $player->account_id);
+                                            if ($player->hero_id != 0) {
+                                                $radiant_players_hero_indicator[$player->hero_id] = $player->player_slot - 1;
+                                            }
+                                        }
+                                    } else {
+                                        $player_idx = 0;
+                                        $player = $game->scoreboard->radiant->players->player;
+
                                         $radiant_player = new Dota2LiveMatchPlayer([
                                             'steam32_id' => $player->account_id,
                                             'name' => $players[$player->account_id],
@@ -2535,7 +3050,7 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                         }
                                         $radiant->dota2_live_match_players()->save($radiant_player);
 
-                                        for ($item_idx = 0; $item_idx < 6; $item_idx++) { 
+                                        for ($item_idx = 0; $item_idx < 6; $item_idx++) {
                                             if ($player->{'item'.$item_idx} != 0) {
                                                 $radiant_player->items()->attach($player->{'item'.$item_idx}, [
                                                     'item_order' => $item_idx + 1,
@@ -2790,7 +3305,68 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                     $dire_players = [];
                                     $dire_players_hero_indicator = [];
                                     $dire_players_steam32_id = [];
-                                    foreach ($game->scoreboard->dire->players->player as $player_idx => $player) {
+                                    if (is_array($game->scoreboard->dire->players->player)) {
+                                        foreach ($game->scoreboard->dire->players->player as $player_idx => $player) {
+                                            $dire_player = new Dota2LiveMatchPlayer([
+                                                'steam32_id' => $player->account_id,
+                                                'name' => $players[$player->account_id],
+                                                'kills' => $player->kills,
+                                                'death' => $player->death,
+                                                'assists' => $player->assists,
+                                                'last_hits' => $player->last_hits,
+                                                'denies' => $player->denies,
+                                                'gold' => $player->gold,
+                                                'level' => $player->level,
+                                                'gold_per_min' => $player->gold_per_min,
+                                                'xp_per_min' => $player->xp_per_min,
+                                                'respawn_timer' => $player->respawn_timer,
+                                                'position_x' => $player->position_x,
+                                                'position_y' => $player->position_y,
+                                                'net_worth' => $player->net_worth,
+                                                'player_order' => $player->player_slot
+                                            ]);
+                                            if ($player->hero_id != 0) {
+                                                $dire_player->hero()->associate(Dota2Hero::find($player->hero_id));
+                                            }
+                                            $dire->dota2_live_match_players()->save($dire_player);
+
+                                            for ($item_idx = 0; $item_idx < 6; $item_idx++) {
+                                                if ($player->{'item'.$item_idx} != 0) {
+                                                    $dire_player->items()->attach($player->{'item'.$item_idx}, [
+                                                        'item_order' => $item_idx + 1,
+                                                        'created_at' => Carbon::now(),
+                                                        'updated_at' => Carbon::now()
+                                                    ]);
+                                                }
+                                            }
+
+                                            $last_gold = 625;
+                                            $dire_player_gold = new Dota2LiveMatchPlayerGold([
+                                                'gold_per_min' => $player->gold_per_min,
+                                                'gold' => $last_gold + ($timelapse * $player->gold_per_min / 60),
+                                                'net_worth' => $player->net_worth,
+                                                'duration' => $duration
+                                            ]);
+                                            $dire_player->golds()->save($dire_player_gold);
+
+                                            $last_xp = 0;
+                                            $dire_player_xp = new Dota2LiveMatchPlayerXP([
+                                                'xp_per_min' => $player->xp_per_min,
+                                                'xp' => $last_xp + ($timelapse * $player->xp_per_min / 60),
+                                                'duration' => $duration
+                                            ]);
+                                            $dire_player->xps()->save($dire_player_xp);
+
+                                            $dire_players[$player_idx] = $dire_player;
+                                            array_push($dire_players_steam32_id, $player->account_id);
+                                            if ($player->hero_id != 0) {
+                                                $dire_players_hero_indicator[$player->hero_id] = $player->player_slot - 1;
+                                            }
+                                        }
+                                    } else {
+                                        $player_idx = 0;
+                                        $player = $game->scoreboard->dire->players->player;
+
                                         $dire_player = new Dota2LiveMatchPlayer([
                                             'steam32_id' => $player->account_id,
                                             'name' => $players[$player->account_id],
@@ -2814,7 +3390,7 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                         }
                                         $dire->dota2_live_match_players()->save($dire_player);
 
-                                        for ($item_idx = 0; $item_idx < 6; $item_idx++) { 
+                                        for ($item_idx = 0; $item_idx < 6; $item_idx++) {
                                             if ($player->{'item'.$item_idx} != 0) {
                                                 $dire_player->items()->attach($player->{'item'.$item_idx}, [
                                                     'item_order' => $item_idx + 1,
@@ -3184,7 +3760,7 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                     $selected_player->save();
 
                                     $selected_player->items()->detach();
-                                    for ($item_idx = 0; $item_idx < 6; $item_idx++) { 
+                                    for ($item_idx = 0; $item_idx < 6; $item_idx++) {
                                         if ($player->{'item_'.$item_idx} != 0) {
                                             $selected_player->items()->attach($player->{'item_'.$item_idx}, [
                                                 'item_order' => $item_idx + 1,

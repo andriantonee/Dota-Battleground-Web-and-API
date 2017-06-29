@@ -176,6 +176,25 @@ class GuzzleHelper
         }
     }
 
+    public static function finalizeTournamentChallonge(Tournament $tournament)
+    {
+        $http = new GuzzleClient();
+
+        try {
+            $challonge_tournament_id = $tournament->challonges_id;
+
+            $response = $http->post('https://api.challonge.com/v1/tournaments/'.$challonge_tournament_id.'/finalize.json', [
+                'form_params' => [
+                    'api_key' => env('CHALLONGE_API_KEY', '')
+                ]
+            ]);
+
+            return json_decode($response->getBody()->__toString(), false);
+        } catch (RequestException $e) {
+            return null;
+        }
+    }
+
     public static function requestDota2LiveLeagueGames()
     {
         $http = new GuzzleClient();

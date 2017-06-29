@@ -73,14 +73,14 @@ $(document).ready(function() {
     });
 
     $(document).on("click", "input[name=\"members[]\"]", function(e) {
-        if ($("input[name=\"members[]\"]:checked").length == 5) {
+        if ($("input[name=\"members[]\"]:checked").length == max) {
             $("input[name=\"members[]\"]:not(:checked)").prop("disabled", true);
             $("#btn-tournament-register").prop("disabled", false);
         } else {
             $("input[name=\"members[]\"]:disabled").prop("disabled", false);
             $("#btn-tournament-register").prop("disabled", true);
         }
-        $("#player-left").html(5 - $("input[name=\"members[]\"]:checked").length);
+        $("#player-left").html(max - $("input[name=\"members[]\"]:checked").length);
     });
 
     $("#form-tournament-register").on("submit", function(e) {

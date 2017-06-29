@@ -38,4 +38,9 @@ class Match extends Model
     {
         return $this->belongsToMany('App\Match', 'matches_qualifications_details', 'child_matches_id', 'parent_matches_id');
     }
+
+    public function dota2_live_matches()
+    {
+        return $this->hasMany('App\Dota2LiveMatch', 'matches_id', 'id');
+    }
 }

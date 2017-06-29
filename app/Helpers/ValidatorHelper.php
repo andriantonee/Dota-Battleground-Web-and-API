@@ -293,6 +293,7 @@ class ValidatorHelper
             'city' => 'filled|integer|exists:cities,id',
             'address' => 'string|max:255',
             'max_participant' => 'required|integer|min:3|max:256',
+            'team_size' => 'required|integer|in:1,5',
             'rules' => 'required|string|max:65535',
             'prize_1st' => 'string|max:255',
             'prize_2nd' => 'string|max:255',
@@ -329,6 +330,9 @@ class ValidatorHelper
             'max_participant.integer' => 'Max Participant must be an integer.',
             'max_participant.min' => 'Max Participant has a minimum :min value.',
             'max_participant.max' => 'Max Participant has a maximum :max value.',
+            'team_size.required' => 'Team Size is required.',
+            'team_size.integer' => 'Team Size must be an integer.',
+            'team_size.in' => 'Team Size can support 1 VS 1 or 5 VS 5.',
             'rules.required' => 'Rules is required.',
             'rules.string' => 'Rules must be a string.',
             'rules.max' => 'Rules has a maximum :max characters only.',
@@ -428,17 +432,17 @@ class ValidatorHelper
         }
     }
 
-    public static function validateTournamentRegisterRequest(array $data, $leader_id, $tournament_id, $must_have_identifications)
+    public static function validateTournamentRegisterRequest(array $data, $leader_id, $tournament_id, $must_have_identifications, $team_size)
     {
         $rule = [
             'team' => 'required|integer',
-            'members' => 'required|array|size:5',
+            'members' => 'required|array|size:'.$team_size,
             'members.*' => 'required|integer'
         ];
         $message = [
             'team.required' => 'You must select a team.',
             'team.integer' => 'Team must be an integer.',
-            'members.required' => 'You must select 5 members in order to participate this tournament.',
+            'members.required' => 'You must select '.$team_size.' members in order to participate this tournament.',
             'members.array' => 'Member must be an array.',
             'members.size' => 'You need :size members in order to participate this tournament.',
             'members.*.required' => 'Each member is required.',

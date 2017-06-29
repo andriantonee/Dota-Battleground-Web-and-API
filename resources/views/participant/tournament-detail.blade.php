@@ -280,6 +280,18 @@
                                             <td>Current Participants</td>
                                             <td>{{ $tournament->registrations_count }}</td>
                                         </tr>
+                                        <tr>
+                                            <td>Team Size</td>
+                                            <td>
+                                                @if ($tournament->team_size == 5)
+                                                    5 VS 5
+                                                @elseif ($tournament->team_size == 1)
+                                                    1 VS 1
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

@@ -230,6 +230,66 @@ $(document).ready(function(e) {
         });
     });
 
+    $("#btn-tournament-finalize").on("click", function(e) {
+        e.preventDefault();
+
+        swal({
+            "title" : "Finalize Tournament",
+            "text" : "Do you want to finalize it?",
+            "type" : "warning",
+            "showCancelButton" : true,
+            "showConfirmButton" : true,
+            "confirmButtonText" : "Yes, finalize it.",
+            "cancelButtonText" : "No, dont't finalize it.",
+            "closeOnConfirm" : false,
+            "showLoaderOnConfirm" : true
+        }, function() {
+            $.ajax({
+                "type" : "PUT",
+                "url" : api_url + "tournament/" + location.pathname.split("/")[3] + "/finalize",
+                "headers" : {
+                    "Accept" : "application/json",
+                    "Authorization" : "Bearer " + document.cookie.replace(/(?:(?:^|.*;\s*)organizer_token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
+                }
+            })
+                .done(function(data) {
+                    if (data.code == 200) {
+                        swal({
+                            "title" : "Finalize Tournament Success",
+                            "text" : data.message[0],
+                            "type" : "success",
+                            "showConfirmButton" : false,
+                            "timer" : 1000
+                        });
+
+                        location.reload();
+                    } else {
+                        var html_error_message = "";
+                        $.each(data.message, function(index, value) {
+                            if (html_error_message != "") {
+                                html_error_message += "\n";
+                            }
+
+                            html_error_message += value;
+                        });
+
+                        swal({
+                            "title" : "Finalize Tournament Fail",
+                            "text" : html_error_message,
+                            "type" : "error"
+                        });
+                    }
+                })
+                .fail(function() {
+                    swal({
+                        "title" : "Finalize Tournament Fail",
+                        "text" : "Something went wrong. Please try again.",
+                        "type" : "error"
+                    });
+                });
+        });
+    });
+
     $("#schedule-modal").on("show.bs.modal", function(e) {
         var btn_trigger = $(e.relatedTarget);
         var tr_child = btn_trigger.parent().parent().children();
@@ -313,7 +373,7 @@ $(document).ready(function(e) {
 
         var match_id = btn_trigger.data("match-id");
         var round_id = btn_trigger.data("round-id");
-        var round = $("#round-" + round_id + "-title").html().trim();
+        var round = $("#match-report-round-" + round_id + "-title").html().trim();
         var match = tr_child.eq(tr_child_length - 5).html().trim();
         var player_1 = tr_child.eq(tr_child_length - 4).html().trim();
         var player_2 = tr_child.eq(tr_child_length - 2).html().trim();

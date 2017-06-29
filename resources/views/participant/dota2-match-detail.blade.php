@@ -521,8 +521,48 @@
             </div>
         </div>
         <div class="row" style="background-color: #292E3A;box-shadow: 5px 5px 12px 5px rgba(0,0,0,0.3);margin-bottom: 15px;margin-top: 15px;padding-bottom: 15px;padding-top: 15px;">
-            <!-- winner section -->
-            <h2 class="radiant-color" style="text-align:center;margin: 0;margin-bottom:5px;font-weight: 800 !important;text-shadow: 1px 1px 5px black;">RADIANT VICTORY</h2>
+            @if ($radiant->matches_result == 3)
+                @if ($radiant->tournament_registration)
+                    <h2 id="radiant-victory" class="radiant-color" style="text-align: center;margin: 0;margin-bottom: 10px;font-weight: 800 !important;text-shadow: 1px 1px 5px black;">{{ $radiant->tournament_registration->team->name }} VICTORY</h2>
+                @else
+                    @if ($radiant->dota2_teams_name)
+                        <h2 id="radiant-victory" class="radiant-color" style="text-align: center;margin: 0;margin-bottom: 10px;font-weight: 800 !important;text-shadow: 1px 1px 5px black;">{{ $radiant->dota2_teams_name }} VICTORY</h2>
+                    @else
+                        <h2 id="radiant-victory" class="radiant-color" style="text-align: center;margin: 0;margin-bottom: 10px;font-weight: 800 !important;text-shadow: 1px 1px 5px black;">RADIANT VICTORY</h2>
+                    @endif
+                @endif
+            @else
+                @if ($radiant->tournament_registration)
+                    <h2 id="radiant-victory" class="radiant-color" style="text-align: center;margin: 0;margin-bottom: 10px;font-weight: 800 !important;text-shadow: 1px 1px 5px black;display: none;">{{ $radiant->tournament_registration->team->name }} VICTORY</h2>
+                @else
+                    @if ($radiant->dota2_teams_name)
+                        <h2 id="radiant-victory" class="radiant-color" style="text-align: center;margin: 0;margin-bottom: 10px;font-weight: 800 !important;text-shadow: 1px 1px 5px black;display: none;">{{ $radiant->dota2_teams_name }} VICTORY</h2>
+                    @else
+                        <h2 id="radiant-victory" class="radiant-color" style="text-align: center;margin: 0;margin-bottom: 10px;font-weight: 800 !important;text-shadow: 1px 1px 5px black;display: none;">RADIANT VICTORY</h2>
+                    @endif
+                @endif
+            @endif
+            @if ($dire->matches_result == 3)
+                @if ($dire->tournament_registration)
+                    <h2 id="dire-victory" class="dire-color" style="text-align: center;margin: 0;margin-bottom: 10px;font-weight: 800 !important;text-shadow: 1px 1px 5px black;">{{ $dire->tournament_registration->team->name }} VICTORY</h2>
+                @else
+                    @if ($dire->dota2_teams_name)
+                        <h2 id="dire-victory" class="dire-color" style="text-align: center;margin: 0;margin-bottom: 10px;font-weight: 800 !important;text-shadow: 1px 1px 5px black;">{{ $dire->dota2_teams_name }} VICTORY</h2>
+                    @else
+                        <h2 id="dire-victory" class="dire-color" style="text-align: center;margin: 0;margin-bottom: 10px;font-weight: 800 !important;text-shadow: 1px 1px 5px black;">RADIANT VICTORY</h2>
+                    @endif
+                @endif
+            @else
+                @if ($dire->tournament_registration)
+                    <h2 id="dire-victory" class="dire-color" style="text-align: center;margin: 0;margin-bottom: 10px;font-weight: 800 !important;text-shadow: 1px 1px 5px black;display: none;">{{ $dire->tournament_registration->team->name }} VICTORY</h2>
+                @else
+                    @if ($dire->dota2_teams_name)
+                        <h2 id="dire-victory" class="dire-color" style="text-align: center;margin: 0;margin-bottom: 10px;font-weight: 800 !important;text-shadow: 1px 1px 5px black;display: none;">{{ $dire->dota2_teams_name }} VICTORY</h2>
+                    @else
+                        <h2 id="dire-victory" class="dire-color" style="text-align: center;margin: 0;margin-bottom: 10px;font-weight: 800 !important;text-shadow: 1px 1px 5px black;display: none;">DIRE VICTORY</h2>
+                    @endif
+                @endif
+            @endif
             <div class="col-xs-12" style="text-align: center;">
                 <div style="display: inline-block;text-align: right;vertical-align: middle;">
                     @if ($radiant->tournament_registration)
@@ -542,7 +582,7 @@
                     @endif
                 </div>
                 <div style="display: inline-block;margin-left: 5px;margin-right: 5px;vertical-align: top;">
-                    <h5 id="duration" style="margin-top: 0px; margin-bottom: 10px;color: #5f6472;">{{ floor($dota2_live_match->duration / 60) }}:{{ $dota2_live_match->duration % 60 }}</h5>
+                    <h5 id="duration" style="margin-top: 0px; margin-bottom: 10px;color: #5f6472;">{{ (floor($dota2_live_match->duration / 60) < 10 ? '0' : '').floor($dota2_live_match->duration / 60) }}:{{ ($dota2_live_match->duration % 60 < 10 ? '0' : '').$dota2_live_match->duration % 60 }}</h5>
                     <h2 id="score" style="margin: 0;">{{ $radiant->score }} - {{ $dire->score }}</h2>
                     {{-- <h2 id="score" style="margin: 0;">0 - 0</h2> --}}
                 </div>

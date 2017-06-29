@@ -25,6 +25,7 @@ class CreateTournamentsTable extends Migration
             $table->unsignedMediumInteger('cities_id')->nullable();
             $table->string('address', 255)->nullable();
             $table->unsignedSmallInteger('max_participant');
+            $table->unsignedSmallInteger('team_size');
             $table->text('rules');
             $table->string('prize_1st', 255)->nullable();
             $table->string('prize_2nd', 255)->nullable();

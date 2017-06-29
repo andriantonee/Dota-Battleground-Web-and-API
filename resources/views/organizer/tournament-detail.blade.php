@@ -43,6 +43,34 @@
         #report-match-enter-scores-title {
             margin-top: 0;
         }
+
+        .live-match-group-list-item {
+            cursor: pointer;
+            padding: 15px;
+            position: relative;
+            text-align: center;
+        }
+        .live-match-group-list-item:first-child {
+            margin-bottom: 10px;
+        }
+        .live-match-group-list-item+.live-match-group-list-item {
+            margin-bottom: 10px;
+        }
+        .live-match-group-list-item:last-child {
+            margin-bottom: 0px;
+        }
+        .radiant-color {
+            color: #92A525;
+        }
+        .dire-color {
+            color: #C23C2A;
+        }
+        .handle-overflow {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 100px;
+        }
     </style>
 @endsection
 
@@ -68,23 +96,30 @@
                                         @if (count($tournament->registrations) >= 2)
                                             <h4 style="margin: 0;">
                                                 Status : <span class="in-progress">Registration Closed</span>
-                                                <button id="btn-tournament-start" class="btn btn-default btn-custom" style="margin-left: 15px;">
+                                                <button id="btn-tournament-start" class="btn btn-default btn-custom" style="margin-left: 10px;">
                                                     <i class="fa fa-play"></i>&nbsp;&nbsp;Start
                                                 </button>
                                             </h4>
                                         @else
                                             <h4 style="margin: 0;">
-                                                Status : <span class="in-progress">Registration Closed </span>
-                                                <button id="btn-tournament-end" class="btn btn-default btn-custom" style="margin-left: 15px;">
+                                                Status : <span class="in-progress">Registration Closed</span>
+                                                <button id="btn-tournament-end" class="btn btn-default btn-custom" style="margin-left: 10px;">
                                                     <i class="fa fa-stop"></i>&nbsp;&nbsp;End
                                                 </button>
                                             </h4>
                                         @endif
                                     @else
                                         @if ($tournament->complete == 0)
-                                            <h4>Status : <span class="in-progress">In Progress </span></h4>
+                                            <h4>
+                                                Status : <span class="in-progress">In Progress</span>
+                                                @if (count($tournament->available_matches_report) == 0)
+                                                    <button id="btn-tournament-finalize" class="btn btn-default btn-custom" style="margin-left: 10px;">
+                                                        <i class="fa fa-floppy-o"></i>&nbsp;&nbsp;Finalize
+                                                    </button>
+                                                @endif
+                                            </h4>
                                         @else
-                                            <h4>Status : <span class="in-progress">Complete </span></h4>
+                                            <h4>Status : <span class="in-progress">Complete</span></h4>
                                         @endif
                                     @endif
                                 @endif
@@ -177,14 +212,23 @@
                                                 <label class="control-label text-left" style="font-weight: normal;">Teams</label>
                                             </div>
                                         </div>
-                                        {{-- <div class="form-group">
+                                        <div class="form-group">
                                             <label for="team-size" class="col-xs-offset-2 col-xs-3 control-label text-left">Team Size</label>
-                                            <div class="col-xs-3">
-                                                <select class="form-control" id="team-size" name="team_size">
-                                                    <option value="5" selected="selected">5 Vs 5</option>
+                                            <div class="col-xs-2">
+                                                <select class="form-control" id="team-size" name="team_size" disabled="disabled">
+                                                    @if ($tournament->team_size == 5)
+                                                        <option value="5" selected="selected">5 VS 5</option>
+                                                        <option value="1">1 VS 1</option>
+                                                    @elseif ($tournament->team_size == 1)
+                                                        <option value="5" selected="selected">5 VS 5</option>
+                                                        <option value="1" selected="selected">1 VS 1</option>
+                                                    @else
+                                                        <option value="5" selected="selected">5 VS 5</option>
+                                                        <option value="1">1 VS 1</option>
+                                                    @endif
                                                 </select>
                                             </div>
-                                        </div> --}}
+                                        </div>
                                         <div class="form-group">
                                             <label for="rules" class="col-xs-offset-2 col-xs-3 control-label text-left">Tournament Rules</label>
                                             <div class="col-xs-5">
@@ -340,28 +384,40 @@
                                         <div class="form-group">
                                             <label for="tournament-type" class="col-xs-offset-2 col-xs-3 control-label text-left">Tournament Type</label>
                                             <div class="col-xs-5">
-                                                <select class="form-control" id="tournament-type" name="type" required="required">
-                                                    @if ($tournament->type == 1)
-                                                        <option value="1" selected="selected">Single Elimination</option>
-                                                        <option value="2">Double Elimination</option>
-                                                    @elseif ($tournament->type == 2)
-                                                        <option value="1">Single Elimination</option>
-                                                        <option value="2" selected="selected">Double Elimination</option>
-                                                    @else
-                                                        <option value="1">Single Elimination</option>
-                                                        <option value="2">Double Elimination</option>
-                                                    @endif
-                                                </select>
-                                                @if (count($tournament->registrations) >= 2)
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" id="ckbox-tournament-randomize-participant-seed" name="randomize" value="1"> Randomize Participant Seed
-                                                        </label>
-                                                    </div>
-                                                @else
+                                                @if ($tournament->start)
+                                                    <select class="form-control" id="tournament-type" name="type" required="required" disabled="disabled">
+                                                        @if ($tournament->type == 1)
+                                                            <option value="1" selected="selected">Single Elimination</option>
+                                                            <option value="2">Double Elimination</option>
+                                                        @elseif ($tournament->type == 2)
+                                                            <option value="1">Single Elimination</option>
+                                                            <option value="2" selected="selected">Double Elimination</option>
+                                                        @else
+                                                            <option value="1">Single Elimination</option>
+                                                            <option value="2">Double Elimination</option>
+                                                        @endif
+                                                    </select>
                                                     <div class="checkbox disabled">
                                                         <label>
                                                             <input type="checkbox" id="ckbox-tournament-randomize-participant-seed" name="randomize" value="1" disabled="disabled"> Randomize Participant Seed
+                                                        </label>
+                                                    </div>
+                                                @else
+                                                    <select class="form-control" id="tournament-type" name="type" required="required">
+                                                        @if ($tournament->type == 1)
+                                                            <option value="1" selected="selected">Single Elimination</option>
+                                                            <option value="2">Double Elimination</option>
+                                                        @elseif ($tournament->type == 2)
+                                                            <option value="1">Single Elimination</option>
+                                                            <option value="2" selected="selected">Double Elimination</option>
+                                                        @else
+                                                            <option value="1">Single Elimination</option>
+                                                            <option value="2">Double Elimination</option>
+                                                        @endif
+                                                    </select>
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" id="ckbox-tournament-randomize-participant-seed" name="randomize" value="1"> Randomize Participant Seed
                                                         </label>
                                                     </div>
                                                 @endif
@@ -369,9 +425,15 @@
                                         </div>
                                         <div class="form-group" style="margin-bottom: 0;">
                                             <div class="col-xs-offset-5 col-xs-5 text-right">
-                                                <button type="submit" id="btn-tournament-brackets" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9">
-                                                    <span class="ladda-label">Generate</span>
-                                                </button>
+                                                @if ($tournament->start)
+                                                    <button type="submit" id="btn-tournament-brackets" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9" disabled="disabled">
+                                                        <span class="ladda-label">Generate</span>
+                                                    </button>
+                                                @else
+                                                    <button type="submit" id="btn-tournament-brackets" class="btn btn-default btn-custom ladda-button" data-style="zoom-out" data-spinner-color="#A9A9A9">
+                                                        <span class="ladda-label">Generate</span>
+                                                    </button>
+                                                @endif
                                             </div>
                                         </div>
                                     </form>
@@ -397,194 +459,19 @@
                                                         <th style="width: 201px;">Round</th>
                                                         <th style="width: 75px;">Match #</th>
                                                         <th style="width: 185px;"></th>
-                                                        <th style="width: 25px;"></th>
+                                                        <th style="width: 35px;"></th>
                                                         <th style="width: 185px;"></th>
                                                         <th style="width: 260px;" colspan="2">Schedule</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @for ($round_id = 1; $round_id <= $tournament->max_round; $round_id++)
-                                                        @foreach ($tournament->matches[$round_id] as $key_match => $match)
-                                                            <tr>
-                                                                @if ($key_match == 0)
-                                                                    <td class="round" id="round-{{ $round_id }}-title" rowspan="{{ count($tournament->matches[$round_id]) }}">
-                                                                        @if ($round_id < $tournament->max_round - 1)
-                                                                            Round {{ $round_id }}
-                                                                        @elseif ($round_id == $tournament->max_round - 1)
-                                                                            Semifinals
-                                                                        @else
-                                                                            Finals
-                                                                        @endif
-                                                                    </td>
-                                                                @endif
-                                                                <td>{{ $key_match + 1 }}</td>
-                                                                <td>
-                                                                    @if (isset($match->participants[0]))
-                                                                        {{ $match->participants[0]->team->name }}
-                                                                    @else
-                                                                        TBD
-                                                                    @endif
-                                                                </td>
-                                                                <td>VS</td>
-                                                                <td>
-                                                                    @if (isset($match->participants[1]))
-                                                                        {{ $match->participants[1]->team->name }}
-                                                                    @else
-                                                                        TBD
-                                                                    @endif
-                                                                </td>
-                                                                <td style="border-right: 0;">
-                                                                    @if ($match->scheduled_time)
-                                                                        {{ date('l, d F Y H:i:s', strtotime($match->scheduled_time)) }}
-                                                                    @else
-                                                                        Not Scheduled
-                                                                    @endif
-                                                                </td>
-                                                                <td style="border-left: 0;">
-                                                                    <button class="btn btn-default btn-xs btn-edit-schedule" data-match-id="{{ $match->id }}" data-round-id={{ $round_id }} data-toggle="modal" data-target="#schedule-modal">
-                                                                        <i class="fa fa-pencil-square-o"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    @endfor
-                                                    @if (isset($tournament->matches[0]))
-                                                        @if (isset($tournament->matches[0][0]))
-                                                            <tr>
-                                                                <td class="round" id="round-0-title" rowspan="1">Bronze Match</td>
-                                                                <td>1</td>
-                                                                <td>
-                                                                    @if (isset($tournament->matches[0][0]->participants[0]))
-                                                                        {{ $tournament->matches[0][0]->participants[0]->team->name }}
-                                                                    @else
-                                                                        TBD
-                                                                    @endif
-                                                                </td>
-                                                                <td>VS</td>
-                                                                <td>
-                                                                    @if (isset($tournament->matches[0][0]->participants[1]))
-                                                                        {{ $tournament->matches[0][0]->participants[1]->team->name }}
-                                                                    @else
-                                                                        TBD
-                                                                    @endif
-                                                                </td>
-                                                                <td style="border-right: 0;">
-                                                                    @if ($tournament->matches[0][0]->scheduled_time)
-                                                                        {{ date('l, d F Y H:i:s', strtotime($tournament->matches[0][0]->scheduled_time)) }}
-                                                                    @else
-                                                                        Not Scheduled
-                                                                    @endif
-                                                                </td>
-                                                                <td style="border-left: 0;">
-                                                                    <button class="btn btn-default btn-xs btn-edit-schedule" data-match-id="{{ $tournament->matches[0][0]->id }}" data-round-id="0" data-toggle="modal" data-target="#schedule-modal">
-                                                                        <i class="fa fa-pencil-square-o"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        @endif
-                                                    @endif
-                                                </tbody>
-                                            </table>
-                                        @elseif ($tournament->type == 2)
-                                            {{-- <h2 style="border-bottom: 1px solid #e3e3e3; margin-bottom: 15px;margin-top: 0;padding-bottom: 10px;">Upper Bracket</h2>
-                                            <table class="table table-bordered table-striped table-schedule">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Round</th>
-                                                        <th>Match #</th>
-                                                        <th>Team A</th>
-                                                        <th></th>
-                                                        <th>Team B</th>
-                                                        <th>Schedule</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="round" rowspan="3" style="text-align: center;vertical-align: middle;">Round 1</td>
-                                                        <td>1</td>
-                                                        <td>Team A</td>
-                                                        <td>vs</td>
-                                                        <td>Team B</td>
-                                                        <td>Not Schedule</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>2</td>
-                                                        <td>Team A</td>
-                                                        <td>vs</td>
-                                                        <td>Team B</td>
-                                                        <td>Not Schedule</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>3</td>
-                                                        <td>Team A</td>
-                                                        <td>vs</td>
-                                                        <td>Team B</td>
-                                                        <td>Not Schedule</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <h2 style="border-bottom: 1px solid #e3e3e3;margin-bottom: 15px;margin-top: 0;padding-bottom: 10px;">Lower Bracket</h2>
-                                            <table class="table table-bordered table-striped table-schedule" style="margin-bottom: 0;">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Round</th>
-                                                        <th>Match #</th>
-                                                        <th>Team A</th>
-                                                        <th></th>
-                                                        <th>Team B</th>
-                                                        <th>Schedule</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="round" rowspan="3" style="text-align: center;vertical-align: middle;">Round 1</td>
-                                                        <td>1</td>
-                                                        <td>Team A</td>
-                                                        <td>vs</td>
-                                                        <td>Team B</td>
-                                                        <td>Not Schedule</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>2</td>
-                                                        <td>Team A</td>
-                                                        <td>vs</td>
-                                                        <td>Team B</td>
-                                                        <td>Not Schedule</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>3</td>
-                                                        <td>Team A</td>
-                                                        <td>vs</td>
-                                                        <td>Team B</td>
-                                                        <td>Not Schedule</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table> --}}
-                                        @endif
-                                    </div>
-                                    <div class="tab-pane fade" id="report-match-tab" style="min-height: 600px;">
-                                        @if ($tournament->type == 1)
-                                            <table class="table table-bordered table-striped table-content-centered table-schedule" style="margin-bottom: 0;">
-                                                <thead>
-                                                    <tr>
-                                                        <th style="width: 201px;">Round</th>
-                                                        <th style="width: 75px;">Match #</th>
-                                                        <th style="width: 185px;"></th>
-                                                        <th style="width: 25px;"></th>
-                                                        <th style="width: 185px;"></th>
-                                                        <th style="width: 30px;"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @if (count($tournament->available_matches_report) > 0)
-                                                        @foreach ($tournament->available_matches_report as $round_id => $round)
-                                                            @foreach ($round as $key_match => $match)
+                                                    @if ($tournament->max_round >= 0)
+                                                        @for ($round_id = 1; $round_id <= $tournament->max_round; $round_id++)
+                                                            @foreach ($tournament->matches[$round_id] as $key_match => $match)
                                                                 <tr>
                                                                     @if ($key_match == 0)
-                                                                        <td class="round" id="round-{{ $round_id }}-title" rowspan="{{ count($round) }}">
-                                                                            @if ($round_id == 0)
-                                                                                Bronze Match
-                                                                            @elseif ($round_id < $tournament->max_round - 1)
+                                                                        <td class="round" id="round-{{ $round_id }}-title" rowspan="{{ count($tournament->matches[$round_id]) }}">
+                                                                            @if ($round_id < $tournament->max_round - 1)
                                                                                 Round {{ $round_id }}
                                                                             @elseif ($round_id == $tournament->max_round - 1)
                                                                                 Semifinals
@@ -595,31 +482,461 @@
                                                                     @endif
                                                                     <td>{{ $key_match + 1 }}</td>
                                                                     <td>
-                                                                        {{ $match->participants[0]->team->name }}
+                                                                        @if (isset($match->participants[0]))
+                                                                            {{ $match->participants[0]->team->name }}
+                                                                        @else
+                                                                            TBD
+                                                                        @endif
                                                                     </td>
                                                                     <td>VS</td>
                                                                     <td>
-                                                                        {{ $match->participants[1]->team->name }}
+                                                                        @if (isset($match->participants[1]))
+                                                                            {{ $match->participants[1]->team->name }}
+                                                                        @else
+                                                                            TBD
+                                                                        @endif
                                                                     </td>
-                                                                    <td>
-                                                                        <button class="btn btn-default btn-xs btn-report-match" data-match-id="{{ $match->id }}" data-round-id={{ $round_id }} data-toggle="modal" data-target="#report-match-modal">
+                                                                    <td style="border-right: 0;">
+                                                                        @if ($match->scheduled_time)
+                                                                            {{ date('l, d F Y H:i:s', strtotime($match->scheduled_time)) }}
+                                                                        @else
+                                                                            Not Scheduled
+                                                                        @endif
+                                                                    </td>
+                                                                    <td style="border-left: 0;width: 53px;">
+                                                                        <button class="btn btn-default btn-xs btn-edit-schedule" data-match-id="{{ $match->id }}" data-round-id={{ $round_id }} data-toggle="modal" data-target="#schedule-modal">
                                                                             <i class="fa fa-pencil-square-o"></i>
                                                                         </button>
                                                                     </td>
                                                                 </tr>
                                                             @endforeach
-                                                        @endforeach
+                                                        @endfor
+                                                        @if (isset($tournament->matches[0]))
+                                                            @if (isset($tournament->matches[0][0]))
+                                                                <tr>
+                                                                    <td class="round" id="round-0-title" rowspan="1">Bronze Match</td>
+                                                                    <td>1</td>
+                                                                    <td>
+                                                                        @if (isset($tournament->matches[0][0]->participants[0]))
+                                                                            {{ $tournament->matches[0][0]->participants[0]->team->name }}
+                                                                        @else
+                                                                            TBD
+                                                                        @endif
+                                                                    </td>
+                                                                    <td>VS</td>
+                                                                    <td>
+                                                                        @if (isset($tournament->matches[0][0]->participants[1]))
+                                                                            {{ $tournament->matches[0][0]->participants[1]->team->name }}
+                                                                        @else
+                                                                            TBD
+                                                                        @endif
+                                                                    </td>
+                                                                    <td style="border-right: 0;">
+                                                                        @if ($tournament->matches[0][0]->scheduled_time)
+                                                                            {{ date('l, d F Y H:i:s', strtotime($tournament->matches[0][0]->scheduled_time)) }}
+                                                                        @else
+                                                                            Not Scheduled
+                                                                        @endif
+                                                                    </td>
+                                                                    <td style="border-left: 0;width: 53px;">
+                                                                        <button class="btn btn-default btn-xs btn-edit-schedule" data-match-id="{{ $tournament->matches[0][0]->id }}" data-round-id="0" data-toggle="modal" data-target="#schedule-modal">
+                                                                            <i class="fa fa-pencil-square-o"></i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            @else
+                                                                @if ($tournament->max_round == 0)
+                                                                    <tr>
+                                                                        <td colspan="7">No Match Available</td>
+                                                                    </tr>
+                                                                @endif
+                                                            @endif
+                                                        @endif
                                                     @else
                                                         <tr>
-                                                            <td colspan="6">No Data Available</td>
+                                                            <td colspan="7">No Match Available</td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                        @elseif ($tournament->type == 2)
+                                            <h4 style="border-bottom: 1px solid #e3e3e3; margin-bottom: 15px;margin-top: 0;padding-bottom: 10px;">Upper Bracket</h4>
+                                            <table class="table table-bordered table-striped table-content-centered table-schedule" style="margin-bottom: 15px;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 201px;">Round</th>
+                                                        <th style="width: 75px;">Match #</th>
+                                                        <th style="width: 185px;"></th>
+                                                        <th style="width: 35px;"></th>
+                                                        <th style="width: 185px;"></th>
+                                                        <th style="width: 260px;" colspan="2">Schedule</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if ($tournament->max_round > 0)
+                                                        @for ($round_id = 1; $round_id <= $tournament->max_round; $round_id++)
+                                                            @foreach ($tournament->matches[$round_id] as $key_match => $match)
+                                                                <tr>
+                                                                    @if ($key_match == 0)
+                                                                        <td class="round" id="round-{{ $round_id }}-title" rowspan="{{ count($tournament->matches[$round_id]) }}">
+                                                                            @if ($round_id < $tournament->max_round - 1)
+                                                                                Round {{ $round_id }}
+                                                                            @elseif ($round_id == $tournament->max_round - 1)
+                                                                                Semifinals
+                                                                            @else
+                                                                                Finals
+                                                                            @endif
+                                                                        </td>
+                                                                    @endif
+                                                                    <td>{{ $key_match + 1 }}</td>
+                                                                    <td>
+                                                                        @if (isset($match->participants[0]))
+                                                                            {{ $match->participants[0]->team->name }}
+                                                                        @else
+                                                                            TBD
+                                                                        @endif
+                                                                    </td>
+                                                                    <td>VS</td>
+                                                                    <td>
+                                                                        @if (isset($match->participants[1]))
+                                                                            {{ $match->participants[1]->team->name }}
+                                                                        @else
+                                                                            TBD
+                                                                        @endif
+                                                                    </td>
+                                                                    <td style="border-right: 0;">
+                                                                        @if ($match->scheduled_time)
+                                                                            {{ date('l, d F Y H:i:s', strtotime($match->scheduled_time)) }}
+                                                                        @else
+                                                                            Not Scheduled
+                                                                        @endif
+                                                                    </td>
+                                                                    <td style="border-left: 0;width: 53px;">
+                                                                        <button class="btn btn-default btn-xs btn-edit-schedule" data-match-id="{{ $match->id }}" data-round-id={{ $round_id }} data-toggle="modal" data-target="#schedule-modal">
+                                                                            <i class="fa fa-pencil-square-o"></i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        @endfor
+                                                    @else
+                                                        <tr>
+                                                            <td colspan="7">No Match Available</td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                            <h4 style="border-bottom: 1px solid #e3e3e3;margin-bottom: 15px;margin-top: 0;padding-bottom: 10px;">Lower Bracket</h4>
+                                            <table class="table table-bordered table-striped table-content-centered table-schedule" style="margin-bottom: 0;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 201px;">Round</th>
+                                                        <th style="width: 75px;">Match #</th>
+                                                        <th style="width: 185px;"></th>
+                                                        <th style="width: 35px;"></th>
+                                                        <th style="width: 185px;"></th>
+                                                        <th style="width: 260px;" colspan="2">Schedule</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if ($tournament->min_round < 0)
+                                                        @for ($round_id = -1; $round_id >= $tournament->min_round; $round_id--)
+                                                            @foreach ($tournament->matches[$round_id] as $key_match => $match)
+                                                                <tr>
+                                                                    @if ($key_match == 0)
+                                                                        <td class="round" id="round-{{ $round_id }}-title" rowspan="{{ count($tournament->matches[$round_id]) }}">
+                                                                            Round {{ abs($round_id) }}
+                                                                        </td>
+                                                                    @endif
+                                                                    <td>{{ $key_match + 1 }}</td>
+                                                                    <td>
+                                                                        @if (isset($match->participants[0]))
+                                                                            {{ $match->participants[0]->team->name }}
+                                                                        @else
+                                                                            TBD
+                                                                        @endif
+                                                                    </td>
+                                                                    <td>VS</td>
+                                                                    <td>
+                                                                        @if (isset($match->participants[1]))
+                                                                            {{ $match->participants[1]->team->name }}
+                                                                        @else
+                                                                            TBD
+                                                                        @endif
+                                                                    </td>
+                                                                    <td style="border-right: 0;">
+                                                                        @if ($match->scheduled_time)
+                                                                            {{ date('l, d F Y H:i:s', strtotime($match->scheduled_time)) }}
+                                                                        @else
+                                                                            Not Scheduled
+                                                                        @endif
+                                                                    </td>
+                                                                    <td style="border-left: 0;width: 53px;">
+                                                                        <button class="btn btn-default btn-xs btn-edit-schedule" data-match-id="{{ $match->id }}" data-round-id={{ $round_id }} data-toggle="modal" data-target="#schedule-modal">
+                                                                            <i class="fa fa-pencil-square-o"></i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        @endfor
+                                                    @else
+                                                        <tr>
+                                                            <td colspan="7">No Match Available</td>
                                                         </tr>
                                                     @endif
                                                 </tbody>
                                             </table>
                                         @endif
                                     </div>
-                                    <div class="tab-pane fade" id="live-match-tab" style="min-height: 600px;">
-                                        Default 6
+                                    <div class="tab-pane fade" id="report-match-tab">
+                                        @if ($tournament->type == 1)
+                                            <table class="table table-bordered table-striped table-content-centered table-schedule" style="margin-bottom: 0;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 281px;">Round</th>
+                                                        <th style="width: 105px;">Match #</th>
+                                                        <th style="width: 245px;"></th>
+                                                        <th style="width: 35px;"></th>
+                                                        <th style="width: 245px;"></th>
+                                                        <th style="width: 53px;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if ($tournament->available_matches_report_max_round >= 0)
+                                                        @for ($round_id = 1; $round_id <= $tournament->available_matches_report_max_round; $round_id++)
+                                                            @if (isset($tournament->available_matches_report[$round_id]))
+                                                                @foreach ($tournament->available_matches_report[$round_id] as $key_match => $match)
+                                                                    <tr>
+                                                                        @if ($key_match == 0)
+                                                                            <td class="round" id="match-report-round-{{ $round_id }}-title" rowspan="{{ count($tournament->available_matches_report[$round_id]) }}">
+                                                                                @if ($round_id < $tournament->max_round - 1)
+                                                                                    Round {{ $round_id }}
+                                                                                @elseif ($round_id == $tournament->max_round - 1)
+                                                                                    Semifinals
+                                                                                @else
+                                                                                    Finals
+                                                                                @endif
+                                                                            </td>
+                                                                        @endif
+                                                                        <td>{{ $key_match + 1 }}</td>
+                                                                        <td>
+                                                                            {{ $match->participants[0]->team->name }}
+                                                                        </td>
+                                                                        <td>VS</td>
+                                                                        <td>
+                                                                            {{ $match->participants[1]->team->name }}
+                                                                        </td>
+                                                                        <td>
+                                                                            <button class="btn btn-default btn-xs btn-report-match" data-match-id="{{ $match->id }}" data-round-id="{{ $round_id }}" data-toggle="modal" data-target="#report-match-modal">
+                                                                                <i class="fa fa-pencil-square-o"></i>
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            @endif
+                                                        @endfor
+                                                        @if (isset($tournament->available_matches_report[0]))
+                                                            @if (isset($tournament->available_matches_report[0][0]))
+                                                                <tr>
+                                                                    <td class="round" id="match-report-round-0-title" rowspan="1">Bronze Match</td>
+                                                                    <td>1</td>
+                                                                    <td>
+                                                                        {{ $tournament->available_matches_report[0][0]->participants[0]->team->name }}
+                                                                    </td>
+                                                                    <td>VS</td>
+                                                                    <td>
+                                                                        {{ $tournament->available_matches_report[0][0]->participants[1]->team->name }}
+                                                                    </td>
+                                                                    <td>
+                                                                        <button class="btn btn-default btn-xs btn-report-match" data-match-id="{{ $tournament->available_matches_report[0][0]->id }}" data-round-id="0" data-toggle="modal" data-target="#report-match-modal">
+                                                                            <i class="fa fa-pencil-square-o"></i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            @endif
+                                                        @else
+                                                            @if ($tournament->available_matches_report_max_round == 0)
+                                                                <tr>
+                                                                    <td colspan="6">No Match Available for Report</td>
+                                                                </tr>
+                                                            @endif
+                                                        @endif
+                                                    @else
+                                                        <tr>
+                                                            <td colspan="6">No Match Available for Report</td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                        @else
+                                            <h4 style="border-bottom: 1px solid #e3e3e3; margin-bottom: 15px;margin-top: 0;padding-bottom: 10px;">Upper Bracket</h4>
+                                            <table class="table table-bordered table-striped table-content-centered table-schedule" style="margin-bottom: 15px;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 281px;">Round</th>
+                                                        <th style="width: 105px;">Match #</th>
+                                                        <th style="width: 245px;"></th>
+                                                        <th style="width: 35px;"></th>
+                                                        <th style="width: 245px;"></th>
+                                                        <th style="width: 53px;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if ($tournament->available_matches_report_max_round > 0)
+                                                        @for ($round_id = 1; $round_id <= $tournament->available_matches_report_max_round; $round_id++)
+                                                            @if (isset($tournament->available_matches_report[$round_id]))
+                                                                @foreach ($tournament->available_matches_report[$round_id] as $key_match => $match)
+                                                                    <tr>
+                                                                        @if ($key_match == 0)
+                                                                            <td class="round" id="match-report-round-{{ $round_id }}-title" rowspan="{{ count($tournament->available_matches_report[$round_id]) }}">
+                                                                                @if ($round_id < $tournament->max_round - 1)
+                                                                                    Round {{ $round_id }}
+                                                                                @elseif ($round_id == $tournament->max_round - 1)
+                                                                                    Semifinals
+                                                                                @else
+                                                                                    Finals
+                                                                                @endif
+                                                                            </td>
+                                                                        @endif
+                                                                        <td>{{ $key_match + 1 }}</td>
+                                                                        <td>
+                                                                            {{ $match->participants[0]->team->name }}
+                                                                        </td>
+                                                                        <td>VS</td>
+                                                                        <td>
+                                                                            {{ $match->participants[1]->team->name }}
+                                                                        </td>
+                                                                        <td>
+                                                                            <button class="btn btn-default btn-xs btn-report-match" data-match-id="{{ $match->id }}" data-round-id="{{ $round_id }}" data-toggle="modal" data-target="#report-match-modal">
+                                                                                <i class="fa fa-pencil-square-o"></i>
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            @endif
+                                                        @endfor
+                                                    @else
+                                                        <tr>
+                                                            <td colspan="6">No Match Available for Report</td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                            <h4 style="border-bottom: 1px solid #e3e3e3;margin-bottom: 15px;margin-top: 0;padding-bottom: 10px;">Lower Bracket</h4>
+                                            <table class="table table-bordered table-striped table-content-centered table-schedule" style="margin-bottom: 0;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 281px;">Round</th>
+                                                        <th style="width: 105px;">Match #</th>
+                                                        <th style="width: 245px;"></th>
+                                                        <th style="width: 35px;"></th>
+                                                        <th style="width: 245px;"></th>
+                                                        <th style="width: 53px;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if ($tournament->available_matches_report_min_round < 0)
+                                                        @for ($round_id = -1; $round_id >= $tournament->available_matches_report_min_round; $round_id--)
+                                                            @if (isset($tournament->available_matches_report[$round_id]))
+                                                                @foreach ($tournament->available_matches_report[$round_id] as $key_match => $match)
+                                                                    <tr>
+                                                                        @if ($key_match == 0)
+                                                                            <td class="round" id="match-report-round-{{ $round_id }}-title" rowspan="{{ count($tournament->available_matches_report[$round_id]) }}">
+                                                                                Round {{ abs($round_id) }}
+                                                                            </td>
+                                                                        @endif
+                                                                        <td>{{ $key_match + 1 }}</td>
+                                                                        <td>
+                                                                            {{ $match->participants[0]->team->name }}
+                                                                        </td>
+                                                                        <td>VS</td>
+                                                                        <td>
+                                                                            {{ $match->participants[1]->team->name }}
+                                                                        </td>
+                                                                        <td>
+                                                                            <button class="btn btn-default btn-xs btn-report-match" data-match-id="{{ $match->id }}" data-round-id="{{ $round_id }}" data-toggle="modal" data-target="#report-match-modal">
+                                                                                <i class="fa fa-pencil-square-o"></i>
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            @endif
+                                                        @endfor
+                                                    @else
+                                                        <tr>
+                                                            <td colspan="6">No Match Available for Report</td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                        @endif
+                                    </div>
+                                    <div class="tab-pane fade" id="live-match-tab">
+                                        @if (count($tournament->live_matches) > 0)
+                                            <div class="live-match-group-list">
+                                                @foreach ($tournament->live_matches as $match)
+                                                    @foreach ($match->dota2_live_matches as $live_match)
+                                                        <a href="{{ url('organizer/dota-2/match/'.$live_match->id) }}" class="live-match-group-list-item well-custom">
+                                                            <p style="position: absolute;top: 0;left: 3px;margin: 0;">Match ID : {{ $live_match->id }}</p>
+                                                            <p style="position: absolute;top: 0;right: 3px;margin: 0;">
+                                                                Game {{ $live_match->dota2_live_match_teams[0]->series_wins + $live_match->dota2_live_match_teams[1]->series_wins + 1 }} | Best of
+                                                                @if ($live_match->series_type == 0)
+                                                                    1
+                                                                @elseif ($live_match->series_type == 1)
+                                                                    3
+                                                                @elseif ($live_match->series_type == 2)
+                                                                    5
+                                                                @endif
+                                                            </p>
+                                                            <p style="position: absolute;bottom: 0;right: 3px;margin: 0;">Spectators : {{ $live_match->spectators }}</p>
+                                                            <div style="display: inline-block;text-align: right;vertical-align: middle;">
+                                                                @if ($live_match->dota2_live_match_teams[0]->tournament_registration)
+                                                                    <h2 title="{{ $live_match->dota2_live_match_teams[0]->tournament_registration->team->name }}" class="radiant-color handle-overflow" style="display: inline-block;width: auto;min-width: 250px;max-width: 250px;margin: 0;vertical-align: middle;">{{ $live_match->dota2_live_match_teams[0]->tournament_registration->team->name }}</h2>
+                                                                    @if ($live_match->dota2_live_match_teams[0]->tournament_registration->team->picture_file_name)
+                                                                        <img src="{{ asset('storage/team/'.$live_match->dota2_live_match_teams[0]->tournament_registration->team->picture_file_name) }}" style="display: inline-block;height: 80px;width: 130px;margin-left: 5px;vertical-align: middle;">
+                                                                    @else
+                                                                        <img src="{{ asset('img/dota-2/heroes/default.png') }}" style="display: inline-block;height: 80px;width: 130px;margin-left: 5px;vertical-align: middle;">
+                                                                    @endif
+                                                                @else
+                                                                    @if ($live_match->dota2_live_match_teams[0]->dota2_teams_name)
+                                                                        <h2 title="{{ $live_match->dota2_live_match_teams[0]->dota2_teams_name }}" class="radiant-color handle-overflow" style="display: inline-block;width: auto;min-width: 250px;max-width: 250px;margin: 0;vertical-align: middle;">{{ $live_match->dota2_live_match_teams[0]->dota2_teams_name }}</h2>
+                                                                    @else
+                                                                        <h2 title="Radiant" class="radiant-color handle-overflow" style="display: inline-block;width: auto;min-width: 250px;max-width: 250px;margin: 0;vertical-align: middle;">Radiant</h2>
+                                                                    @endif
+                                                                    <img src="{{ asset('img/dota-2/heroes/default.png') }}" style="display: inline-block;height: 80px;width: 130px;margin-left: 5px;vertical-align: middle;">
+                                                                @endif
+                                                            </div>
+                                                            <div style="display: inline-block;margin-left: 5px;margin-right: 5px;vertical-align: top;min-width: 120px;max-width: 120px;">
+                                                                <h5 id="duration" style="margin-top: 0px; margin-bottom: 10px;color: #5f6472;">{{ (floor($live_match->duration / 60) < 10 ? '0' : '').floor($live_match->duration / 60) }}:{{ ($live_match->duration % 60 < 10 ? '0' : '').$live_match->duration % 60 }}</h5>
+                                                                <h2 id="score" style="margin: 0;">{{ $live_match->dota2_live_match_teams[0]->score }} - {{ $live_match->dota2_live_match_teams[1]->score }}</h2>
+                                                            </div>
+                                                            <div style="display: inline-block;text-align: left;vertical-align: middle;">
+                                                                @if ($live_match->dota2_live_match_teams[1]->tournament_registration)
+                                                                    @if ($live_match->dota2_live_match_teams[1]->tournament_registration->team->picture_file_name)
+                                                                        <img src="{{ asset('storage/team/'.$live_match->dota2_live_match_teams[1]->tournament_registration->team->picture_file_name) }}" style="display: inline-block;height: 80px;width: 130px;margin-right: 5px;vertical-align: middle;">
+                                                                    @else
+                                                                        <img src="{{ asset('img/dota-2/heroes/default.png') }}" style="display: inline-block;height: 80px;width: 130px;margin-right: 5px;vertical-align: middle;">
+                                                                    @endif
+                                                                    <h2 title="{{ $live_match->dota2_live_match_teams[1]->dota2_teams_name }}" class="dire-color handle-overflow" style="display: inline-block;width: auto;min-width: 250px;max-width: 250px;margin: 0;vertical-align: middle;">{{ $live_match->dota2_live_match_teams[1]->dota2_teams_name }}</h2>
+                                                                @else
+                                                                    <img src="{{ asset('img/dota-2/heroes/default.png') }}" style="display: inline-block;height: 80px;width: 130px;margin-right: 5px;vertical-align: middle;">
+                                                                    @if ($live_match->dota2_live_match_teams[1]->dota2_teams_name)
+                                                                        <h2 title="{{ $live_match->dota2_live_match_teams[1]->dota2_teams_name }}" class="dire-color handle-overflow" style="display: inline-block;width: auto;min-width: 250px;max-width: 250px;margin: 0;vertical-align: middle;">{{ $live_match->dota2_live_match_teams[1]->dota2_teams_name }}</h2>
+                                                                    @else
+                                                                        <h2 title="Dire" class="dire-color handle-overflow" style="display: inline-block;width: auto;min-width: 250px;max-width: 250px;margin: 0;vertical-align: middle;">Dire</h2>
+                                                                    @endif
+                                                                @endif
+                                                            </div>
+                                                        </a>
+                                                    @endforeach
+                                                @endforeach
+                                            </div>
+                                        @else
+                                            <div style="margin-top: 15px;opacity: 0.2;">
+                                                <p style="font-size: 256px;margin-bottom: 0;text-align: center;"><i class="fa fa-calendar-times-o" aria-hidden="true"></i></p>
+                                                <p style="font-size: 64px;margin-top: 0;text-align: center;">No Match Lives Now.</p>
+                                            </div>
+                                        @endif
                                     </div>
                                 @endif
                             </div>

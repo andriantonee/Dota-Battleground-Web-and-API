@@ -19,7 +19,7 @@ class TournamentController extends BaseController
     public function index()
     {
         $cities = City::select('id', 'name')->get();
-        $tournaments = Tournament::select('id', 'name', 'logo_file_name', 'type', 'entry_fee', 'registration_closed', 'start_date', 'end_date', 'members_id')
+        $tournaments = Tournament::select('id', 'name', 'logo_file_name', 'type', 'entry_fee', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'members_id')
             ->with([
                 'owner' => function($owner) {
                     $owner->select('id', 'name');
@@ -85,7 +85,16 @@ class TournamentController extends BaseController
 
     public function registerIndex($id, Request $request)
     {
-        $tournament = Tournament::select('id', 'name', 'registration_closed', 'need_identifications')
+        $tournament = Tournament::select('id', 'name', 'max_participant', 'team_size', 'registration_closed', 'need_identifications')
+            ->withCount([
+                'registrations' => function($registrations) {
+                    $registrations->whereHas('confirmation', function($confirmation) {
+                        $confirmation->whereHas('approval', function($approval) {
+                            $approval->where('status', 1);
+                        });
+                    });
+                }
+            ])
             ->whereHas('approval', function($approval) {
                 $approval->where('tournaments_approvals.accepted', 1);
             })
@@ -93,7 +102,11 @@ class TournamentController extends BaseController
 
         if ($tournament) {
             if ($tournament->registration_closed >= date('Y-m-d H:i:s')) {
-                // Continue
+                if ($tournament->registrations_count < $tournament->max_participant) {
+                    // Continue
+                } else {
+                    abort(404);
+                }
             } else {
                 abort(404);
             }
@@ -109,14 +122,28 @@ class TournamentController extends BaseController
 
     public function register($id, Request $request)
     {
-        $tournament = Tournament::whereHas('approval', function($approval) {
+        $tournament = Tournament::select('*')
+            ->withCount([
+                'registrations' => function($registrations) {
+                    $registrations->whereHas('confirmation', function($confirmation) {
+                        $confirmation->whereHas('approval', function($approval) {
+                            $approval->where('status', 1);
+                        });
+                    });
+                }
+            ])
+            ->whereHas('approval', function($approval) {
                 $approval->where('tournaments_approvals.accepted', 1);
             })
             ->find($id);
 
         if ($tournament) {
             if ($tournament->registration_closed >= date('Y-m-d H:i:s')) {
-                // Continue
+                if ($tournament->registrations_count < $tournament->max_participant) {
+                    // Continue
+                } else {
+                    abort(404);
+                }
             } else {
                 return response()->json(['code' => 400, 'message' => ['Tournament Registration already closed.']]);
             }
@@ -130,7 +157,7 @@ class TournamentController extends BaseController
             'team' => $request->input('team'),
             'members' => $request->input('members')
         ];
-        if (!$validatorResponse = ValidatorHelper::validateTournamentRegisterRequest($data, $member->id, $tournament->id, (boolean) $tournament->need_identifications)) {
+        if (!$validatorResponse = ValidatorHelper::validateTournamentRegisterRequest($data, $member->id, $tournament->id, (boolean) $tournament->need_identifications, $tournament->team_size)) {
             DB::beginTransaction();
             try {
                 $team = Team::find($data['team']);

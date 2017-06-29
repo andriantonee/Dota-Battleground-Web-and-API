@@ -12,7 +12,7 @@ class Tournament extends Model
     protected $keyType = 'integer';
 
     protected $dates = [];
-    protected $fillable = ['name', 'description', 'logo_file_name', 'type', 'leagues_id', 'address', 'max_participant', 'rules', 'prize_1st', 'prize_2nd', 'prize_3rd', 'prize_other', 'entry_fee', 'registration_closed', 'need_identifications', 'start_date', 'end_date'];
+    protected $fillable = ['name', 'description', 'logo_file_name', 'type', 'leagues_id', 'address', 'max_participant', 'team_size', 'rules', 'prize_1st', 'prize_2nd', 'prize_3rd', 'prize_other', 'entry_fee', 'registration_closed', 'need_identifications', 'start_date', 'end_date'];
     protected $hidden = [];
 
     public $incrementing = true;

@@ -40,6 +40,7 @@ Route::group(['prefix' => 'organizer', 'middleware' => ['exchange:organizer,2'],
         Route::get('/tournament/{id}/detail', 'TournamentController@detail');
         Route::get('/password', 'HomeController@password');
         Route::post('/logout', 'AuthController@webLogout');
+        Route::get('/dota-2/match/{id}', 'Dota2MatchController@show');
     });
 });
 

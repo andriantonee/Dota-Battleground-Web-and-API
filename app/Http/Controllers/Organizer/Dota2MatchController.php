@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Participant;
+namespace App\Http\Controllers\Organizer;
 
 use App\Dota2LiveMatch;
 use App\Dota2LiveMatchComment;
@@ -17,7 +17,11 @@ class Dota2MatchController extends BaseController
         if ($dota2_live_match) {
             $match = $dota2_live_match->match;
             if ($match) {
-                // Continue
+                if ($match->tournament->members_id == $request->input('organizer_model')->id) {
+                    // Continue
+                } else {
+                    abort(404);
+                }
             } else {
                 abort(404);
             }
@@ -167,7 +171,7 @@ class Dota2MatchController extends BaseController
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
-            return view('participant.dota2-match-detail', compact('dota2_live_match', 'duration', 'radiant', 'dire', 'radiant_statistics', 'dire_statistics', 'dota2_live_match_comments'));
+            return view('organizer.dota2-match-detail', compact('dota2_live_match', 'duration', 'radiant', 'dire', 'radiant_statistics', 'dire_statistics', 'dota2_live_match_comments'));
         } else {
             abort(404);
         }
@@ -179,7 +183,11 @@ class Dota2MatchController extends BaseController
         if ($dota2_live_match) {
             $match = $dota2_live_match->match;
             if ($match) {
-                // Continue
+                if ($match->tournament->members_id == $request->user()->id) {
+                    // Continue
+                } else {
+                    return response()->json(['code' => 404, 'message' => ['Dota 2 Live Match ID is invalid.']]);
+                }
             } else {
                 return response()->json(['code' => 404, 'message' => ['Dota 2 Live Match ID is invalid.']]);
             }

@@ -151,7 +151,7 @@ $(document).ready(function(e) {
         "encrypted" : true
     });
 
-    var dota2_live_match_channel = pusher.subscribe("dota2-live-match" + location.pathname.split("/")[3]);
+    var dota2_live_match_channel = pusher.subscribe("dota2-live-match" + location.pathname.split("/")[4]);
 
     dota2_live_match_channel.bind('update', function(data) {
         var net_worth_datasets = [];
@@ -768,10 +768,10 @@ $(document).ready(function(e) {
 
         $.ajax({
             "type" : "POST",
-            "url" : api_url + "dota-2/match/" + location.pathname.split("/")[3] + "/comment",
+            "url" : api_url + "dota-2/match/" + location.pathname.split("/")[4] + "/comment",
             "headers" : {
                 "Accept" : "application/json",
-                "Authorization" : "Bearer " + document.cookie.replace(/(?:(?:^|.*;\s*)participant_token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
+                "Authorization" : "Bearer " + document.cookie.replace(/(?:(?:^|.*;\s*)organizer_token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
             },
             "data" : data,
             "beforeSend" : function() {
