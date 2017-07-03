@@ -21,6 +21,7 @@
         }
         .caption > h3{
             color:#fff;
+            font-size: 23px;
         }
         .caption > p {
             color:#9d9d9d;
@@ -42,11 +43,11 @@
 
 @section('content')
     <div class="container-fluid" style="padding:0px">
-        <header class="jumbotron hero-spacer" style="background:#0c0c0c;">
+        <header class="jumbotron hero-spacer" style="background-image: url('{{ asset('img/organizer-background-1.jpg') }}');">
             <div class="row">
                 <div class="col-xs-6" style="height: 270px;display: table;">
                     <div style="display: table-cell;vertical-align: middle;">
-                        <h1 style="font-size: 63px;margin-top: 0;">Dota Battleground</h1>
+                        <h1 style="font-size: 63px;margin-top: 0;color:rgb(255, 90, 25)">Dota Battleground</h1>
                         <h2 style="margin-bottom: 0;">Managing your tournament with ease</h2>
                     </div>
                 </div>
@@ -102,31 +103,35 @@
         <div class="row text-center feature-section">
             <div class="col-xs-4">
                 <div class="thumbnail">
-                    <img src="http://placehold.it/150x150" alt="">
+                    <img src="{{ asset('img/feature-organizer-1.png') }}" alt="" style="height:150px">
                     <div class="caption">
-                        <h3>Feature Label</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                        <h3 style="color:rgb(255, 90, 25)">Free Tournament Management Software</h3>
+                        <p>Free tournament management software for all organizer</p>
                     </div>
                 </div>
             </div>
             <div class="col-xs-4">
                 <div class="thumbnail">
-                    <img src="http://placehold.it/150x150" alt="">
+                    <img src="{{ asset('img/feature-organizer-2.png') }}" alt="" style="height:150px">
                     <div class="caption">
-                        <h3>Feature Label</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                        <h3 style="color:rgb(255, 90, 25)">Live Match Commenting</h3>
+                        <p>Tournament's Commentator can comment and interact with the viewer on live match statistic page</p>
                     </div>
                 </div>
             </div>
             <div class="col-xs-4">
                 <div class="thumbnail">
-                    <img src="http://placehold.it/150x150" alt="">
+                    <img src="{{ asset('img/feature-organizer-3.png') }}" alt="" style="height:150px">
                     <div class="caption">
-                        <h3>Feature Label</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                        <h3 style="color:rgb(255, 90, 25)">Re-registration the participant</h3>
+                        <p>Organizer can re-check or re-regist the participant at on-site tournament just by using scan feature on mobile app.</p>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row text-center" style="background-image: url('{{ asset('img/organizer-background-2.jpg') }}');padding-top: 40px;padding-bottom:80px">
+             <h2 style="color:#fff;margin-bottom:40px;">Download Dota Battleground Organizer App Now!</h2>
+             <a href="" ><img src="img/google-play-store.png" style="width: 200px;"></a>
         </div>
     </div>
 @endsection

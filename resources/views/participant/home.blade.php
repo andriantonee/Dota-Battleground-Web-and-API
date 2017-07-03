@@ -19,10 +19,7 @@
         }
         .footer-ul > li > a {
             color: #9d9d9d;
-        }
-        .footer-ul > li > a:hover {
-            color: blue;
-            text-decoration: none;
+
         }
 
         .copyright {
@@ -43,18 +40,31 @@
 
 @section('content')
     <div class="container-fluid" style="padding:0;">
-        <header class="jumbotron hero-spacer" style=" background-image: url('{{ asset('img/carousel_image.jpg') }}');opacity:0.5;height:400px;margin-bottom:0">
-            <h1>Dota Battleground</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</p>
-        </header>
+<!--         <header class="jumbotron hero-spacer" style=" background-image: url('{{ asset('img/carousel_image2.jpg') }}');opacity:0.5;height:400px;margin-bottom:0">
+            <div>
+                <h1>Dota Battleground</h1>
+                <h2>The Easiest Way to Manage Your Tournament</h2>
+            </div>
+            
+        </header> -->
 
+        <div class="carousel">
+            <div style="position:absolute;text-shadow: 0 1px 2px rgba(0,0,0,.6);z-index: 10;left:5%;top:20%;">
+                <h1 style="color:rgb(255, 90, 25);font-size: 63px;">Dota Battleground</h1>
+                <!-- <h2>The Easiest Way to Manage Your DOTA 2 Tournament</h2> -->
+                <h2 style="font-size: 33px;">Find, Compete, and Win the DOTA 2 Tournament</h2>
+            </div>
+            <div class="carousel-inner">
+                <img src="{{ asset('img/carousel_image2.jpg') }}" width="100%" style="opacity:0.3;">
+            </div>
+        </div>
         <!-- Page Features -->
-        <div class="row text-center" style="background:#0c0c0c;padding-top:20px;padding-bottom:20px;">
+        <div class="row text-center" style="background-color: #272A33;padding-top:20px;padding-bottom:20px;border-top: 1px solid #5f6471;">
             <div class="col-xs-offset-1 col-xs-4">
                 <div class="thumbnail" style="background:transparent; border:none;margin:0">
-                    <img src="http://placehold.it/150x150" alt="">
+                    <img src="{{ asset('img/organize_icon.png') }}" alt="">
                     <div class="caption">
-                        <h4 style="color:#fff">DO YOU ORGANIZE TOURNAMENTS?</h4>
+                        <h4 style="color:rgb(255, 90, 25)">DO YOU ORGANIZE TOURNAMENTS?</h4>
                         <p style="color:#9d9d9d">Create and manage your own tournaments for free</p>
                         <p>
                             <a href="#" class="btn btn-default btn-custom">Start Now!</a>
@@ -64,9 +74,9 @@
             </div>
             <div class="col-xs-offset-2 col-xs-4">
                 <div class="thumbnail" style="background:transparent; border:none;margin:0">
-                    <img src="http://placehold.it/150x150" alt="">
+                    <img src="{{ asset('img/searching_tournament_icon.png') }}" alt="">
                     <div class="caption">
-                        <h4 style="color:#fff">LOOKING FOR TOURNAMENTS?</h4>
+                        <h4 style="color:rgb(255, 90, 25)">LOOKING FOR TOURNAMENTS?</h4>
                         <p style="color:#9d9d9d">Look for your tournament to start compete and win the prize</p>
                         <div class="input-group stylish-input-group">
                             <span class="input-group-addon">
@@ -84,18 +94,25 @@
 @section('footer')
     <footer>
         <div class="container-fluid">
-            <div class="row text-center" style="background-color: #272A33;border-top: 1px solid #5f6471;border-bottom: 1px solid #5f6471;padding-bottom: 10px;">
-                <h2>WHAT YOU CAN DO ON DOTA BATTLEGROUND</h2>
-                <div class="col-xs-offset-4 col-xs-4" style="padding-left: 20px;">                
-                    <ul style="text-align: left;">
-                        <li>Bla Bla Bla Bla</li>
-                        <li>Bla Bla Bla Bla</li>
-                        <li>Bla Bla Bla Bla</li>
-                        <li>Bla Bla Bla Bla</li>
-                        <li>Bla Bla Bla Bla</li>
-                        <li>Bla Bla Bla Bla</li>
-                    </ul>
-                </div>
+            <div class="row" style="background-color:  #0c0c0c;border-top: 1px solid #5f6471;border-bottom: 1px solid #5f6471;padding-bottom: 10px;">
+                 <div class="col-xs-4  col-xs-offset-1">
+                     <img src="{{ asset('img/feature-live.png') }}" alt="" style="margin-top:10px;height:380px">
+                 </div>
+                 <div class="col-xs-6 col-xs-offset-1" style="margin-top:60px;">
+                     <h2 style="color:rgb(255, 90, 25)">View Statistic on a Live Match</h2>
+                     <h4 style="color:#9d9d9d;padding-top:10px;padding-bottom:20px;">Follow your favorite team by viewing their statistic match LIVE</h4>
+                 </div>
+            </div>
+
+            <div class="row" style="background-color: #272A33;border-bottom: 1px solid #5f6471;padding-bottom: 10px;">
+                 <div class="col-xs-6 col-xs-offset-1" style="margin-top:60px;">
+                     <h2 style="color:rgb(255, 90, 25)">Dota Battleground Come Handy in Mobile</h2>
+                     <h4 style="color:#9d9d9d;padding-top:10px;padding-bottom:20px;">You can get your schedule notification on your mobile phone</h4>
+                     <a href="" class=""><img src="img/google-play-store.png" style="width: 200px;"></a>
+                 </div>
+                 <div class="col-xs-4  col-xs-offset-1">
+                     <img src="{{ asset('img/feature-smartphone.png') }}" alt="" style="margin-top:10px;height:400px;">
+                 </div>
             </div>
             <div class="row" style="padding: 20px 0px;background:#0c0c0c;">
                 <div class="col-xs-offset-1 col-xs-3">
@@ -108,7 +125,7 @@
                 </div>
                 <div class="col-xs-4">
                     <p>Download Aplikasi Dota 2 Battleground</p>
-                    <img src="img/google-play-store.png" style="width: 200px;">
+                    <a href="" class=""><img src="img/google-play-store.png" style="width: 200px;"></a>
                 </div>
                 <div class="col-xs-3">
                     <p>Follow Us</p>

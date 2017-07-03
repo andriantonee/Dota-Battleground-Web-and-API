@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" style="display: table-cell;vertical-align: middle;height: 50px;padding: 0px;padding-right: 15px;float: none;" href="{{ url('/') }}">
-                <img alt="Brand" src="{{ asset('img/dota-2-logo.png') }}">
+                <img alt="Brand" src="{{ asset('img/logo.png') }}">
             </a>
         </div>
         <!-- Note that the .navbar-collapse and .collapse classes have been removed from the #navbar -->

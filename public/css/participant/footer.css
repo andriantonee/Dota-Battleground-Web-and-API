@@ -21,3 +21,8 @@
 .footer-ul-horizontal > li > a:hover {
     color: #FFF;
 }
+
+.footer-ul > li > a:hover{
+    color:#fff;
+    text-decoration:none;
+}

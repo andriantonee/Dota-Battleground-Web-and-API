@@ -88,7 +88,7 @@
                 <div class="container-login well-transparent">
                     <div class="container-login-header">
                         <div class="container-login-header-img">
-                            <img src="{{ asset('/img/dota-2-logo.png') }}">
+                            <img src="{{ asset('/img/logo.png') }}">
                         </div>
                         <div class="container-login-header-text">
                             <h4>Dota Battleground</h4>
