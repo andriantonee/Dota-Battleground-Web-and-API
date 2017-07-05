@@ -34,6 +34,11 @@ class Team extends Model
         return $this->hasMany('App\TournamentRegistration', 'teams_id', 'id');
     }
 
+    public function tournaments_registrations()
+    {
+        return $this->hasMany('App\TournamentRegistration', 'teams_id', 'id');
+    }
+
     public static function checkNameExists($name, $team_id = null)
     {
         if ($team_id) {

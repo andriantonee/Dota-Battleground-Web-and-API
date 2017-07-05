@@ -14,18 +14,140 @@ class ProfileController extends BaseController
 {
     public function index(Request $request)
     {
-        $identification_file_name = Member::find($request->input('participant_model')->id)
-            ->identifications()
+        $member = Member::find($request->input('participant_model')->id);
+        $identification_file_name = $member->identifications()
             ->orderBy('created_at', 'DESC')
             ->value('identification_file_name');
-        $teams = Member::find($request->input('participant_model')->id)
-            ->teams()
+        $teams = $member->teams()
             ->select('teams.id', 'teams.name', 'teams.picture_file_name')
             ->orderBy('teams.created_at', 'ASC')
             ->withCount('details')
             ->get();
+        $schedules = $member->tournaments_registrations()
+            ->select('tournaments_registrations.id', 'tournaments_registrations.tournaments_id', 'tournaments_registrations.teams_id', 'tournaments_registrations.created_at')
+            ->with([
+                'tournament' => function($tournament) use($member) {
+                    $tournament->select('tournaments.id', 'tournaments.name', DB::raw('MAX(`matches`.`round`) AS max_round'))
+                        ->join('matches', 'tournaments.id', '=', 'matches.tournaments_id')
+                        ->with([
+                            'matches' => function($matches) use($member) {
+                                $matches->select('id', 'tournaments_id', 'scheduled_time', 'round')
+                                    ->with([
+                                        'participants' => function($participants) {
+                                            $participants->select('tournaments_registrations.teams_id', 'matches_participants.side')
+                                                ->with([
+                                                    'team' => function($team) {
+                                                        $team->select('id', 'name');
+                                                    }
+                                                ])
+                                                ->whereIn('matches_participants.side', [1, 2])
+                                                ->orderBy('matches_participants.side', 'ASC');
+                                        }
+                                    ])
+                                    ->whereHas('participants', function($participants) use($member) {
+                                        $participants->whereHas('members', function($members) use($member) {
+                                            $members->where('members.id', $member->id); 
+                                        });
+                                    })
+                                    ->orderBy('round', 'ASC');
+                            }
+                        ])
+                        ->groupBy('tournaments.id');
+                }
+            ])
+            ->whereHas('tournament', function($tournament) use($member) {
+                $tournament->where('start', 1)
+                    ->whereHas('matches', function($matches) use($member) {
+                        $matches->whereHas('participants', function($participants) use($member) {
+                            $participants->whereHas('members', function($members) use($member) {
+                                $members->where('members.id', $member->id); 
+                            });
+                        });
+                    });
+            })
+            ->orderBy('tournaments_registrations.created_at', 'DESC')
+            ->get();
+        $registrations = $member->teams()
+            ->select('teams.id', 'teams.name')
+            ->with([
+                'tournaments_registrations' => function($tournaments_registrations) {
+                    $tournaments_registrations->select('id', 'tournaments_id', 'teams_id', 'created_at')
+                        ->with([
+                            'tournament' => function($tournament) {
+                                $tournament->select('id', 'name');
+                            },
+                            'confirmation' => function($confirmation) {
+                                $confirmation->select('tournaments_registrations_id')
+                                    ->with([
+                                        'approval' => function($approval) {
+                                            $approval->select('tournaments_registrations_confirmations_id', 'status');
+                                        }
+                                    ]);
+                            }
+                        ])
+                        ->withCount('members')
+                        ->orderBy('created_at', 'DESC');
+                }
+            ])
+            ->whereHas('details', function($details) use($member) {
+                $details->where('members.id', $member->id)
+                    ->where('teams_details.members_privilege', 2);
+            })
+            ->whereHas('tournaments_registrations')
+            ->orderBy('teams.created_at', 'ASC')
+            ->get();
+        $in_progress_tournaments = $member->tournaments_registrations()
+            ->select('tournaments_registrations.id', 'tournaments_registrations.tournaments_id', 'tournaments_registrations.teams_id', 'tournaments_registrations.created_at', 'tournaments_registrations_details.qr_identifier')
+            ->with([
+                'tournament' => function($tournament) {
+                    $tournament->select('id', 'name', 'logo_file_name', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'members_id');
+                },
+                'team' => function($team) {
+                    $team->select('id', 'name');
+                }
+            ])
+            ->whereHas('tournament', function($tournament) {
+                $tournament->where('start', 1)
+                    ->where('complete', 0);
+            })
+            ->whereHas('confirmation', function($confirmation) {
+                $confirmation->whereHas('approval', function($approval) {
+                    $approval->where('status', 1);
+                });
+            })
+            ->orderBy('tournaments_registrations.created_at', 'DESC')
+            ->get();
+        $in_progress_tournaments = $in_progress_tournaments->map(function($tournaments_registrations, $key) {
+            if ($tournaments_registrations->qr_identifier) {
+                $qr_file_name = md5($tournaments_registrations->qr_identifier);
+                $tournaments_registrations->qr_identifier = $qr_file_name;
+            }
 
-        return view('participant.profile', compact('identification_file_name', 'teams'));
+            return $tournaments_registrations;
+        });
+        $completed_tournaments = $member->tournaments_registrations()
+            ->select('tournaments_registrations.id', 'tournaments_registrations.tournaments_id', 'tournaments_registrations.teams_id', 'tournaments_registrations.created_at')
+            ->with([
+                'tournament' => function($tournament) {
+                    $tournament->select('id', 'name', 'logo_file_name', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'members_id');
+                },
+                'team' => function($team) {
+                    $team->select('id', 'name');
+                }
+            ])
+            ->whereHas('tournament', function($tournament) {
+                $tournament->where('start', 1)
+                    ->where('complete', 1);
+            })
+            ->whereHas('confirmation', function($confirmation) {
+                $confirmation->whereHas('approval', function($approval) {
+                    $approval->where('status', 1);
+                });
+            })
+            ->orderBy('tournaments_registrations.created_at', 'DESC')
+            ->get();
+
+        return view('participant.profile', compact('identification_file_name', 'teams', 'schedules', 'registrations', 'in_progress_tournaments', 'completed_tournaments'));
     }
 
     public function update(Request $request)

@@ -6,6 +6,7 @@ use App\Helpers\GuzzleHelper;
 use App\Tournament;
 use App\TournamentApproval;
 use App\TournamentRegistrationConfirmation;
+use App\TournamentRegistrationConfirmationApproval;
 use DB;
 use Illuminate\Http\Request;
 use PHPQRCode\QRcode;
@@ -116,6 +117,7 @@ class TournamentController extends BaseController
 
     public function approvePayment($id, Request $request)
     {
+        $admin = $request->user();
         $tournament_registration_confirmation = TournamentRegistrationConfirmation::whereDoesntHave('approval')->find($id);
         if ($tournament_registration_confirmation) {
             $tournament = $tournament_registration_confirmation->registration->tournament()->select('*')
@@ -168,9 +170,9 @@ class TournamentController extends BaseController
                 $tournament_registration->challonges_participants_id = $challonge_participant->participant->id;
                 $tournament_registration->save();
 
-                $tournament_registration_confirmation_approval = $tournament_registration_confirmation->approval()->create([
-                    'status' => 1
-                ]);
+                $tournament_registration_confirmation_approval = new TournamentRegistrationConfirmationApproval(['status' => 1]);
+                $tournament_registration_confirmation_approval->member()->associate($admin);
+                $tournament_registration_confirmation->approval()->save($tournament_registration_confirmation_approval);
 
                 DB::commit();
                 return response()->json(['code' => 200, 'message' => ['Approve tournament payment success.']]);
@@ -192,6 +194,7 @@ class TournamentController extends BaseController
 
     public function declinePayment($id, Request $request)
     {
+        $admin = $request->user();
         $tournament_registration_confirmation = TournamentRegistrationConfirmation::whereDoesntHave('approval')->find($id);
         if ($tournament_registration_confirmation) {
             // Continue
@@ -201,9 +204,9 @@ class TournamentController extends BaseController
 
         DB::beginTransaction();
         try {
-            $tournament_registration_confirmation_approval = $tournament_registration_confirmation->approval()->create([
-                'status' => 0
-            ]);
+            $tournament_registration_confirmation_approval = new TournamentRegistrationConfirmationApproval(['status' => 0]);
+            $tournament_registration_confirmation_approval->member()->associate($admin);
+            $tournament_registration_confirmation->approval()->save($tournament_registration_confirmation_approval);
 
             DB::commit();
             return response()->json(['code' => 200, 'message' => ['Approve tournament payment success.']]);

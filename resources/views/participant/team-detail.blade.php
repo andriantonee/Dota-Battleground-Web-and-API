@@ -8,6 +8,7 @@
     <link href="{{ asset('css/participant/footer.css') }}" rel="stylesheet">
     <link href="{{ asset('css/participant/tab-pages.css') }}" rel="stylesheet">
     <link href="{{ asset('css/participant/search-input.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/participant/modify-table.css') }}" rel="stylesheet">
     <style type="text/css">
         #profile-picture-container {
             height: 150px;
@@ -63,8 +64,30 @@
             width: 168px;
         }
 
+        .members-rows:first-child {
+            margin-bottom: 10px;
+        }
+        .members-rows+.members-rows {
+            margin-bottom: 10px;
+        }
+        .members-rows:last-child {
+            margin-bottom: 0;
+        }
 
+        .tournaments-rows:first-child {
+            margin-bottom: 10px;
+        }
+        .tournaments-rows+.tournaments-rows {
+            margin-bottom: 10px;
+        }
+        .tournaments-rows:last-child {
+            margin-bottom: 0;
+        }
 
+        .table-content-centered th, .table-content-centered td {
+            text-align: center;
+            vertical-align: middle !important;
+        }
     </style>
 @endsection
 
@@ -149,43 +172,187 @@
                     </ul>
                     <div class="panel-body">
                         <div class="tab-content">
-                            <div class="tab-pane fade in active" id="teams-tab" style="min-height: 400px;">
-                                <div style="width: 450px;margin-left: 25px;">
-                                    @foreach ($team->details as $detail)
-                                        <div class="row well-custom" style="padding: 15px 0px;margin-bottom: 10px;">
-                                            <div class="col-xs-4">
-                                                <div class="thumbnail" style="height: 110px;width: 110px;margin: 0px auto;">
-                                                    @if ($detail->picture_file_name)
-                                                        <img src="{{ asset('storage/member/'.$detail->picture_file_name) }}" style="height: 100px;width: 100px;">
-                                                    @else
-                                                        <img src="{{ asset('img/default-profile.jpg') }}" style="height: 100px;width: 100px;">
-                                                    @endif
+                            <div class="tab-pane fade in active" id="teams-tab">
+                                <?php $start = 1; ?>
+                                @foreach ($team->details as $detail)
+                                    @if ($start % 2 == 1)
+                                        <div class="row members-rows">
+                                    @endif
+                                        <div class="col-xs-6">
+                                            @if ($start % 2 == 1)
+                                                <div style="padding-left: 16px;padding-right: 8px;">
+                                            @else
+                                                <div style="padding-left: 8px;padding-right: 16px;">
+                                            @endif
+                                                <div class="row well-custom" style="padding: 15px 0px;">
+                                                    <div class="col-xs-4">
+                                                        <div class="thumbnail" style="height: 110px;width: 110px;margin: 0px auto;">
+                                                            @if ($detail->picture_file_name)
+                                                                <img src="{{ asset('storage/member/'.$detail->picture_file_name) }}" style="height: 100px;width: 100px;">
+                                                            @else
+                                                                <img src="{{ asset('img/default-profile.jpg') }}" style="height: 100px;width: 100px;">
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-8" style="position: relative;">
+                                                        <h3 style="margin-top: 15px;">{{ $detail->name }}</h3>
+                                                        <p>{{ $detail->steam32_id ?: '-' }}</p>
+                                                        <p style="color: #afaeae;">Joined on {{ date('d F Y', strtotime($detail->created_at)) }}</p>
+                                                        @if ($detail->members_privilege == 1 && $inTeam && $isTeamLeader)
+                                                            <div style="position: absolute;right: 10px;top: -5px;">
+                                                                <a role="button" class="btn-kick-member" data-member-id="{{ $detail->id }}" data-member-name="{{ $detail->name }}">
+                                                                    <i class="glyphicon glyphicon-remove-sign" style="font-size: 24px;"></i>
+                                                                </a>
+                                                            </div>
+                                                        @endif
+                                                        @if ($detail->members_privilege == 2)
+                                                            <p style="position: absolute;right: 5px;bottom: -25px;font-size: 12px;color: #afaeae;"><strong>Captain</strong></p>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-8" style="position: relative;">
-                                                <h3 style="margin-top: 15px;">{{ $detail->name }}</h3>
-                                                <p>{{ $detail->steam32_id ?: '-' }}</p>
-                                                <p style="color: #afaeae;">Joined on {{ date('d F Y', strtotime($detail->created_at)) }}</p>
-                                                @if ($detail->members_privilege == 1 && $inTeam && $isTeamLeader)
-                                                    <div style="position: absolute;right: 10px;top: -5px;">
-                                                        <a role="button" class="btn-kick-member" data-member-id="{{ $detail->id }}" data-member-name="{{ $detail->name }}">
-                                                            <i class="glyphicon glyphicon-remove-sign" style="font-size: 24px;"></i>
-                                                        </a>
-                                                    </div>
-                                                @endif
-                                                @if ($detail->members_privilege == 2)
-                                                    <p style="position: absolute;right: 5px;bottom: -25px;font-size: 12px;color: #afaeae;"><strong>Captain</strong></p>
-                                                @endif
-                                            </div>
                                         </div>
-                                    @endforeach
-                                </div>
+                                    @if ($start % 2 == 0)
+                                        </div>
+                                    @endif
+                                    <?php $start++; ?>
+                                @endforeach
+                                @if ($start % 2 == 0)
+                                    </div>
+                                @endif
                             </div>
                             <div class="tab-pane fade" id="schedule-tab">
-                                Default 2
+                                @if (count($team->tournaments_schedules) > 0)
+                                    <table class="table table-bordered table-striped table-content-centered table-schedule" style="margin-top: 10px;margin-bottom: 0;">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 276px;">Round</th>
+                                                <th style="width: 185px;"></th>
+                                                <th style="width: 35px;"></th>
+                                                <th style="width: 185px;"></th>
+                                                <th style="width: 260px;">Schedule</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($team->tournaments_schedules as $tournaments_schedule)
+                                                <tr>
+                                                    <td colspan="5" style="font-weight: bold;font-size: 24px;">{{ $tournaments_schedule->tournament->name }}</td>
+                                                </tr>
+                                                @foreach ($tournaments_schedule->tournament->matches as $match)
+                                                    <tr>
+                                                        <td>
+                                                            @if ($match->round < 0)
+                                                                Lower Round {{ abs($match->round) }}
+                                                            @elseif ($match->round == 0)
+                                                                Bronze Match
+                                                            @elseif ($match->round < $tournaments_schedule->tournament->max_round - 1)
+                                                                Round {{ $match->round }}
+                                                            @elseif ($match->round == $tournaments_schedule->tournament->max_round - 1)
+                                                                Semifinals
+                                                            @else
+                                                                Finals
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if (isset($match->participants[0]))
+                                                                {{ $match->participants[0]->team->name }}
+                                                            @else
+                                                                TBD
+                                                            @endif
+                                                        </td>
+                                                        <td>VS</td>
+                                                        <td>
+                                                            @if (isset($match->participants[1]))
+                                                                {{ $match->participants[1]->team->name }}
+                                                            @else
+                                                                TBD
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($match->scheduled_time)
+                                                                {{ date('l, d F Y H:i:s', strtotime($match->scheduled_time)) }}
+                                                            @else
+                                                                Not Scheduled
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @else
+                                    <div class="row">
+                                        <div class="col-xs-12 text-center" style="opacity: 0.2;">
+                                            <div>
+                                                <i class="fa fa-times" aria-hidden="true" style="font-size: 192px;"></i>
+                                            </div>
+                                            <strong style="font-size: 64px;">No Tournament Scheduled</strong>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                             <div class="tab-pane fade" id="registration-status-tab">
-                                Default 3
+                                @if (count($team->tournaments_registrations) > 0)
+                                    <?php $start = 1; ?>
+                                    @foreach ($team->tournaments_registrations as $tournaments_registration)
+                                        @if ($start % 2 == 1)
+                                            <div class="row tournaments-rows">
+                                        @endif
+                                            <div class="col-xs-6">
+                                                @if ($start % 2 == 1)
+                                                    <div style="padding-left: 16px;padding-right: 8px;">
+                                                @else
+                                                    <div style="padding-left: 8px;padding-right: 16px;">
+                                                @endif
+                                                    <div class="row well-custom" style="padding: 15px 0px;">
+                                                        <div class="col-xs-4">
+                                                            <a href="{{ url('tournament/'.$tournaments_registration->tournament->id) }}" style="width: 110px;height: 110px;">
+                                                                <img src="{{ asset('storage/tournament/'.$tournaments_registration->tournament->logo_file_name) }}" style="height: 110px;width: 110px;border: 1px solid black;">
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-xs-8" style="position: relative;">
+                                                            <h3 style="margin-top: 15px;">{{ $tournaments_registration->tournament->name }}</h3>
+                                                            <p>{{ $tournaments_registration->tournament->owner->name }}</p>
+                                                            <p style="color: #afaeae;">{{ date('d F Y', strtotime($tournaments_registration->tournament->start_date)) }} - {{ date('d F Y', strtotime($tournaments_registration->tournament->end_date)) }}</p>
+                                                            <p style="position: absolute;right: 5px;bottom: -25px;font-size: 12px;color: #afaeae;">
+                                                                <strong>
+                                                                    @if (date('Y-m-d H:i:s') <= $tournaments_registration->tournament->registration_closed)
+                                                                        Upcoming
+                                                                    @else
+                                                                        @if ($tournaments_registration->tournament->start == 0)
+                                                                            Upcoming
+                                                                        @else
+                                                                            @if ($tournaments_registration->tournament->complete == 0)
+                                                                                In Progress
+                                                                            @else
+                                                                                Complete
+                                                                            @endif
+                                                                        @endif
+                                                                    @endif
+                                                                </strong>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @if ($start % 2 == 0)
+                                            </div>
+                                        @endif
+                                        <?php $start++ ?>
+                                    @endforeach
+                                    @if ($start % 2 == 0)
+                                        </div>
+                                    @endif
+                                @else
+                                    <div class="row">
+                                        <div class="col-xs-12 text-center" style="opacity: 0.2;">
+                                            <div>
+                                                <i class="fa fa-times" aria-hidden="true" style="font-size: 192px;"></i>
+                                            </div>
+                                            <strong style="font-size: 64px;">No Tournament Registered</strong>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

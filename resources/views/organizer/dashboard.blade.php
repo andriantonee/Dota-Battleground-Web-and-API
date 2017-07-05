@@ -107,7 +107,7 @@
                                             @endif
                                         @else
                                             <i class="fa fa-clock-o pending" aria-hidden="true" style="font-size: 55px;"></i>
-                                            <h4 class="pending" style="margin-top: 0px;>PENDING</h4>
+                                            <h4 class="pending" style="margin-top: 0px;">PENDING</h4>
                                         @endif
                                     </div>
                                 </a>

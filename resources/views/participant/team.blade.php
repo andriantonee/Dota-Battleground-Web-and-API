@@ -6,7 +6,18 @@
     <link href="{{ asset('css/participant/footer.css') }}" rel="stylesheet">
     <link href="{{ asset('css/participant/search-input.css') }}" rel="stylesheet">
     <style type="text/css">
-
+        .team-wrapper {
+            display: block;
+        }
+        .team-wrapper:first-child {
+            margin-bottom: 10px;
+        }
+        .team-wrapper+.team-wrapper {
+            margin-bottom: 10px;
+        }
+        .team-wrapper:last-child {
+            margin-bottom: 0;
+        }
     </style>
 @endsection
 
@@ -25,10 +36,10 @@
                 </div>
             </div>
         </div>
-        <div id="team-list-container" style="width: 700px;margin-left: 15px;margin-top: 20px;">
+        <div id="team-list-container" style="width: 700px;margin-left: 15px;margin-bottom: 20px;margin-top: 20px;">
             @foreach ($teams as $team)
-                <a href="{{ url('/team/'.$team->id) }}">
-                    <div class="row well-custom" style="margin-bottom: 5px;padding: 10px 0px;">
+                <a class="team-wrapper" href="{{ url('/team/'.$team->id) }}">
+                    <div class="row well-custom" style="padding: 10px 0px;">
                         <div class="col-xs-2">
                             <div class="thumbnail" style="height: 80px;width: 80px;margin: 0px auto;">
                                 @if ($team->picture_file_name)

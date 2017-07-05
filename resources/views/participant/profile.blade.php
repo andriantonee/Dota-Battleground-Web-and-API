@@ -7,7 +7,7 @@
     <link href="{{ asset('vendor/jasny-bootstrap/dist/css/jasny-bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/participant/footer.css') }}" rel="stylesheet">
     <link href="{{ asset('css/participant/tab-pages.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/participant/team.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/participant/modify-table.css') }}" rel="stylesheet">
     <style type="text/css">
         #profile-picture-container {
             height: 150px;
@@ -62,6 +62,73 @@
         .fileinput-exists #btn-file-size-settings {
             width: 168px;
         }
+
+        .team-list-content {
+            display: block;
+        }
+        .team-list-content:first-child {
+            margin-bottom: 10px;
+        }
+        .team-list-content+.team-list-content {
+            margin-bottom: 10px;
+        }
+        .team-list-content:last-child {
+            margin-bottom: 0;
+        }
+
+        .table-content-centered th, .table-content-centered td {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+
+        .tournaments-registrations-container {
+            margin-bottom: 15px;
+        }
+        .tournaments-registrations-container:last-child {
+            margin-bottom: 0;
+        }
+
+        .tournaments-registrations-rows:first-child {
+            margin-bottom: 10px;
+        }
+        .tournaments-registrations-rows+.tournaments-registrations-rows {
+            margin-bottom: 10px;
+        }
+        .tournaments-registrations-rows:last-child {
+            margin-bottom: 0;
+        }
+
+        .pending {
+            color : #5F89A3;
+        }
+        .reject {
+            color : #ba3f3f;
+        }
+
+        .in-progress-tournaments-rows:first-child {
+            margin-bottom: 10px;
+        }
+        .in-progress-tournaments-rows+.in-progress-tournaments-rows {
+            margin-bottom: 10px;
+        }
+        .in-progress-tournaments-rows:last-child {
+            margin-bottom: 0;
+        }
+
+        #barcode-img {
+            height: 165px;
+            width: 165px;
+        }
+
+        .completed-tournaments-rows:first-child {
+            margin-bottom: 10px;
+        }
+        .completed-tournaments-rows+.completed-tournaments-rows {
+            margin-bottom: 10px;
+        }
+        .completed-tournaments-rows:last-child {
+            margin-bottom: 0;
+        }
     </style>
 @endsection
 
@@ -114,7 +181,8 @@
                         <li class="active"><a href="#teams-tab" data-toggle="tab">Teams</a></li>
                         <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
                         <li><a href="#registration-status-tab" data-toggle="tab">Registration Status</a></li>
-                        <li><a href="#my-tournaments-tab" data-toggle="tab">My Tournaments</a></li>
+                        <li><a href="#in-progress-tournaments-tab" data-toggle="tab">In Progress Tournaments</a></li>
+                        <li><a href="#completed-tournaments-tab" data-toggle="tab">Completed Tournaments</a></li>
                     </ul>
                     <div class="panel-body">
                         <div class="tab-content">
@@ -122,7 +190,7 @@
                                 <div id="team-list-container">
                                     @foreach ($teams as $team)
                                         <a class="team-list-content well-custom" href="{{ url('/team/'.$team->id) }}">
-                                            <div class="row" style="padding: 15px 5px;margin: 0px;margin-bottom: 15px;">
+                                            <div class="row" style="padding: 15px 5px;margin: 0;">
                                                 <div class="col-xs-2">
                                                     <div class="thumbnail" style="margin: 0px auto;width: 75px;height: 75px;">
                                                         <img src="{{ asset($team->picture_file_name ? '/storage/team/'.$team->picture_file_name : 'img/default-group.png') }}" style="width: 65px;height: 65px;">
@@ -136,7 +204,7 @@
                                         </a>
                                     @endforeach
                                 </div>
-                                <div style="margin: 25px 0px;text-align: center;">
+                                <div style="margin: 0;margin-top: 25px;text-align: center;">
                                     <a role="button" class="btn btn-default btn-custom" data-toggle="modal" data-target="#create-team-modal" >
                                         <div>
                                             <i class="glyphicon glyphicon-plus-sign" style="font-size: 24px;color:#fff"></i>
@@ -146,13 +214,247 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="schedule-tab">
-                                Default 2
+                                @if (count($schedules) > 0)
+                                    <table class="table table-bordered table-striped table-content-centered table-schedule" style="margin: 0;">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 276px;">Round</th>
+                                                <th style="width: 185px;"></th>
+                                                <th style="width: 35px;"></th>
+                                                <th style="width: 185px;"></th>
+                                                <th style="width: 260px;">Schedule</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($schedules as $tournaments_schedule)
+                                                <tr>
+                                                    <td colspan="5" style="font-weight: bold;font-size: 24px;">{{ $tournaments_schedule->tournament->name }}</td>
+                                                </tr>
+                                                @foreach ($tournaments_schedule->tournament->matches as $match)
+                                                    <tr>
+                                                        <td>
+                                                            @if ($match->round < 0)
+                                                                Lower Round {{ abs($match->round) }}
+                                                            @elseif ($match->round == 0)
+                                                                Bronze Match
+                                                            @elseif ($match->round < $tournaments_schedule->tournament->max_round - 1)
+                                                                Round {{ $match->round }}
+                                                            @elseif ($match->round == $tournaments_schedule->tournament->max_round - 1)
+                                                                Semifinals
+                                                            @else
+                                                                Finals
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if (isset($match->participants[0]))
+                                                                {{ $match->participants[0]->team->name }}
+                                                            @else
+                                                                TBD
+                                                            @endif
+                                                        </td>
+                                                        <td>VS</td>
+                                                        <td>
+                                                            @if (isset($match->participants[1]))
+                                                                {{ $match->participants[1]->team->name }}
+                                                            @else
+                                                                TBD
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($match->scheduled_time)
+                                                                {{ date('l, d F Y H:i:s', strtotime($match->scheduled_time)) }}
+                                                            @else
+                                                                Not Scheduled
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @else
+                                    <div class="row">
+                                        <div class="col-xs-12 text-center" style="opacity: 0.2;">
+                                            <div>
+                                                <i class="fa fa-times" aria-hidden="true" style="font-size: 192px;"></i>
+                                            </div>
+                                            <strong style="font-size: 64px;">No Tournament Scheduled</strong>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                             <div class="tab-pane fade" id="registration-status-tab">
-                                Default 3
+                                @if (count($registrations) > 0)
+                                    @foreach ($registrations as $team)
+                                        <h4 style="border-bottom: 1px solid #e3e3e3; margin-bottom: 15px;margin-top: 0;padding-bottom: 10px;">{{ $team->name }}</h4>
+                                        <div class="tournaments-registrations-container">
+                                            <?php $start = 1; ?>
+                                            @foreach ($team->tournaments_registrations as $tournaments_registration)
+                                                @if ($start % 2 == 1)
+                                                    <div class="row tournaments-registrations-rows">
+                                                @endif
+                                                    <div class="col-xs-6">
+                                                        @if ($start % 2 == 1)
+                                                            <div style="padding-left: 16px;padding-right: 8px;">
+                                                        @else
+                                                            <div style="padding-left: 8px;padding-right: 16px;">
+                                                        @endif
+                                                            <div class="row well-custom" style="padding: 15px 0px;min-height: 137px;max-height: 137px;">
+                                                                <div class="col-xs-12" style="position: relative;">
+                                                                    <h3 style="margin: 0;">{{ $tournaments_registration->tournament->name }}</h3>
+                                                                    <p style="margin: 0;padding-left: 10px;">{{ $tournaments_registration->members_count }} Players</p>
+                                                                    <p style="color: #afaeae;margin: 0;margin-bottom: 5px;padding-left: 10px;">Register on {{ date('d F Y', strtotime($tournaments_registration->created_at)) }}</p>
+                                                                    @if (!$tournaments_registration->confirmation)
+                                                                        <a class="btn btn-default ladda-button btn-custom" href="{{ url('/tournament/confirm-payment/'.$tournaments_registration->id) }}">Payment Confirmation</a>
+                                                                    @else
+                                                                        @if ($tournaments_registration->confirmation->approval)
+                                                                            @if ($tournaments_registration->confirmation->approval->status == 0)
+                                                                                <a class="btn btn-default ladda-button btn-custom" href="{{ url('/tournament/confirm-payment/'.$tournaments_registration->id) }}">Payment Confirmation</a>
+                                                                            @endif
+                                                                        @else
+                                                                            <a class="btn btn-default ladda-button btn-custom" href="{{ url('/tournament/confirm-payment/'.$tournaments_registration->id) }}">Payment Confirmation</a>
+                                                                        @endif
+                                                                    @endif
+                                                                    <div class="text-center" style="position: absolute;top: 16px;right: 25px;width: 100px;">
+                                                                        @if ($tournaments_registration->confirmation)
+                                                                            @if ($tournaments_registration->confirmation->approval)
+                                                                                @if ($tournaments_registration->confirmation->approval->status == 1)
+                                                                                    <i class="fa fa-check" aria-hidden="true" style="font-size: 55px;"></i>
+                                                                                    <h4 class="" style="margin-top: 0px;">ACCEPTED</h4>
+                                                                                @elseif ($tournaments_registration->confirmation->approval->status == 0)
+                                                                                    <i class="fa fa-ban reject" aria-hidden="true" style="font-size: 55px;"></i>
+                                                                                    <h4 class="reject" style="margin-top: 0px;">REJECTED</h4>
+                                                                                @endif
+                                                                            @else
+                                                                                <i class="fa fa-clock-o pending" aria-hidden="true" style="font-size: 55px;"></i>
+                                                                                <h4 class="pending" style="margin-top: 0px;">PENDING</h4>
+                                                                            @endif
+                                                                        @else
+                                                                            <i class="fa fa-exclamation-circle not-confirmed" aria-hidden="true" style="font-size: 55px;"></i>
+                                                                            <h6 class="not-confirmed" style="margin-top: 0px;">NOT CONFIRMED</h4>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @if ($start % 2 == 0)
+                                                    </div>
+                                                @endif
+                                                <?php $start++; ?>
+                                            @endforeach
+                                            @if ($start % 2 == 0)
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="row">
+                                        <div class="col-xs-12 text-center" style="opacity: 0.2;">
+                                            <div>
+                                                <i class="fa fa-times" aria-hidden="true" style="font-size: 192px;"></i>
+                                            </div>
+                                            <strong style="font-size: 64px;">No Tournament Registered</strong>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
-                            <div class="tab-pane fade" id="my-tournaments-tab">
-                                Default 4
+                            <div class="tab-pane fade" id="in-progress-tournaments-tab">
+                                @if (count($in_progress_tournaments) > 0)
+                                    <?php $start = 1; ?>
+                                    @foreach ($in_progress_tournaments as $tournaments_registration)
+                                        @if ($start % 2 == 1)
+                                            <div class="row in-progress-tournaments-rows">
+                                        @endif
+                                            <div class="col-xs-6">
+                                                @if ($start % 2 == 1)
+                                                    <div style="padding-left: 16px;padding-right: 8px;">
+                                                @else
+                                                    <div style="padding-left: 8px;padding-right: 16px;">
+                                                @endif
+                                                    <div class="row well-custom" style="padding: 15px 0px;">
+                                                        <div class="col-xs-4">
+                                                            <a href="{{ url('tournament/'.$tournaments_registration->tournament->id) }}" style="width: 110px;height: 110px;">
+                                                                <img src="{{ asset('storage/tournament/'.$tournaments_registration->tournament->logo_file_name) }}" style="height: 110px;width: 110px;border: 1px solid black;">
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-xs-8" style="position: relative;">
+                                                            <h3 style="margin-top: 15px;">{{ $tournaments_registration->tournament->name }}</h3>
+                                                            <p>{{ $tournaments_registration->team->name }}</p>
+                                                            <p style="color: #afaeae;">{{ date('d F Y', strtotime($tournaments_registration->tournament->start_date)) }} - {{ date('d F Y', strtotime($tournaments_registration->tournament->end_date)) }}</p>
+                                                            @if ($tournaments_registration->qr_identifier)
+                                                                <a role="button" data-toggle="modal" data-target="#show-barcode-modal" data-src="{{ asset('storage/tournament/qr/'.$tournaments_registration->qr_identifier.'.png') }}" style="position: absolute;right: 5px;bottom: -10px;font-size: 12px;color: #afaeae;">
+                                                                    <img src="{{ asset('storage/tournament/qr/'.$tournaments_registration->qr_identifier.'.png') }}" style="width: 50px;height: 50px;">
+                                                                </a>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @if ($start % 2 == 0)
+                                            </div>
+                                        @endif
+                                        <?php $start++ ?>
+                                    @endforeach
+                                    @if ($start % 2 == 0)
+                                        </div>
+                                    @endif
+                                @else
+                                    <div class="row">
+                                        <div class="col-xs-12 text-center" style="opacity: 0.2;">
+                                            <div>
+                                                <i class="fa fa-times" aria-hidden="true" style="font-size: 192px;"></i>
+                                            </div>
+                                            <strong style="font-size: 64px;">No Tournament In Progress</strong>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="tab-pane fade" id="completed-tournaments-tab">
+                                @if (count($completed_tournaments) > 0)
+                                    <?php $start = 1; ?>
+                                    @foreach ($completed_tournaments as $tournaments_registration)
+                                        @if ($start % 2 == 1)
+                                            <div class="row completed-tournaments-rows">
+                                        @endif
+                                            <div class="col-xs-6">
+                                                @if ($start % 2 == 1)
+                                                    <div style="padding-left: 16px;padding-right: 8px;">
+                                                @else
+                                                    <div style="padding-left: 8px;padding-right: 16px;">
+                                                @endif
+                                                    <div class="row well-custom" style="padding: 15px 0px;">
+                                                        <div class="col-xs-4">
+                                                            <a href="{{ url('tournament/'.$tournaments_registration->tournament->id) }}" style="width: 110px;height: 110px;">
+                                                                <img src="{{ asset('storage/tournament/'.$tournaments_registration->tournament->logo_file_name) }}" style="height: 110px;width: 110px;border: 1px solid black;">
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-xs-8" style="position: relative;">
+                                                            <h3 style="margin-top: 15px;">{{ $tournaments_registration->tournament->name }}</h3>
+                                                            <p>{{ $tournaments_registration->team->name }}</p>
+                                                            <p style="color: #afaeae;">{{ date('d F Y', strtotime($tournaments_registration->tournament->start_date)) }} - {{ date('d F Y', strtotime($tournaments_registration->tournament->end_date)) }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @if ($start % 2 == 0)
+                                            </div>
+                                        @endif
+                                        <?php $start++ ?>
+                                    @endforeach
+                                    @if ($start % 2 == 0)
+                                        </div>
+                                    @endif
+                                @else
+                                    <div class="row">
+                                        <div class="col-xs-12 text-center" style="opacity: 0.2;">
+                                            <div>
+                                                <i class="fa fa-times" aria-hidden="true" style="font-size: 192px;"></i>
+                                            </div>
+                                            <strong style="font-size: 64px;">No Tournament Completed</strong>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -303,6 +605,17 @@
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Show Image Modal -->
+    <div class="modal modal-remove-padding-right" id="show-barcode-modal" tabindex="-1" role="dialog" aria-labelledby="show-barcode-modal-label">
+        <div class="modal-dialog modal-dialog-fixed-width-200" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <img id="barcode-img" src="">
                 </div>
             </div>
         </div>

@@ -23,4 +23,9 @@ class TournamentRegistrationConfirmationApproval extends Model
     {
         return $this->belongsTo('App\TouranmentRegistrationConfirmation', 'tournaments_registrations_id', 'tournaments_registrations_confirmations_id');
     }
+
+    public function member()
+    {
+        return $this->belongsTo('App\Member', 'members_id', 'id');
+    }
 }

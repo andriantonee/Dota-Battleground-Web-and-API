@@ -100,7 +100,7 @@
         </header>
 
         <!-- Page Features -->
-        <div class="row text-center feature-section">
+        <div class="row text-center feature-section" style="margin-left: 0;margin-right: 0;">
             <div class="col-xs-4">
                 <div class="thumbnail">
                     <img src="{{ asset('img/feature-organizer-1.png') }}" alt="" style="height:150px">
@@ -129,7 +129,7 @@
                 </div>
             </div>
         </div>
-        <div class="row text-center" style="background-image: url('{{ asset('img/organizer-background-2.jpg') }}');padding-top: 40px;padding-bottom:80px">
+        <div class="row text-center" style="background-image: url('{{ asset('img/organizer-background-2.jpg') }}');padding-top: 40px;padding-bottom:80px;margin-left: 0;margin-right: 0;">
              <h2 style="color:#fff;margin-bottom:40px;">Download Dota Battleground Organizer App Now!</h2>
              <a href="" ><img src="img/google-play-store.png" style="width: 200px;"></a>
         </div>

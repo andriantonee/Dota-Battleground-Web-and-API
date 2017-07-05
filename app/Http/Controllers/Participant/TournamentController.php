@@ -69,13 +69,62 @@ class TournamentController extends BaseController
 
         if ($tournament) {
             $tournament->description = str_replace(PHP_EOL, '<br />', $tournament->description);
-            if ($tournament->type == 1) {
-                $tournament->type = 'Single Elimination';
-            } else if ($tournament->type == 2) {
-                $tournament->type = 'Double Elimination';
-            }
+            // if ($tournament->type == 1) {
+            //     $tournament->type = 'Single Elimination';
+            // } else if ($tournament->type == 2) {
+            //     $tournament->type = 'Double Elimination';
+            // }
             $tournament->rules = str_replace(PHP_EOL, '<br />', $tournament->rules);
             $tournament->prize_other = str_replace(PHP_EOL, '<br />', $tournament->prize_other);
+            $tournament->matches = $tournament->matches()
+                ->select('id', 'tournaments_id', 'scheduled_time', 'round')
+                ->with([
+                    'participants' => function($participants) {
+                        $participants->select('tournaments_registrations.id AS id', 'tournaments_registrations.teams_id AS teams_id', 'matches_participants.matches_result AS matches_result')
+                            ->with([
+                                'team' => function($team) {
+                                    $team->select('id', 'name', 'picture_file_name');
+                                }
+                            ])
+                            ->orderBy('matches_participants.side');
+                    }
+                ])
+                ->get();
+            $tournament->max_round = $tournament->matches->max('round');
+            $tournament->min_round = $tournament->matches->min('round');
+            $tournament->matches = $tournament->matches->groupBy('round');
+            $tournament->live_matches = $tournament->matches()
+                ->select('id')
+                // ->whereHas('dota2_live_matches')
+                ->whereHas('dota2_live_matches', function($dota2_live_matches) {
+                    $dota2_live_matches->whereHas('dota2_live_match_teams', function($dota2_live_match_teams) {
+                        $dota2_live_match_teams->whereNull('matches_result');
+                    });
+                })
+                ->with([
+                    'dota2_live_matches' => function($dota2_live_matches) {
+                        $dota2_live_matches->select('id', 'matches_id', 'series_type', 'spectators', 'duration')
+                            ->with([
+                                'dota2_live_match_teams' => function($dota2_live_match_teams) {
+                                    $dota2_live_match_teams->select('id', 'dota2_teams_name', 'dota2_teams_logo', 'tournaments_registrations_id', 'dota2_live_matches_id', 'series_wins', 'score', 'side')
+                                        ->with([
+                                            'tournament_registration' => function($tournament_registration) {
+                                                $tournament_registration->select('id', 'teams_id')
+                                                    ->with([
+                                                        'team' => function($team) {
+                                                            $team->select('id', 'name', 'picture_file_name');
+                                                        }
+                                                    ]);
+                                            }
+                                        ])
+                                        ->where('side', 1)
+                                        ->orWhere('side', 2)
+                                        ->orderBy('side', 'ASC');
+                                }
+                            ]);
+                    }
+                ])
+                ->get();
 
             return view('participant.tournament-detail', compact('tournament'));
         } else {
@@ -191,7 +240,13 @@ class TournamentController extends BaseController
 
     public function confirmPaymentIndex($id, Request $request)
     {
-        $tournament_registration = TournamentRegistration::find($id);
+        $tournament_registration = TournamentRegistration::select('*')
+            ->whereDoesntHave('confirmation', function($confirmation) {
+                $confirmation->whereHas('approval', function($approval) {
+                    $approval->where('status', 1);
+                });
+            })
+            ->find($id);
         if ($tournament_registration) {
             $tournament_registration->load([
                 'tournament' => function($tournament) {
@@ -228,7 +283,13 @@ class TournamentController extends BaseController
 
     public function confirmPayment($id, Request $request)
     {
-        $tournament_registration = TournamentRegistration::find($id);
+        $tournament_registration = TournamentRegistration::select('*')
+            ->whereDoesntHave('confirmation', function($confirmation) {
+                $confirmation->whereHas('approval', function($approval) {
+                    $approval->where('status', 1);
+                });
+            })
+            ->find($id);
         if ($tournament_registration) {
             $tournament_registration->load([
                 'team' => function($team) {
@@ -272,6 +333,8 @@ class TournamentController extends BaseController
                     $tournament_registration_confirmation->banks_id = $data['bank'];
                     $tournament_registration_confirmation->confirmation_file_name = substr($path, strlen('public/tournament/confirmation') + 1);
                     $tournament_registration_confirmation->save();
+
+                    $tournament_registration_confirmation->approval()->delete();
                 } else {
                     $tournament_registration_confirmation = $tournament_registration->confirmation()->create([
                         'name' => $data['name'],

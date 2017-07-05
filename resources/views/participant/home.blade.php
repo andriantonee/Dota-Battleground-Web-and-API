@@ -59,7 +59,7 @@
             </div>
         </div>
         <!-- Page Features -->
-        <div class="row text-center" style="background-color: #272A33;padding-top:20px;padding-bottom:20px;border-top: 1px solid #5f6471;">
+        <div class="row text-center" style="background-color: #272A33;padding-top:20px;padding-bottom:20px;border-top: 1px solid #5f6471;margin-left: 0;margin-right: 0;">
             <div class="col-xs-offset-1 col-xs-4">
                 <div class="thumbnail" style="background:transparent; border:none;margin:0">
                     <img src="{{ asset('img/organize_icon.png') }}" alt="">

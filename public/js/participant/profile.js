@@ -384,4 +384,10 @@ $(document).ready(function() {
                 btn_create.stop();
             });
     });
+
+    $("#show-barcode-modal").on("shown.bs.modal", function(e) {
+        var btn_trigger = $(e.relatedTarget);
+
+        $("#barcode-img").attr("src", btn_trigger.data("src"));
+    });
 });

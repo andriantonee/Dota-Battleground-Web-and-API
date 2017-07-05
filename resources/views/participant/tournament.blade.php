@@ -19,10 +19,10 @@
             padding: 15px;
         }
         .tournament-list-group-item:first-child {
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
         .tournament-list-group-item+.tournament-list-group-item {
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
         .tournament-list-group-item:last-child {
             margin-bottom: 0px;

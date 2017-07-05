@@ -86,6 +86,61 @@ class TeamController extends BaseController
                     }
                 }
             }
+            $team->tournaments_schedules = $team->tournaments_registrations()
+                ->select('id', 'tournaments_id', 'teams_id', 'created_at')
+                ->with([
+                    'tournament' => function($tournament) use($team) {
+                        $tournament->select('tournaments.id', 'tournaments.name', DB::raw('MAX(`matches`.`round`) AS max_round'))
+                            ->join('matches', 'tournaments.id', '=', 'matches.tournaments_id')
+                            ->with([
+                                'matches' => function($matches) use($team) {
+                                    $matches->select('id', 'tournaments_id', 'scheduled_time', 'round')
+                                        ->with([
+                                            'participants' => function($participants) {
+                                                $participants->select('tournaments_registrations.teams_id', 'matches_participants.side')
+                                                    ->with([
+                                                        'team' => function($team) {
+                                                            $team->select('id', 'name');
+                                                        }
+                                                    ])
+                                                    ->whereIn('matches_participants.side', [1, 2])
+                                                    ->orderBy('matches_participants.side', 'ASC');
+                                            }
+                                        ])
+                                        ->whereHas('participants', function($participants) use($team) {
+                                            $participants->where('tournaments_registrations.teams_id', $team->id);
+                                        })
+                                        ->orderBy('round', 'ASC');
+                                }
+                            ])
+                            ->groupBy('tournaments.id');
+                    }
+                ])
+                ->whereHas('tournament', function($tournament) use($team) {
+                    $tournament->where('start', 1)
+                        ->whereHas('matches', function($matches) use($team) {
+                            $matches->whereHas('participants', function($participants) use($team) {
+                                $participants->where('tournaments_registrations.teams_id', $team->id);
+                            });
+                        });
+                })
+                ->orderBy('created_at', 'DESC')
+                ->get();
+            // dd($team->tournaments_schedules->toArray());
+            $team->tournaments_registrations = $team->tournaments_registrations()
+                ->select('id', 'tournaments_id', 'teams_id', 'created_at')
+                ->with([
+                    'tournament' => function($tournament) {
+                        $tournament->select('id', 'name', 'logo_file_name', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'members_id')
+                            ->with([
+                                'owner' => function($owner) {
+                                    $owner->select('id', 'name');
+                                }
+                            ]);
+                    }
+                ])
+                ->orderBy('created_at', 'DESC')
+                ->get();
 
             return view('participant.team-detail', compact('team', 'inTeam', 'isTeamLeader'));
         } else {

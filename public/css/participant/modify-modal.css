@@ -1,3 +1,7 @@
+.modal-dialog-fixed-width-200 {
+    width: 200px !important;
+    margin: 90px auto 0px auto !important;
+}
 .modal-dialog-fixed-width-320 {
     width: 320px !important;
     margin: 90px auto 0px auto !important;
