@@ -5,6 +5,7 @@
 @section('style')
     <link href="{{ asset('css/participant/footer.css') }}" rel="stylesheet">
     <link href="{{ asset('css/participant/search-input.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
     <style type="text/css">
         button.list-group-item:focus {
             outline: none;
@@ -107,25 +108,53 @@
                     <span class="input-group-addon">
                         <i class="glyphicon glyphicon-search"></i>
                     </span>
-                    <input type="text" id="txtbox-search-team" class="form-control" placeholder="Search name..." >
+                    <input type="text" name="txtbox_search_tournament" id="txtbox-search-tournament" class="form-control" value="{{ $name }}" placeholder="Search name...">
                 </div>
                 <div style="margin-top: 5px;">
                     <label class="radio-inline">
-                        <input type="radio" name="tournament_filter_status" id="tournament-filter-status-all" value="1"> All
+                        @if ($status == 1)
+                            <input type="radio" name="tournament_filter_status" id="tournament-filter-status-all" value="1" checked="checked"> All
+                        @else
+                            <input type="radio" name="tournament_filter_status" id="tournament-filter-status-all" value="1"> All
+                        @endif
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="tournament_filter_status" id="tournament-filter-status-upcoming" value="2"> Upcoming
+                        @if ($status == 2)
+                            <input type="radio" name="tournament_filter_status" id="tournament-filter-status-upcoming" value="2" checked="checked"> Upcoming
+                        @else
+                            <input type="radio" name="tournament_filter_status" id="tournament-filter-status-upcoming" value="2"> Upcoming
+                        @endif
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="tournament_filter_status" id="tournament-filter-status-in-progress" value="3"> In Progress
+                        @if ($status == 3)
+                            <input type="radio" name="tournament_filter_status" id="tournament-filter-status-in-progress" value="3" checked="checked"> In Progress
+                        @else
+                            <input type="radio" name="tournament_filter_status" id="tournament-filter-status-in-progress" value="3"> In Progress
+                        @endif
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="tournament_filter_status" id="tournament-filter-status-completed" value="4"> Completed
+                        @if ($status == 4)
+                            <input type="radio" name="tournament_filter_status" id="tournament-filter-status-completed" value="4" checked="checked"> Completed
+                        @else
+                            <input type="radio" name="tournament_filter_status" id="tournament-filter-status-completed" value="4"> Completed
+                        @endif
                     </label>
-                    <select class="form-control" id="team-size" name="team_size" style="display: inline-block;width: 125px;margin-left: 10px;">
-                        <option value="1" selected="selected">A through Z</option>
-                        <option value="2">Start Date</option>
-                        <option value="3">Registration End</option>
+                    <select class="form-control" name="tournament_ordering" id="tournament-ordering" style="display: inline-block;width: 125px;margin-left: 10px;">
+                        @if ($order == 1)  
+                            <option value="1" selected="selected">A through Z</option>
+                        @else
+                            <option value="1">A through Z</option>
+                        @endif
+                        @if ($order == 2)
+                            <option value="2" selected="selected">Start Date</option>
+                        @else
+                            <option value="2">Start Date</option>
+                        @endif
+                        @if ($order == 3)
+                            <option value="3" selected="selected">Registration End</option>
+                        @else
+                            <option value="3">Registration End</option>
+                        @endif
                     </select>
                 </div>
             </div>
@@ -137,22 +166,38 @@
                     <div class="collapse in list-group-item-detail" id="filter-prices">
                         <div class="radio" style="margin-top: 0;">
                             <label>
-                                <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-1" value="1">&nbsp;Below Rp. 50.000
+                                @if ($price == 1)
+                                    <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-1" value="1" checked="checked">&nbsp;Below Rp. 50.000
+                                @else
+                                    <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-1" value="1">&nbsp;Below Rp. 50.000
+                                @endif
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-2" value="2">&nbsp;Rp. 50.000 - Rp. 100.000
+                                @if ($price == 2)
+                                    <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-2" value="2" checked="checked">&nbsp;Rp. 50.000 - Rp. 100.000
+                                @else
+                                    <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-2" value="2">&nbsp;Rp. 50.000 - Rp. 100.000
+                                @endif
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-3" value="3">&nbsp;Rp. 100.000 - Rp. 150.000
+                                @if ($price == 3)
+                                    <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-3" value="3" checked="checked">&nbsp;Rp. 100.000 - Rp. 150.000
+                                @else
+                                    <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-3" value="3">&nbsp;Rp. 100.000 - Rp. 150.000
+                                @endif
                             </label>
                         </div>
                         <div class="radio" style="margin-bottom: 0;">
                             <label>
-                                <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-4" value="4">&nbsp;Above Rp. 150.000
+                                @if ($price == 4)
+                                    <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-4" value="4" checked="checked">&nbsp;Above Rp. 150.000
+                                @else
+                                    <input type="radio" name="tournament_filter_prices" id="tournament-filter-prices-4" value="4">&nbsp;Above Rp. 150.000
+                                @endif
                             </label>
                         </div>
                     </div>
@@ -161,56 +206,74 @@
                         <div class="form-group" style="margin-bottom: 5px;">
                             <label for="start-date" class="control-label" style="font-weight: normal;">Start Date</label>
                             <div class="input-group date" id="start-date-datetimepicker">
-                                <input type="text" class="form-control" id="start-date" name="start_date">
+                                <input type="text" class="form-control" id="start-date" name="start_date" value="{{ $start_date }}">
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
                             </div>
                         </div>
                         <div class="form-group" style="margin-bottom: 5px;">
-                            <label for="start-date" class="control-label" style="font-weight: normal;">Location</label>
-                            <select class="form-control" id="team-size" name="team_size">
+                            <label for="city" class="control-label" style="font-weight: normal;">Location</label>
+                            <select class="form-control" id="city" name="city">
+                                @if ($selected_city)
+                                    <option value disabled="disabled">-- Filter City --</option>
+                                @else
+                                    <option value disabled="disabled" selected="selected">-- Filter City --</option>
+                                @endif
                                 @foreach ($cities as $city)
-                                    <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                    @if ($selected_city == $city->id)
+                                        <option value="{{ $city->id }}" selected="selected">{{ $city->name }}</option>
+                                    @else
+                                        <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <button class="form-control btn btn-default btn-custom">Filter</button>
+                    <button class="form-control btn btn-default btn-custom" id="btn-filter-tournament">Filter</button>
                 </div>
             </div>
             <div class="col-xs-8">
-                @foreach ($tournaments as $tournament)
-                    <a href="{{ url('/tournament/'.$tournament->id) }}" class="well-custom tournament-list-group-item">
-                        <div class="tournament-list-group-item-logo">
-                            <img src="{{ asset('storage/tournament/'.$tournament->logo_file_name) }}">
-                        </div>
-                        <div class="tournament-list-group-item-detail-1">
-                            <h4 class="tournament-list-group-item-detail-1-name" style="color: #f45138;">{{ $tournament->name }}</h4>
-                            <p class="tournament-list-group-item-detail-1-organizer-name" style="color:#afaeae">{{ $tournament->owner->name }}</p>
-                            <p class="tournament-list-group-item-detail-1-event-date">{{ date('d F Y', strtotime($tournament->start_date)) }} - {{ date('d F Y', strtotime($tournament->end_date)) }}</p>
-                        </div>
-                        <div class="tournament-list-group-item-detail-2">
-                            <h4 class="tournament-list-group-item-detail-2-price" style="color: #fc7b67;">Rp. {{ number_format($tournament->entry_fee, 0, ',', '.') }} / Team</h4>
-                            <p class="tournament-list-group-item-detail-2-registration-closed">Registration Before {{ date('d F Y H:i', strtotime($tournament->registration_closed)) }}</p>
-                            @if (date('Y-m-d H:i:s') <= $tournament->registration_closed)
-                                <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Upcoming</p>
-                            @else
-                                @if ($tournament->start == 0)
+                @if (count($tournaments) > 0)
+                    @foreach ($tournaments as $tournament)
+                        <a href="{{ url('/tournament/'.$tournament->id) }}" class="well-custom tournament-list-group-item">
+                            <div class="tournament-list-group-item-logo">
+                                <img src="{{ asset('storage/tournament/'.$tournament->logo_file_name) }}">
+                            </div>
+                            <div class="tournament-list-group-item-detail-1">
+                                <h4 class="tournament-list-group-item-detail-1-name" style="color: #f45138;">{{ $tournament->name }}</h4>
+                                <p class="tournament-list-group-item-detail-1-organizer-name" style="color:#afaeae">{{ $tournament->owner->name }}</p>
+                                <p class="tournament-list-group-item-detail-1-event-date">{{ date('d F Y', strtotime($tournament->start_date)) }} - {{ date('d F Y', strtotime($tournament->end_date)) }}</p>
+                            </div>
+                            <div class="tournament-list-group-item-detail-2">
+                                <h4 class="tournament-list-group-item-detail-2-price" style="color: #fc7b67;">Rp. {{ number_format($tournament->entry_fee, 0, ',', '.') }} / Team</h4>
+                                <p class="tournament-list-group-item-detail-2-registration-closed">Registration Before {{ date('d F Y H:i', strtotime($tournament->registration_closed)) }}</p>
+                                @if (date('Y-m-d H:i:s') <= $tournament->registration_closed)
                                     <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Upcoming</p>
                                 @else
-                                    @if ($tournament->complete == 0)
-                                        <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">In Progress</p>
+                                    @if ($tournament->start == 0)
+                                        <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Upcoming</p>
                                     @else
-                                        <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Complete</p>
+                                        @if ($tournament->complete == 0)
+                                            <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">In Progress</p>
+                                        @else
+                                            <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Complete</p>
+                                        @endif
                                     @endif
                                 @endif
-                            @endif
+                            </div>
+                        </a>
+                    @endforeach
+                @else
+                    <div class="text-center" style="opacity: 0.2;">
+                        <div>
+                            <i class="fa fa-times" aria-hidden="true" style="font-size: 192px;"></i>
                         </div>
-                    </a>
-                @endforeach
+                        <strong style="font-size: 64px;">No Tournament Available</strong>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -221,4 +284,7 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('vendor/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('js/participant/tournament.js') }}"></script>
 @endsection

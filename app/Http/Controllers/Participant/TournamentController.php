@@ -16,10 +16,17 @@ use Storage;
 
 class TournamentController extends BaseController
 {
-    public function index()
+    public function index(Request $request)
     {
+        $name = $request->input('name');
+        $status = $request->input('status') ?: 1;
+        $order = $request->input('order') ?: 1;
+        $price = $request->input('price');
+        $start_date = $request->input('start_date');
+        $selected_city = $request->input('city');
+
         $cities = City::select('id', 'name')->get();
-        $tournaments = Tournament::select('id', 'name', 'logo_file_name', 'type', 'entry_fee', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'members_id')
+        $tournaments = Tournament::select('id', 'name', 'logo_file_name', 'type', 'cities_id', 'entry_fee', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'members_id')
             ->with([
                 'owner' => function($owner) {
                     $owner->select('id', 'name');
@@ -27,8 +34,54 @@ class TournamentController extends BaseController
             ])
             ->whereHas('approval', function($approval) {
                 $approval->where('tournaments_approvals.accepted', 1);
-            })
-            ->get();
+            });
+
+        if ($name) {
+            $tournaments = $tournaments->where('name', 'LIKE', '%'.$name.'%');
+        }
+
+        if ($status == 2) {
+            $tournaments = $tournaments->where(function($status) {
+                $status->orWhere('registration_closed', '>=', date('Y-m-d H:i:s'))
+                    ->orWhere('start', 0);
+            });
+        } else if ($status == 3) {
+            $tournaments = $tournaments->where('start', 1)
+                ->where('complete', 0);
+        } else if ($status == 4) {
+            $tournaments = $tournaments->where('start', 1)
+                ->where('complete', 1);
+        }
+
+        if ($order == 1) {
+            $tournaments = $tournaments->orderBy('name', 'ASC');
+        } else if ($order == 2) {
+            $tournaments = $tournaments->orderBy('start_date', 'ASC');
+        } else if ($order == 3) {
+            $tournaments = $tournaments->orderBy('registration_closed', 'ASC');
+        }
+
+        if ($price == 1) {
+            $tournaments = $tournaments->where('entry_fee', '<', '50000');
+        } else if ($price == 2) {
+            $tournaments = $tournaments->where('entry_fee', '>=', '50000')
+                ->where('entry_fee', '<=', '100000');
+        } else if ($price == 3) {
+            $tournaments = $tournaments->where('entry_fee', '>=', '100000')
+                ->where('entry_fee', '<=', '150000');
+        } else if ($price == 4) {
+            $tournaments = $tournaments->where('entry_fee', '>', '150000');
+        }
+
+        if ($start_date) {
+            $tournaments = $tournaments->where('start_date', date('Y-m-d', strtotime(str_replace('/', '-', $start_date))));
+        }
+
+        if ($selected_city) {
+            $tournaments = $tournaments->where('cities_id', $selected_city);
+        }
+
+        $tournaments = $tournaments->get();
 
         $tournaments = $tournaments->map(function($tournament, $key) {
             if ($tournament->type == 1) {
@@ -40,7 +93,7 @@ class TournamentController extends BaseController
             return $tournament;
         });
 
-        return view('participant.tournament', compact('cities', 'tournaments'));
+        return view('participant.tournament', compact('cities', 'tournaments', 'name', 'status', 'order', 'price', 'start_date', 'selected_city'));
     }
 
     public function show($id, Request $request)

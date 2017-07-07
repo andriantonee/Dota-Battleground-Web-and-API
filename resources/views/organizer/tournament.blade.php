@@ -68,20 +68,36 @@
                     </div>
                     <div class="col-xs-8 text-right" style="padding-top: 7px;">
                         <label class="radio-inline">
-                            <input type="radio" name="tournament_filter" id="tournament_filter_all" value="1"> All
+                            @if ($status == 1)
+                                <input type="radio" name="tournament_filter" id="tournament_filter_all" value="1" checked="checked"> All
+                            @else
+                                <input type="radio" name="tournament_filter" id="tournament_filter_all" value="1"> All
+                            @endif
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="tournament_filter" id="tournament_filter_upcoming" value="2"> Upcoming
+                            @if ($status == 2)
+                                <input type="radio" name="tournament_filter" id="tournament_filter_upcoming" value="2" checked="checked"> Upcoming
+                            @else
+                                <input type="radio" name="tournament_filter" id="tournament_filter_upcoming" value="2"> Upcoming
+                            @endif
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="tournament_filter" id="tournament_filter_in_progress" value="3"> In Progress
+                            @if ($status == 3)
+                                <input type="radio" name="tournament_filter" id="tournament_filter_in_progress" value="3" checked="checked"> In Progress
+                            @else
+                                <input type="radio" name="tournament_filter" id="tournament_filter_in_progress" value="3"> In Progress
+                            @endif
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="tournament_filter" id="tournament_filter_completed" value="4"> Completed
+                            @if ($status == 4)
+                                <input type="radio" name="tournament_filter" id="tournament_filter_completed" value="4" checked="checked"> Completed
+                            @else
+                                <input type="radio" name="tournament_filter" id="tournament_filter_completed" value="4"> Completed
+                            @endif
                         </label>
                     </div>
                 </div>
-                <div class="row" style="margin-top: 25px;margin-bottom: 25px;">
+                <div class="row" style="margin-top: 25px;">
                     @if (count($tournaments) > 0)
                         <div class="col-xs-offset-2 col-xs-8">
                             @foreach ($tournaments as $tournament)
@@ -108,7 +124,6 @@
                                                 <div>Created Date</div>: {{ $tournament->created_at->format('d F Y H:i:s') }}
                                             </h6>
                                         </div>
-                                        
                                     </div>
                                     <div class="text-right" style="position: absolute;top: 10px;right: 15px;width: 200px;">
                                         <p><i class="fa fa-users" aria-hidden="true"></i>&nbsp;&nbsp;{{ $tournament->registrations_count }}/{{ $tournament->max_participant }}</p>
@@ -147,4 +162,5 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('js/organizer/tournament.js') }}"></script>
 @endsection

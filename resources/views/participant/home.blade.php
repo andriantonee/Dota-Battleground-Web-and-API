@@ -67,7 +67,7 @@
                         <h4 style="color:rgb(255, 90, 25)">DO YOU ORGANIZE TOURNAMENTS?</h4>
                         <p style="color:#9d9d9d">Create and manage your own tournaments for free</p>
                         <p>
-                            <a href="#" class="btn btn-default btn-custom">Start Now!</a>
+                            <a href="{{ url('organizer') }}" class="btn btn-default btn-custom">Start Now!</a>
                         </p>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
                             <span class="input-group-addon">
                                 <i class="glyphicon glyphicon-search"></i>
                             </span>
-                            <input type="text" id="txtbox-search-team" class="form-control" placeholder="Search name..." >
+                            <input type="text" id="txtbox-search-tournament" class="form-control" placeholder="Search name..." >
                         </div>
                     </div>
                 </div>
@@ -150,4 +150,5 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('js/participant/home.js') }}"></script>
 @endsection

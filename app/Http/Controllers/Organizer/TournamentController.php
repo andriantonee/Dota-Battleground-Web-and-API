@@ -15,6 +15,8 @@ class TournamentController extends BaseController
 {
     public function index(Request $request)
     {
+        $status = $request->input('status') ?: 1;
+
         $organizer = $request->input('organizer_model');
         $tournaments = Tournament::select('id', 'name', 'logo_file_name', 'challonges_url', 'max_participant', 'type', 'entry_fee', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'created_at')
             ->withCount([
@@ -29,8 +31,22 @@ class TournamentController extends BaseController
             ->where('members_id', $organizer->id)
             ->whereHas('approval', function($approval) {
                 $approval->where('tournaments_approvals.accepted', 1);
-            })
-            ->get();
+            });
+
+        if ($status == 2) {
+            $tournaments = $tournaments->where(function($status) {
+                $status->orWhere('registration_closed', '>=', date('Y-m-d H:i:s'))
+                    ->orWhere('start', 0);
+            });
+        } else if ($status == 3) {
+            $tournaments = $tournaments->where('start', 1)
+                ->where('complete', 0);
+        } else if ($status == 4) {
+            $tournaments = $tournaments->where('start', 1)
+                ->where('complete', 1);
+        }
+
+        $tournaments = $tournaments->get();
 
         $tournaments = $tournaments->map(function($tournament, $key) {
             if ($tournament->type == 1) {
@@ -42,7 +58,7 @@ class TournamentController extends BaseController
             return $tournament;
         });
 
-        return view('organizer.tournament', compact('tournaments'));
+        return view('organizer.tournament', compact('tournaments', 'status'));
     }
 
     public function create()

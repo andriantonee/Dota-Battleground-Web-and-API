@@ -32,60 +32,73 @@
                     <span class="input-group-addon">
                         <i class="glyphicon glyphicon-search"></i>
                     </span>
-                    <input type="text" id="txtbox-search-team" class="form-control" placeholder="Search name..." >
+                    <input type="text" id="txtbox-search-team" class="form-control" value="{{ $name }}" placeholder="Search name..." >
                 </div>
             </div>
         </div>
-        <div id="team-list-container" style="width: 700px;margin-left: 15px;margin-bottom: 20px;margin-top: 20px;">
-            @foreach ($teams as $team)
-                <a class="team-wrapper" href="{{ url('/team/'.$team->id) }}">
-                    <div class="row well-custom" style="padding: 10px 0px;">
-                        <div class="col-xs-2">
-                            <div class="thumbnail" style="height: 80px;width: 80px;margin: 0px auto;">
-                                @if ($team->picture_file_name)
-                                    <img src="{{ asset('storage/team/'.$team->picture_file_name) }}" style="height: 70px;width: 70px;">
-                                @else
-                                    <img src="{{ asset('img/default-group.png') }}" style="height: 70px;width: 70px;">
+        @if (count($teams) > 0)
+            <div id="team-list-container" style="width: 700px;margin-left: 15px;margin-bottom: 20px;margin-top: 20px;">
+                @foreach ($teams as $team)
+                    <a class="team-wrapper" href="{{ url('/team/'.$team->id) }}">
+                        <div class="row well-custom" style="padding: 10px 0px;">
+                            <div class="col-xs-2">
+                                <div class="thumbnail" style="height: 80px;width: 80px;margin: 0px auto;">
+                                    @if ($team->picture_file_name)
+                                        <img src="{{ asset('storage/team/'.$team->picture_file_name) }}" style="height: 70px;width: 70px;">
+                                    @else
+                                        <img src="{{ asset('img/default-group.png') }}" style="height: 70px;width: 70px;">
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-xs-5">
+                                <h3 style="margin-top: 13px;color: #f45138;">{{ $team->name }}</h3>
+                                <p style="color: #afaeae;"><span class="team-count" >{{ $team->details_count }}</span> Member</p>
+                            </div>
+                            <div class="col-xs-5 text-right" style="padding-top: 20px;">
+                                @if (count($team->details) == 0 && $participant)
+                                    @if (count($team->invitation_list) > 0)
+                                        <button class="btn btn-default btn-custom btn-accept accept-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false">
+                                            <i class="glyphicon glyphicon-ok" style="color:#68ff90"></i>&nbsp;&nbsp;Accept
+                                        </button>
+                                        @if ($team->join_password)
+                                            <button class="btn btn-default btn-custom btn-reject reject-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false" data-with-password="true">
+                                                <i class="glyphicon glyphicon-remove" style="color:#fc5d5d"></i>&nbsp;&nbsp;Reject
+                                            </button>
+                                        @else
+                                            <button class="btn btn-default btn-custom btn-reject reject-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false" data-with-password="false">
+                                                <i class="glyphicon glyphicon-remove" style="color:#fc5d5d"></i>&nbsp;&nbsp;Reject
+                                            </button>
+                                        @endif
+                                    @else
+                                        @if ($team->join_password)
+                                            <button class="btn btn-default btn-custom join-with-password" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false">
+                                                <i class="glyphicon glyphicon-log-in" style="color:#fff841"></i>&nbsp;&nbsp;Join Team
+                                            </button>
+                                            
+                                        @else
+                                            <button class="btn btn-default btn-custom join-without-password" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false">
+                                                <i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;Join Team
+                                            </button>
+                                        @endif
+                                    @endif
                                 @endif
                             </div>
                         </div>
-                        <div class="col-xs-5">
-                            <h3 style="margin-top: 13px;color: #f45138;">{{ $team->name }}</h3>
-                            <p style="color: #afaeae;"><span class="team-count" >{{ $team->details_count }}</span> Member</p>
+                    </a>
+                @endforeach
+            </div>
+        @else
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="text-center" style="opacity: 0.2;padding-top: 100px;">
+                        <div>
+                            <i class="fa fa-times" aria-hidden="true" style="font-size: 192px;"></i>
                         </div>
-                        <div class="col-xs-5 text-right" style="padding-top: 20px;">
-                            @if (count($team->details) == 0 && $participant)
-                                @if (count($team->invitation_list) > 0)
-                                    <button class="btn btn-default btn-custom btn-accept accept-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false">
-                                        <i class="glyphicon glyphicon-ok" style="color:#68ff90"></i>&nbsp;&nbsp;Accept
-                                    </button>
-                                    @if ($team->join_password)
-                                        <button class="btn btn-default btn-custom btn-reject reject-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false" data-with-password="true">
-                                            <i class="glyphicon glyphicon-remove" style="color:#fc5d5d"></i>&nbsp;&nbsp;Reject
-                                        </button>
-                                    @else
-                                        <button class="btn btn-default btn-custom btn-reject reject-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false" data-with-password="false">
-                                            <i class="glyphicon glyphicon-remove" style="color:#fc5d5d"></i>&nbsp;&nbsp;Reject
-                                        </button>
-                                    @endif
-                                @else
-                                    @if ($team->join_password)
-                                        <button class="btn btn-default btn-custom join-with-password" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false">
-                                            <i class="glyphicon glyphicon-log-in" style="color:#fff841"></i>&nbsp;&nbsp;Join Team
-                                        </button>
-                                        
-                                    @else
-                                        <button class="btn btn-default btn-custom join-without-password" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false">
-                                            <i class="glyphicon glyphicon-log-in"></i>&nbsp;&nbsp;Join Team
-                                        </button>
-                                    @endif
-                                @endif
-                            @endif
-                        </div>
+                        <strong style="font-size: 64px;">No Team Available</strong>
                     </div>
-                </a>
-            @endforeach
-        </div>
+                </div>
+            </div>
+        @endif
     </div>
 @endsection
 

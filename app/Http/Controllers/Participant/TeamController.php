@@ -42,14 +42,16 @@ class TeamController extends BaseController
 
     public function index(Request $request)
     {
+        $name = $request->input('name');
+
         $member_id = null;
         if ($request->input('participant_model')) {
             $member_id = $request->input('participant_model')->id;
         }
 
-        $teams = $this->getTeamList($member_id);
+        $teams = $this->getTeamList($member_id, $name);
 
-        return view('participant.team', compact('teams'));
+        return view('participant.team', compact('teams', 'name'));
     }
 
     public function show($id, Request $request)
