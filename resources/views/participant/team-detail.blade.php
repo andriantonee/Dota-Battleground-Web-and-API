@@ -167,6 +167,11 @@
                 <div class="panel with-nav-tabs panel-default">
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#teams-tab" data-toggle="tab">Members</a></li>
+                        @if ($inTeam)
+                            @if ($isTeamLeader)
+                                <li><a href="#invited-members-tab" data-toggle="tab">Invited Members</a></li>
+                            @endif
+                        @endif
                         <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
                         <li><a href="#registration-status-tab" data-toggle="tab">Tournaments</a></li>
                     </ul>
@@ -221,6 +226,60 @@
                                     </div>
                                 @endif
                             </div>
+                            @if ($inTeam)
+                                @if ($isTeamLeader)
+                                    <div class="tab-pane fade" id="invited-members-tab">
+                                        @if (count($team->invited_members) > 0)
+                                            <?php $start = 1; ?>
+                                            @foreach ($team->invited_members as $invited_member)
+                                                @if ($start % 2 == 1)
+                                                    <div class="row members-rows">
+                                                @endif
+                                                    <div class="col-xs-6">
+                                                        @if ($start % 2 == 1)
+                                                            <div style="padding-left: 16px;padding-right: 8px;">
+                                                        @else
+                                                            <div style="padding-left: 8px;padding-right: 16px;">
+                                                        @endif
+                                                            <div class="row well-custom" style="padding: 15px 0px;">
+                                                                <div class="col-xs-4">
+                                                                    <div class="thumbnail" style="height: 110px;width: 110px;margin: 0px auto;">
+                                                                        @if ($invited_member->parent->member->picture_file_name)
+                                                                            <img src="{{ asset('storage/member/'.$invited_member->parent->member->picture_file_name) }}" style="height: 100px;width: 100px;">
+                                                                        @else
+                                                                            <img src="{{ asset('img/default-profile.jpg') }}" style="height: 100px;width: 100px;">
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xs-8" style="position: relative;">
+                                                                    <h3 style="margin-top: 15px;">{{ $invited_member->parent->member->name }}</h3>
+                                                                    <p>{{ $invited_member->parent->member->steam32_id ?: '-' }}</p>
+                                                                    <p style="color: #afaeae;">Invited on {{ date('d F Y', strtotime($invited_member->parent->created_at)) }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @if ($start % 2 == 0)
+                                                    </div>
+                                                @endif
+                                                <?php $start++; ?>
+                                            @endforeach
+                                            @if ($start % 2 == 0)
+                                                </div>
+                                            @endif
+                                        @else
+                                            <div class="row">
+                                                <div class="col-xs-12 text-center" style="opacity: 0.2;">
+                                                    <div>
+                                                        <i class="fa fa-times" aria-hidden="true" style="font-size: 192px;"></i>
+                                                    </div>
+                                                    <strong style="font-size: 48px;">Invited Member Not Available</strong>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endif
+                            @endif
                             <div class="tab-pane fade" id="schedule-tab">
                                 @if (count($team->tournaments_schedules) > 0)
                                     <table class="table table-bordered table-striped table-content-centered table-schedule" style="margin-top: 10px;margin-bottom: 0;">

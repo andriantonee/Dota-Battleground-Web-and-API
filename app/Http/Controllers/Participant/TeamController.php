@@ -88,6 +88,24 @@ class TeamController extends BaseController
                     }
                 }
             }
+            if ($isTeamLeader) {
+                $team->invited_members = $team->invitation_list()
+                    ->select('notifications_id', 'teams_id')
+                    ->with([
+                        'parent' => function($parent) {
+                            $parent->select('id', 'members_id', 'created_at')
+                                ->with([
+                                    'member' => function($member) {
+                                        $member->select('id', 'name', 'steam32_id', 'picture_file_name');
+                                    }
+                                ]);
+                        }
+                    ])
+                    ->where('invitation_status', 1)
+                    ->get();
+            } else {
+                $team->invited_members = [];
+            }
             $team->tournaments_schedules = $team->tournaments_registrations()
                 ->select('id', 'tournaments_id', 'teams_id', 'created_at')
                 ->with([

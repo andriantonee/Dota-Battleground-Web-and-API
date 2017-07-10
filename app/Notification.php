@@ -28,4 +28,9 @@ class Notification extends Model
     {
         return $this->hasOne('App\NotificationTeamInvitation', 'notifications_id', 'id');
     }
+
+    public function member()
+    {
+        return $this->belongsTo('App\Member', 'members_id', 'id');
+    }
 }
