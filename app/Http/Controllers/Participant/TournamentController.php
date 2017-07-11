@@ -174,7 +174,10 @@ class TournamentController extends BaseController
                                         ->orWhere('side', 2)
                                         ->orderBy('side', 'ASC');
                                 }
-                            ]);
+                            ])
+                            ->whereHas('dota2_live_match_teams', function($dota2_live_match_teams) {
+                                $dota2_live_match_teams->whereNull('matches_result');
+                            });
                     }
                 ])
                 ->get();

@@ -249,19 +249,19 @@ $(document).ready(function(e) {
             $(".radiant .tower.middle-1").addClass("destroy");
         }
         if (tower_status[8] == "1") {
-            $(".radiant .tower.bottom-3").removeClass("destroy");
+            $(".radiant .tower.top-3").removeClass("destroy");
         } else {
-            $(".radiant .tower.bottom-3").addClass("destroy");
+            $(".radiant .tower.top-3").addClass("destroy");
         }
         if (tower_status[9] == "1") {
-            $(".radiant .tower.bottom-2").removeClass("destroy");
+            $(".radiant .tower.top-2").removeClass("destroy");
         } else {
-            $(".radiant .tower.bottom-2").addClass("destroy");
+            $(".radiant .tower.top-2").addClass("destroy");
         }
         if (tower_status[10] == "1") {
-            $(".radiant .tower.bottom-1").removeClass("destroy");
+            $(".radiant .tower.top-1").removeClass("destroy");
         } else {
-            $(".radiant .tower.bottom-1").addClass("destroy");
+            $(".radiant .tower.top-1").addClass("destroy");
         }
         var barrack_status = ("000000").substr(0, 6 - parseInt(data.radiant.barracks_state).toString(2).length) + parseInt(data.radiant.barracks_state).toString(2);
         if (barrack_status[0] == "1") {
@@ -365,19 +365,19 @@ $(document).ready(function(e) {
             $(".dire .tower.middle-1").addClass("destroy");
         }
         if (tower_status[8] == "1") {
-            $(".dire .tower.bottom-3").removeClass("destroy");
+            $(".dire .tower.top-3").removeClass("destroy");
         } else {
-            $(".dire .tower.bottom-3").addClass("destroy");
+            $(".dire .tower.top-3").addClass("destroy");
         }
         if (tower_status[9] == "1") {
-            $(".dire .tower.bottom-2").removeClass("destroy");
+            $(".dire .tower.top-2").removeClass("destroy");
         } else {
-            $(".dire .tower.bottom-2").addClass("destroy");
+            $(".dire .tower.top-2").addClass("destroy");
         }
         if (tower_status[10] == "1") {
-            $(".dire .tower.bottom-1").removeClass("destroy");
+            $(".dire .tower.top-1").removeClass("destroy");
         } else {
-            $(".dire .tower.bottom-1").addClass("destroy");
+            $(".dire .tower.top-1").addClass("destroy");
         }
         var barrack_status = ("000000").substr(0, 6 - parseInt(data.dire.barracks_state).toString(2).length) + parseInt(data.dire.barracks_state).toString(2);
         if (barrack_status[0] == "1") {
@@ -567,21 +567,25 @@ $(document).ready(function(e) {
                 }
                 if (player.hero !== null) {
                     if (duration != 0) {
-                        var position_from_top = (player.position_y < 0 ? (15360 / 2) : 0) + Math.abs(player.position_y);
-                        var top = 11 + (position_from_top / 15360 * (243 - 11));
+                        var max_position_y = 7456;
+                        var min_position_y = 7072;
+                        var position_from_bottom = min_position_y + player.position_y;
+                        var bottom = (position_from_bottom / (max_position_y + min_position_y) * 248);
 
-                        var position_from_left = (15104 / 2) + player.position_x;
-                        var left = (position_from_left / 15104 * (248));
+                        var max_position_x = 7540;
+                        var min_position_x = 7392;
+                        var position_from_left = min_position_x + player.position_x;
+                        var left = (position_from_left / (max_position_x + min_position_x) * 256);
 
                         var minimap_hero_icon_element = $("#player-" + player.id + "-hero-icon");
                         if (minimap_hero_icon_element.length === 0) {
                             if (player.hero.picture_file_name !== null) {
-                                $("div.minimap .radiant").append("<div title=\"" + player.hero.name + "\" id=\"player-" + player.id + "-hero-icon\" class=\"player\" style=\"background-image: url(/img/dota-2/heroes/mini/" + player.hero.picture_file_name + ");top: " + top + "px;left: " + left + "px;\"></div>");
+                                $("div.minimap .radiant").append("<div title=\"" + player.hero.name + "\" id=\"player-" + player.id + "-hero-icon\" class=\"player\" style=\"background-image: url(/img/dota-2/heroes/mini/" + player.hero.picture_file_name + ");bottom: " + bottom + "px;left: " + left + "px;\"></div>");
                             } else {
-                                $("div.minimap .radiant").append("<div title=\"" + player.hero.name + "\" id=\"player-" + player.id + "-hero-icon\" class=\"player\" style=\"background-image: url(/img/dota-2/heroes/default.png);top: " + top + "px;left: " + left + "px;\"></div>");
+                                $("div.minimap .radiant").append("<div title=\"" + player.hero.name + "\" id=\"player-" + player.id + "-hero-icon\" class=\"player\" style=\"background-image: url(/img/dota-2/heroes/default.png);bottom: " + bottom + "px;left: " + left + "px;\"></div>");
                             }
                         } else {
-                            minimap_hero_icon_element.css("top", top + "px");
+                            minimap_hero_icon_element.css("bottom", bottom + "px");
                             minimap_hero_icon_element.css("left", left + "px");
                         }
                     }
@@ -677,21 +681,25 @@ $(document).ready(function(e) {
                 }
                 if (player.hero !== null) {
                     if (duration != 0) {
-                        var position_from_top = (player.position_y < 0 ? (15360 / 2) : 0) + Math.abs(player.position_y);
-                        var top = 11 + (position_from_top / 15360 * (243 - 11));
+                        var max_position_y = 7456;
+                        var min_position_y = 7072;
+                        var position_from_bottom = min_position_y + player.position_y;
+                        var bottom = (position_from_bottom / (max_position_y + min_position_y) * 248);
 
-                        var position_from_left = (15104 / 2) + player.position_x;
-                        var left = (position_from_left / 15104 * (248));
+                        var max_position_x = 7540;
+                        var min_position_x = 7392;
+                        var position_from_left = min_position_x + player.position_x;
+                        var left = (position_from_left / (max_position_x + min_position_x) * 256);
 
                         var minimap_hero_icon_element = $("#player-" + player.id + "-hero-icon");
                         if (minimap_hero_icon_element.length === 0) {
                             if (player.hero.picture_file_name !== null) {
-                                $("div.minimap .dire").append("<div title=\"" + player.hero.name + "\" id=\"player-" + player.id + "-hero-icon\" class=\"player\" style=\"background-image: url(/img/dota-2/heroes/mini/" + player.hero.picture_file_name + ");top: " + top + "px;left: " + left + "px;\"></div>");
+                                $("div.minimap .dire").append("<div title=\"" + player.hero.name + "\" id=\"player-" + player.id + "-hero-icon\" class=\"player\" style=\"background-image: url(/img/dota-2/heroes/mini/" + player.hero.picture_file_name + ");bottom: " + bottom + "px;left: " + left + "px;\"></div>");
                             } else {
-                                $("div.minimap .dire").append("<div title=\"" + player.hero.name + "\" id=\"player-" + player.id + "-hero-icon\" class=\"player\" style=\"background-image: url(/img/dota-2/heroes/default.png);top: " + top + "px;left: " + left + "px;\"></div>");
+                                $("div.minimap .dire").append("<div title=\"" + player.hero.name + "\" id=\"player-" + player.id + "-hero-icon\" class=\"player\" style=\"background-image: url(/img/dota-2/heroes/default.png);bottom: " + bottom + "px;left: " + left + "px;\"></div>");
                             }
                         } else {
-                            minimap_hero_icon_element.css("top", top + "px");
+                            minimap_hero_icon_element.css("bottom", bottom + "px");
                             minimap_hero_icon_element.css("left", left + "px");
                         }
                     }

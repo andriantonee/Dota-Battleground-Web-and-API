@@ -294,6 +294,13 @@ class Dota2Controller extends BaseController
     public function test(Request $request)
     {
         set_time_limit(0);
+
+        // $dota2_live_league_games = GuzzleHelper::requestDota2LiveLeagueGames();
+        // echo "<pre>";
+        // var_dump($dota2_live_league_games);
+        // echo "</pre>";
+        // die();
+
         // $arr1 = ['1', '2', '3', '4'];
         // $arr2 = [1, 2, 3, 4];
         // dd(array_diff($arr1, $arr2));

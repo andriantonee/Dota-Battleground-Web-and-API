@@ -741,16 +741,20 @@
                                         @foreach ($radiant->dota2_live_match_players as $dota2_live_match_player)
                                             @if ($dota2_live_match_player->hero)
                                                 <?php
-                                                    $position_from_top = ($dota2_live_match_player->position_y < 0 ? (15360 / 2) : 0) + abs($dota2_live_match_player->position_y);
-                                                    $top = 11 + ($position_from_top / 15360 * (243 - 11));
+                                                    $max_position_y = 7456;
+                                                    $min_position_y = 7072;
+                                                    $position_from_bottom = $min_position_y + $dota2_live_match_player->position_y;
+                                                    $bottom = ($position_from_bottom / ($max_position_y + $min_position_y) * 248);
 
-                                                    $position_from_left = (15104 / 2) + $dota2_live_match_player->position_x;
-                                                    $left = ($position_from_left / 15104 * (248));
+                                                    $max_position_x = 7540;
+                                                    $min_position_x = 7392;
+                                                    $position_from_left = $min_position_x + $dota2_live_match_player->position_x;
+                                                    $left = ($position_from_left / ($max_position_x + $min_position_x) * 256);
                                                 ?>
                                                 @if ($dota2_live_match_player->hero->picture_file_name)
-                                                    <div title="{{ $dota2_live_match_player->hero->name }}" id="player-{{ $dota2_live_match_player->id }}-hero-icon" class="player" style="background-image: url({{ asset('img/dota-2/heroes/mini/'.$dota2_live_match_player->hero->picture_file_name) }});top: {{ $top }}px;left: {{ $left }}px;"></div>
+                                                    <div title="{{ $dota2_live_match_player->hero->name }}" id="player-{{ $dota2_live_match_player->id }}-hero-icon" class="player" style="background-image: url({{ asset('img/dota-2/heroes/mini/'.$dota2_live_match_player->hero->picture_file_name) }});bottom: {{ $bottom }}px;left: {{ $left }}px;"></div>
                                                 @else
-                                                    <div title="{{ $dota2_live_match_player->hero->name }}" id="player-{{ $dota2_live_match_player->id }}-hero-icon" class="player" style="background-image: url({{ asset('img/dota-2/heroes/default.png') }});top: {{ $top }}px;left: {{ $left }};"></div>
+                                                    <div title="{{ $dota2_live_match_player->hero->name }}" id="player-{{ $dota2_live_match_player->id }}-hero-icon" class="player" style="background-image: url({{ asset('img/dota-2/heroes/default.png') }});bottom: {{ $bottom }}px;left: {{ $left }};"></div>
                                                 @endif
                                             @endif
                                         @endforeach
@@ -789,16 +793,20 @@
                                         @foreach ($dire->dota2_live_match_players as $dota2_live_match_player)
                                             @if ($dota2_live_match_player->hero)
                                                 <?php
-                                                    $position_from_top = ($dota2_live_match_player->position_y < 0 ? (15360 / 2) : 0) + abs($dota2_live_match_player->position_y);
-                                                    $top = 11 + ($position_from_top / 15360 * (243 - 11));
+                                                    $max_position_y = 7456;
+                                                    $min_position_y = 7072;
+                                                    $position_from_bottom = $min_position_y + $dota2_live_match_player->position_y;
+                                                    $bottom = ($position_from_bottom / ($max_position_y + $min_position_y) * 248);
 
-                                                    $position_from_left = (15104 / 2) + $dota2_live_match_player->position_x;
-                                                    $left = ($position_from_left / 15104 * (248));
+                                                    $max_position_x = 7540;
+                                                    $min_position_x = 7392;
+                                                    $position_from_left = $min_position_x + $dota2_live_match_player->position_x;
+                                                    $left = ($position_from_left / ($max_position_x + $min_position_x) * 256);
                                                 ?>
                                                 @if ($dota2_live_match_player->hero->picture_file_name)
-                                                    <div title="{{ $dota2_live_match_player->hero->name }}" id="player-{{ $dota2_live_match_player->id }}-hero-icon" class="player" style="background-image: url({{ asset('img/dota-2/heroes/mini/'.$dota2_live_match_player->hero->picture_file_name) }});top: {{ $top }}px;left: {{ $left }}px;"></div>
+                                                    <div title="{{ $dota2_live_match_player->hero->name }}" id="player-{{ $dota2_live_match_player->id }}-hero-icon" class="player" style="background-image: url({{ asset('img/dota-2/heroes/mini/'.$dota2_live_match_player->hero->picture_file_name) }});bottom: {{ $bottom }}px;left: {{ $left }}px;"></div>
                                                 @else
-                                                    <div title="{{ $dota2_live_match_player->hero->name }}" id="player-{{ $dota2_live_match_player->id }}-hero-icon" class="player" style="background-image: url({{ asset('img/dota-2/heroes/default.png') }});top: {{ $top }}px;left: {{ $left }};"></div>
+                                                    <div title="{{ $dota2_live_match_player->hero->name }}" id="player-{{ $dota2_live_match_player->id }}-hero-icon" class="player" style="background-image: url({{ asset('img/dota-2/heroes/default.png') }});bottom: {{ $bottom }}px;left: {{ $left }};"></div>
                                                 @endif
                                             @endif
                                         @endforeach
