@@ -37,7 +37,7 @@ class AuthController extends BaseController
                             'email' => $member->email,
                             'name' => $member->name,
                             'steam32_id' => $member->steam32_id,
-                            'image' => $member->picture_file_name ? asset('storage/member/'.$participant->picture_file_name) : asset('img/default-profile.jpg');
+                            'image' => $member->picture_file_name ? asset('storage/member/'.$participant->picture_file_name) : asset('img/default-profile.jpg')
                         ];
 
                         return response()->json(['code' => 200, 'message' => ['Login Success.'], 'token' => $response['access_token'], 'user' => $member_json]);
