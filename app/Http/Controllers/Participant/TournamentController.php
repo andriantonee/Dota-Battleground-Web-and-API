@@ -83,17 +83,50 @@ class TournamentController extends BaseController
 
         $tournaments = $tournaments->get();
 
-        $tournaments = $tournaments->map(function($tournament, $key) {
-            if ($tournament->type == 1) {
-                $tournament->type = 'Single Elimination';
-            } else if ($tournament->type == 2) {
-                $tournament->type = 'Double Elimination';
+        if ($request->segment(1) == 'api') {
+            $tournaments_json = [];
+            foreach ($tournaments as $key_tournament => $tournament) {
+                $tournaments_json[$key_tournament] = [
+                    'id' => $tournament->id,
+                    'image' => asset('storage/tournament/'.$tournament->logo_file_name),
+                    'name' => $tournament->name,
+                    'start_date' => strtotime($tournament->start_date),
+                    'end_date' => strtotime($tournament->end_date),
+                    'registration_closed' => strtotime($tournament->registration_closed),
+                    'entry_fee' => $tournament->entry_fee
+                ];
+
+                $tournament_status = '';
+                if (date('Y-m-d H:i:s' <= $tournament->registration_closed)) {
+                    $tournament_status = 'Upcoming';
+                } else {
+                    if ($tournament->start == 0) {
+                        $tournament_status = 'Upcoming';
+                    } else {
+                        if ($tournament->complete == 0) {
+                            $tournament_status = 'In Progress';
+                        } else {
+                            $tournament_status = 'Complete';
+                        }
+                    }
+                }
+                $tournaments_json[$key_tournament]['status'] = $tournament_status;
             }
 
-            return $tournament;
-        });
+            return response()->json(['code' => 200, 'message' => ['Get Tournament success.'], 'tournaments' => $tournaments_json]);
+        } else {
+            $tournaments = $tournaments->map(function($tournament, $key) {
+                if ($tournament->type == 1) {
+                    $tournament->type = 'Single Elimination';
+                } else if ($tournament->type == 2) {
+                    $tournament->type = 'Double Elimination';
+                }
 
-        return view('participant.tournament', compact('cities', 'tournaments', 'name', 'status', 'order', 'price', 'start_date', 'selected_city'));
+                return $tournament;
+            });
+
+            return view('participant.tournament', compact('cities', 'tournaments', 'name', 'status', 'order', 'price', 'start_date', 'selected_city'));
+        }
     }
 
     public function show($id, Request $request)

@@ -31,7 +31,16 @@ class AuthController extends BaseController
                             ->json(['code' => 200, 'message' => ['Login Success.']])
                             ->cookie('organizer_token', $response['access_token'], 0, '/', '', false, false);
                     } else {
-                        return response()->json(['code' => 200, 'message' => ['Login Success.'], 'token' => $response['access_token']]);
+                        $member = Member::find($member_id);
+                        $member_json = [
+                            'id' => $member->id,
+                            'email' => $member->email,
+                            'name' => $member->name,
+                            'steam32_id' => $member->steam32_id,
+                            'image' => $member->picture_file_name ? asset('storage/member/'.$participant->picture_file_name) : asset('img/default-profile.jpg');
+                        ];
+
+                        return response()->json(['code' => 200, 'message' => ['Login Success.'], 'token' => $response['access_token'], 'user' => $member_json]);
                     }
                 } else {
                     return response()->json($response, 200);
@@ -74,6 +83,23 @@ class AuthController extends BaseController
         } else {
             return response()->json(['code' => 400, 'message' => $validatorResponse]);
         }
+    }
+
+    public function logout(Request $request)
+    {
+        $accessTokenID = (new Parser)->parse($request->bearerToken())->getHeader('jti');
+        DB::beginTransaction();
+        try {
+            DB::table('oauth_access_tokens')->where('id', $accessTokenID)->delete();
+            DB::table('oauth_refresh_tokens')->where('access_token_id', $accessTokenID)->delete();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['code' => 500, 'message' => ['Logout fail.']]);
+        }
+
+        return response()->json(['code' => 200, 'message' => ['Logout success.']]);
     }
 
     public function webLogout(Request $request)

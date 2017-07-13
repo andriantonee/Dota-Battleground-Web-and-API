@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function() {
     Route::post('/login', 'AuthController@login');
     Route::post('/register', 'AuthController@register');
+    Route::get('/tournament', 'TournamentController@index');
+    Route::get('/team', 'TeamController@index');
     Route::get('/team/search', 'TeamController@searchTeam');
 
     Route::group(['middleware' => ['auth:api']], function() {
@@ -39,6 +41,7 @@ Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function
         Route::post('/tournament/{id}/register', 'TournamentController@register');
         Route::post('/tournament/confirm-payment/{id}', 'TournamentController@confirmPayment');
         Route::post('/dota-2/match/{id}/comment', 'Dota2MatchController@postComment');
+        Route::post('/logout', 'AuthController@logout');
     });
 });
 
@@ -57,6 +60,7 @@ Route::group(['prefix' => 'organizer', 'namespace' => 'Organizer'], function() {
         Route::put('/match/{id}/schedule', 'MatchController@updateSchedule');
         Route::put('/match/{id}/score', 'MatchController@updateScore');
         Route::post('/dota-2/match/{id}/comment', 'Dota2MatchController@postComment');
+        Route::post('logout', 'AuthController@logout');
     });
 });
 

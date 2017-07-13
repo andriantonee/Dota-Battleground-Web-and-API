@@ -45,13 +45,32 @@ class TeamController extends BaseController
         $name = $request->input('name');
 
         $member_id = null;
-        if ($request->input('participant_model')) {
-            $member_id = $request->input('participant_model')->id;
+        if ($request->segment(1) == 'api') {
+            if ($request->user()) {
+                $member_id = $request->user()->id;
+            }
+        } else {
+            if ($request->input('participant_model')) {
+                $member_id = $request->input('participant_model')->id;
+            }
         }
 
         $teams = $this->getTeamList($member_id, $name);
 
-        return view('participant.team', compact('teams', 'name'));
+        if ($request->segment(1) == 'api') {
+            $teams_json = [];
+            foreach ($teams as $key_team => $team) {
+                $teams_json[$key_team] = [
+                    'id' => $team->id,
+                    'name' => $team->name,
+                    'image' => $team->picture_file_name ? asset('storage/team/'.$team->picture_file_name) : asset('img/default-group.png')
+                ];
+            }
+
+            return response()->json(['code' => 200, 'message' => ['Get Team success.'], 'teams' => $teams_json]);
+        } else {
+            return view('participant.team', compact('teams', 'name'));
+        }
     }
 
     public function show($id, Request $request)
