@@ -173,7 +173,7 @@
                             @endif
                         @endif
                         <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
-                        <li><a href="#registration-status-tab" data-toggle="tab">Tournaments</a></li>
+                        <li><a href="#tournaments-tab" data-toggle="tab">Tournaments</a></li>
                     </ul>
                     <div class="panel-body">
                         <div class="tab-content">
@@ -350,7 +350,7 @@
                                     </div>
                                 @endif
                             </div>
-                            <div class="tab-pane fade" id="registration-status-tab">
+                            <div class="tab-pane fade" id="tournaments-tab">
                                 @if (count($team->tournaments_registrations) > 0)
                                     <?php $start = 1; ?>
                                     @foreach ($team->tournaments_registrations as $tournaments_registration)

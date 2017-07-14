@@ -409,7 +409,7 @@
                                                         @foreach ($tournament->matches[$round_id] as $key_match => $match)
                                                             <tr>
                                                                 @if ($key_match == 0)
-                                                                    <td rowspan="{{ count($tournament->matches[$round_id]) }}">
+                                                                    <td class="round" rowspan="{{ count($tournament->matches[$round_id]) }}">
                                                                         @if ($round_id < $tournament->max_round - 1)
                                                                             Round {{ $round_id }}
                                                                         @elseif ($round_id == $tournament->max_round - 1)
@@ -448,7 +448,7 @@
                                                     @if (isset($tournament->matches[0]))
                                                         @if (isset($tournament->matches[0][0]))
                                                             <tr>
-                                                                <td rowspan="1">Bronze Match</td>
+                                                                <td class="round" rowspan="1">Bronze Match</td>
                                                                 <td>1</td>
                                                                 <td>
                                                                     @if (isset($tournament->matches[0][0]->participants[0]))
@@ -507,7 +507,7 @@
                                                         @foreach ($tournament->matches[$round_id] as $key_match => $match)
                                                             <tr>
                                                                 @if ($key_match == 0)
-                                                                    <td rowspan="{{ count($tournament->matches[$round_id]) }}">
+                                                                    <td class="round" rowspan="{{ count($tournament->matches[$round_id]) }}">
                                                                         @if ($round_id < $tournament->max_round - 1)
                                                                             Round {{ $round_id }}
                                                                         @elseif ($round_id == $tournament->max_round - 1)
@@ -545,7 +545,7 @@
                                                     @endfor
                                                 @else
                                                     <tr>
-                                                        <td colspan="6">No Match Available</td>
+                                                        <td class="round" colspan="6">No Match Available</td>
                                                     </tr>
                                                 @endif
                                             </tbody>
@@ -568,7 +568,7 @@
                                                         @foreach ($tournament->matches[$round_id] as $key_match => $match)
                                                             <tr>
                                                                 @if ($key_match == 0)
-                                                                    <td rowspan="{{ count($tournament->matches[$round_id]) }}">
+                                                                    <td class="round" rowspan="{{ count($tournament->matches[$round_id]) }}">
                                                                         Round {{ abs($round_id) }}
                                                                     </td>
                                                                 @endif

@@ -97,14 +97,18 @@
         .tournaments-registrations-rows:last-child {
             margin-bottom: 0;
         }
-
+        .accept{
+            color:#20bc36;
+        }
         .pending {
             color : #5F89A3;
         }
         .reject {
             color : #ba3f3f;
         }
-
+        .not-confirmed{
+            color: #fc7b67;
+        }
         .in-progress-tournaments-rows:first-child {
             margin-bottom: 10px;
         }
@@ -319,8 +323,8 @@
                                                                         @if ($tournaments_registration->confirmation)
                                                                             @if ($tournaments_registration->confirmation->approval)
                                                                                 @if ($tournaments_registration->confirmation->approval->status == 1)
-                                                                                    <i class="fa fa-check" aria-hidden="true" style="font-size: 55px;"></i>
-                                                                                    <h4 class="" style="margin-top: 0px;">ACCEPTED</h4>
+                                                                                    <i class="fa fa-check accept" aria-hidden="true" style="font-size: 55px;"></i>
+                                                                                    <h4 class="accept" style="margin-top: 0px;">ACCEPTED</h4>
                                                                                 @elseif ($tournaments_registration->confirmation->approval->status == 0)
                                                                                     <i class="fa fa-ban reject" aria-hidden="true" style="font-size: 55px;"></i>
                                                                                     <h4 class="reject" style="margin-top: 0px;">REJECTED</h4>

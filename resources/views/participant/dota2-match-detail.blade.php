@@ -4,6 +4,7 @@
 
 @section('style')
     <link href="{{ asset('css/jquery.scrollbar.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/participant/modify-table.css') }}" rel="stylesheet">
     <link href="{{ asset('css/participant/footer.css') }}" rel="stylesheet">
     <style type="text/css">
         .radiant-color {
@@ -289,48 +290,6 @@
         .dire .barrack.bottom-melee {
             top: 26%;
             left: 89%;
-        }
-        .table-match {
-            background-color: #242f39;
-            box-shadow: 5px 5px 12px 5px rgba(0, 0, 0, 0.3);
-        }
-        .table-radiant.table-striped> tbody > tr:nth-child(2n+1) > td, .table-radiant.table-striped > tbody > tr:nth-child(2n+1) > th {
-           background-color: #313d36;
-        }
-        .table-dire.table-striped> tbody > tr:nth-child(2n+1) > td, .table-dire.table-striped > tbody > tr:nth-child(2n+1) > th {
-           background-color: #373037;
-        }
-        .table-match > thead > tr > th {
-            border-bottom: none;
-        }
-        .table-match > thead {
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-        .table-match > tbody > tr > td, .table-match > tbody > tr > th, .table-match> tfoot > tr > td, .table-match > tfoot > tr > th, .table-match > thead > tr > td, .table > thead > tr > th {
-            border-top: none;
-        }
-        .table-match > tbody > tr > td {
-            vertical-align:middle;
-        }
-        .table-match > tbody > tr >td.item {
-            padding: 2px;
-            text-align: center;
-        }
-        .table-match > tbody >tr > td.item > .item-detail-1 >div, .table-match > tbody >tr > td.item > .item-detail-2 >div {
-            display: inline-block;
-        }
-        .table-hover.table-striped tbody tr:hover td, .table-hover.table-striped tbody tr:hover th {
-            background-color: #39424b;
-        }
-        .table-ability > tbody > tr >td {
-            padding: 2px;
-            text-align: center;
-        }
-        .table-ability {
-            table-layout: fixed;
-        }
-        .table-ability > thead > tr > th {
-            text-align: center;
         }
         .img-xs {
             height: 20px;
