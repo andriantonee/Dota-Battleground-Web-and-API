@@ -18,6 +18,41 @@
         .team-wrapper:last-child {
             margin-bottom: 0;
         }
+        .pagination-custom > li > a, .pagination-custom > li > span{
+            color: #5f6472;
+            background-color: #292E3A;
+            border: 1px solid #5f6472;
+
+        }
+        .pagination-custom > li > a:focus, 
+        .pagination-custom > li > a:hover, 
+        .pagination-custom > li > span:focus, 
+        .pagination-custom > li > span:hover {
+            color: #e3e3e3 ;
+            background-color: #35373f;
+            border-color: #5f6472;
+        }
+        .pagination-custom > .disabled > a, 
+        .pagination-custom > .disabled > a:focus, 
+        .pagination-custom > .disabled > a:hover, 
+        .pagination-custom > .disabled > span, 
+        .pagination-custom > .disabled > span:focus, 
+        .pagination-custom > .disabled > span:hover {
+            color: #5f6472;
+            background-color: #292E3A;
+            border: 1px solid #5f6472;
+        }
+
+        .pagination-custom > .active > a, 
+        .pagination-custom > .active > a:focus, 
+        .pagination-custom > .active > a:hover, 
+        .pagination-custom > .active > span, 
+        .pagination-custom > .active > span:focus, 
+        .pagination-custom > .active > span:hover{
+            color: #D8D8D8;
+            background : linear-gradient(to bottom, #a43827, #c64823);
+            border-color: #CD5F51;
+        }
     </style>
 @endsection
 
@@ -96,7 +131,7 @@
                 {{-- @endif --}}
             @endforeach
             <nav aria-label="Page navigation" style="text-align: center;">
-                <ul id="team-pagination" class="pagination">
+                <ul id="team-pagination" class="pagination pagination-custom">
                     <li class="disabled">
                         <a href="#previous" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
@@ -104,7 +139,7 @@
                     </li>
                     @for ($page_start = 1; $page_start <= (ceil(count($teams) / 1)); $page_start++)
                         @if ($page_start == 1)
-                            <li class="active">
+                            <li class="active btn-custom">
                         @else
                             <li>
                         @endif
