@@ -362,21 +362,22 @@ $(document).ready(function() {
                 $("#create-team-alert-container").append(li_message);
 
                 if (data.code == 201) {
-                    var team_html = "" +
-                        "<a class=\"team-list-content\" href=\"" + data.team.url + "\">" +
-                            "<div class=\"row\" style=\"padding: 15px 5px;border: 1px solid #000000;margin: 0px;margin-bottom: 15px;\">" +
-                                "<div class=\"col-xs-2\">" +
-                                    "<div class=\"thumbnail\" style=\"margin: 0px auto;width: 75px;height: 75px;\">" +
-                                        "<img src=\"" + data.team.picture_path + "\" style=\"width: 65px;height: 65px;\">" +
-                                    "</div>" +
-                                "</div>" +
-                                "<div class=\"col-xs-10\">" +
-                                    "<h3 style=\"margin-top: 12px;\">" + data.team.name + "</h3>" +
-                                    "<h5>" + data.team.count + " Member</h5>" +
-                                "</div>" +
-                            "</div>" +
-                        "</a>";
-                    $("#team-list-container").append(team_html);
+                    // var team_html = "" +
+                    //     "<a class=\"team-list-content\" href=\"" + data.team.url + "\">" +
+                    //         "<div class=\"row\" style=\"padding: 15px 5px;border: 1px solid #000000;margin: 0px;margin-bottom: 15px;\">" +
+                    //             "<div class=\"col-xs-2\">" +
+                    //                 "<div class=\"thumbnail\" style=\"margin: 0px auto;width: 75px;height: 75px;\">" +
+                    //                     "<img src=\"" + data.team.picture_path + "\" style=\"width: 65px;height: 65px;\">" +
+                    //                 "</div>" +
+                    //             "</div>" +
+                    //             "<div class=\"col-xs-10\">" +
+                    //                 "<h3 style=\"margin-top: 12px;\">" + data.team.name + "</h3>" +
+                    //                 "<h5>" + data.team.count + " Member</h5>" +
+                    //             "</div>" +
+                    //         "</div>" +
+                    //     "</a>";
+                    // $("#team-list-container").append(team_html);
+                    location.reload();
                 }
             })
             .fail(function() {

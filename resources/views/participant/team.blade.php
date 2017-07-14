@@ -37,8 +37,14 @@
             </div>
         </div>
         @if (count($teams) > 0)
-            <div id="team-list-container" style="width: 700px;margin-left: 15px;margin-bottom: 20px;margin-top: 20px;">
-                @foreach ($teams as $team)
+            @foreach ($teams as $key_team => $team)
+                {{-- @if (($key_team + 1) % 10 == 1) --}}
+                    @if ($key_team + 1 == 1)
+                        <div id="team-list-container-{{ ceil(($key_team + 1) / 1) }}" style="width: 700px;margin-left: 15px;margin-top: 20px;">
+                    @else
+                        <div id="team-list-container-{{ ceil(($key_team + 1) / 1) }}" style="display: none;width: 700px;margin-left: 15px;margin-top: 20px;">
+                    @endif
+                {{-- @endif --}}
                     <a class="team-wrapper" href="{{ url('/team/'.$team->id) }}">
                         <div class="row well-custom" style="padding: 10px 0px;">
                             <div class="col-xs-2">
@@ -85,8 +91,37 @@
                             </div>
                         </div>
                     </a>
-                @endforeach
-            </div>
+                {{-- @if (($key_team + 1) % 10 == 0 || ($key_team + 1) == count($teams)) --}}
+                    </div>
+                {{-- @endif --}}
+            @endforeach
+            <nav aria-label="Page navigation" style="text-align: center;">
+                <ul id="team-pagination" class="pagination">
+                    <li class="disabled">
+                        <a href="#previous" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    @for ($page_start = 1; $page_start <= (ceil(count($teams) / 1)); $page_start++)
+                        @if ($page_start == 1)
+                            <li class="active">
+                        @else
+                            <li>
+                        @endif
+                            <a href="#team-list-container-{{ $page_start }}">{{ $page_start }}</a>
+                        </li>
+                    @endfor
+                    @if (ceil(count($teams) / 1) == 1)
+                        <li class="disabled">
+                    @else
+                        <li>
+                    @endif
+                        <a href="#next" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         @else
             <div class="row">
                 <div class="col-xs-12">
@@ -111,4 +146,5 @@
         <script src="{{ asset('js/participant/team.js') }}"></script>
     @endif
     <script src="{{ asset('js/participant/search-team.js') }}"></script>
+    <script src="{{ asset('js/participant/team-pagination.js') }}"></script>
 @endsection

@@ -121,7 +121,7 @@ $(document).ready(function(e) {
             "showCancelButton" : true,
             "showConfirmButton" : true,
             "confirmButtonText" : "Yes, start it.",
-            "cancelButtonText" : "No, dont't start it.",
+            "cancelButtonText" : "No, don't start it.",
             "closeOnConfirm" : false,
             "showLoaderOnConfirm" : true
         }, function() {
@@ -185,7 +185,7 @@ $(document).ready(function(e) {
             "showCancelButton" : true,
             "showConfirmButton" : true,
             "confirmButtonText" : "Yes, end it.",
-            "cancelButtonText" : "No, dont't end it.",
+            "cancelButtonText" : "No, don't end it.",
             "closeOnConfirm" : false,
             "showLoaderOnConfirm" : true
         }, function() {
@@ -249,7 +249,7 @@ $(document).ready(function(e) {
             "showCancelButton" : true,
             "showConfirmButton" : true,
             "confirmButtonText" : "Yes, finalize it.",
-            "cancelButtonText" : "No, dont't finalize it.",
+            "cancelButtonText" : "No, don't finalize it.",
             "closeOnConfirm" : false,
             "showLoaderOnConfirm" : true
         }, function() {
