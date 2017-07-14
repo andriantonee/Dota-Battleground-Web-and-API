@@ -17,6 +17,7 @@ $(document).ready(function() {
                     swal({
                         "title" : "Fetching Member...",
                         "text" : "This will close automatically when it is done.",
+                        "customClass" : "sweet-alert-custom",
                         "showConfirmButton" : false
                     });
                 }
@@ -59,7 +60,8 @@ $(document).ready(function() {
                         swal({
                             "title" : "Fetching Member Fail",
                             "text" : swal_text,
-                            "type" : "error"
+                            "type" : "error",
+                            "customClass" : "sweet-alert-custom"
                         });
                     }
                 })
@@ -67,7 +69,8 @@ $(document).ready(function() {
                     swal({
                         "title" : "Fetching Member Fail",
                         "text" : "Something went wrong. Please try again.",
-                        "type" : "error"
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
                     });
                 });
     });
@@ -93,6 +96,7 @@ $(document).ready(function() {
             "title" : "Join Tournament",
             "text" : "Are you sure want to join \"" + tournament_name + "\" tournament?",
             "type" : "warning",
+            "customClass" : "sweet-alert-custom",
             "showCancelButton" : true,
             "showConfirmButton" : true,
             "confirmButtonText" : "Yes, i want.",
@@ -115,6 +119,7 @@ $(document).ready(function() {
                             "title" : "Join Tournament Success",
                             "text" : data.message[0],
                             "type" : "success",
+                            "customClass" : "sweet-alert-custom",
                             "showConfirmButton" : false,
                             "timer" : 1000
                         }, function() {
@@ -132,7 +137,8 @@ $(document).ready(function() {
                         swal({
                             "title" : "Join Tournament Fail",
                             "text" : swal_text,
-                            "type" : "error"
+                            "type" : "error",
+                            "customClass" : "sweet-alert-custom"
                         });
                     }
                 })
@@ -140,7 +146,8 @@ $(document).ready(function() {
                     swal({
                         "title" : "Join Tournament Fail",
                         "text" : "Something went wrong. Please try again.",
-                        "type" : "error"
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
                     });
                 });
         });

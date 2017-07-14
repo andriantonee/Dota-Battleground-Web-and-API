@@ -21,6 +21,7 @@
         <link href="{{ asset('css/participant/modify-icon.css') }}" rel="stylesheet">
         <link href="{{ asset('css/participant/header.css') }}" rel="stylesheet">
         <link href="{{ asset('css/participant/modify-table.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/sweet-alert-custom.css') }}" rel="stylesheet">
         <style type="text/css">
             .divider-vertical {
                 height: 30px;

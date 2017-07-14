@@ -162,6 +162,7 @@ $(document).ready(function() {
             "title" : "Remove Picture",
             "text" : "Do you want to remove it?",
             "type" : "warning",
+            "customClass" : "sweet-alert-custom",
             "showCancelButton" : true,
             "showConfirmButton" : true,
             "confirmButtonText" : "Yes, remove it.",
@@ -186,6 +187,7 @@ $(document).ready(function() {
                             "title" : "Remove Picture Success",
                             "text" : data.message[0],
                             "type" : "success",
+                            "customClass" : "sweet-alert-custom",
                             "showConfirmButton" : false,
                             "timer" : 1000
                         });
@@ -193,7 +195,8 @@ $(document).ready(function() {
                         swal({
                             "title" : "Remove Picture Fail",
                             "text" : "Something went wrong. Please try again.",
-                            "type" : "error"
+                            "type" : "error",
+                            "customClass" : "sweet-alert-custom"
                         });
                     }
                 })
@@ -201,7 +204,8 @@ $(document).ready(function() {
                     swal({
                         "title" : "Remove Picture Fail",
                         "text" : "Something went wrong. Please try again.",
-                        "type" : "error"
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
                     });
                 });
         });
@@ -298,6 +302,7 @@ $(document).ready(function() {
                         "title" : "Invite Members Success",
                         "text" : data.message[0],
                         "type" : "success",
+                        "customClass" : "sweet-alert-custom",
                         "showConfirmButton" : false,
                         "timer" : 1000
                     });
@@ -316,7 +321,8 @@ $(document).ready(function() {
                     swal({
                         "title" : "Invite Members Fail",
                         "text" : html_error_message,
-                        "type" : "error"
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
                     });
 
                     if (data.code != 500) {
@@ -330,7 +336,8 @@ $(document).ready(function() {
                 swal({
                     "title" : "Invite Members Fail",
                     "text" : "Something went wrong. Please try again.",
-                    "type" : "error"
+                    "type" : "error",
+                    "customClass" : "sweet-alert-custom"
                 });
 
                 $(that).parent().parent().parent().show();
@@ -348,6 +355,7 @@ $(document).ready(function() {
             "title" : "Kick \"" + member_name + "\"",
             "text" : "Do you really want to kick this member from team?",
             "type" : "warning",
+            "customClass" : "sweet-alert-custom",
             "showCancelButton" : true,
             "showConfirmButton" : true,
             "confirmButtonText" : "Yes, i want.",
@@ -371,6 +379,7 @@ $(document).ready(function() {
                             "title" : "Kick Member Success",
                             "text" : data.message[0],
                             "type" : "success",
+                            "customClass" : "sweet-alert-custom",
                             "showConfirmButton" : false,
                             "timer" : 1000
                         });
@@ -386,7 +395,8 @@ $(document).ready(function() {
                         swal({
                             "title" : "Kick Member Fail",
                             "text" : swal_text,
-                            "type" : "error"
+                            "type" : "error",
+                            "customClass" : "sweet-alert-custom"
                         });
                     }
                 })
@@ -394,7 +404,8 @@ $(document).ready(function() {
                     swal({
                         "title" : "Kick Member Fail",
                         "text" : "Something went wrong. Please try again.",
-                        "type" : "error"
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
                     });
                 });
         });

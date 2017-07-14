@@ -168,6 +168,7 @@ $(document).ready(function() {
             "title" : "Remove Profile Picture",
             "text" : "Do you want to remove it?",
             "type" : "warning",
+            "customClass" : "sweet-alert-custom",
             "showCancelButton" : true,
             "showConfirmButton" : true,
             "confirmButtonText" : "Yes, remove it.",
@@ -192,6 +193,7 @@ $(document).ready(function() {
                             "title" : "Remove Profile Picture Success",
                             "text" : data.message[0],
                             "type" : "success",
+                            "customClass" : "sweet-alert-custom",
                             "showConfirmButton" : false,
                             "timer" : 1000
                         });
@@ -199,7 +201,8 @@ $(document).ready(function() {
                         swal({
                             "title" : "Remove Profile Picture Fail",
                             "text" : "Something went wrong. Please try again.",
-                            "type" : "error"
+                            "type" : "error",
+                            "customClass" : "sweet-alert-custom"
                         });
                     }
                 })
@@ -207,7 +210,8 @@ $(document).ready(function() {
                     swal({
                         "title" : "Remove Profile Picture Fail",
                         "text" : "Something went wrong. Please try again.",
-                        "type" : "error"
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
                     });
                 });
         });

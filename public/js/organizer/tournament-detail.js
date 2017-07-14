@@ -117,6 +117,7 @@ $(document).ready(function(e) {
             "title" : "Start Tournament",
             "text" : "Do you want to start it?",
             "type" : "warning",
+            "customClass" : "sweet-alert-custom",
             "showCancelButton" : true,
             "showConfirmButton" : true,
             "confirmButtonText" : "Yes, start it.",
@@ -138,6 +139,7 @@ $(document).ready(function(e) {
                             "title" : "Start Tournament Success",
                             "text" : data.message[0],
                             "type" : "success",
+                            "customClass" : "sweet-alert-custom",
                             "showConfirmButton" : false,
                             "timer" : 1000
                         });
@@ -156,7 +158,8 @@ $(document).ready(function(e) {
                         swal({
                             "title" : "Start Tournament Fail",
                             "text" : html_error_message,
-                            "type" : "error"
+                            "type" : "error",
+                            "customClass" : "sweet-alert-custom"
                         });
                     }
                 })
@@ -164,7 +167,8 @@ $(document).ready(function(e) {
                     swal({
                         "title" : "Start Tournament Fail",
                         "text" : "Something went wrong. Please try again.",
-                        "type" : "error"
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
                     });
                 });
         });
@@ -177,6 +181,7 @@ $(document).ready(function(e) {
             "title" : "End Tournament",
             "text" : "Do you want to end it?",
             "type" : "warning",
+            "customClass" : "sweet-alert-custom",
             "showCancelButton" : true,
             "showConfirmButton" : true,
             "confirmButtonText" : "Yes, end it.",
@@ -198,6 +203,7 @@ $(document).ready(function(e) {
                             "title" : "End Tournament Success",
                             "text" : data.message[0],
                             "type" : "success",
+                            "customClass" : "sweet-alert-custom",
                             "showConfirmButton" : false,
                             "timer" : 1000
                         });
@@ -216,7 +222,8 @@ $(document).ready(function(e) {
                         swal({
                             "title" : "End Tournament Fail",
                             "text" : html_error_message,
-                            "type" : "error"
+                            "type" : "error",
+                            "customClass" : "sweet-alert-custom"
                         });
                     }
                 })
@@ -224,7 +231,8 @@ $(document).ready(function(e) {
                     swal({
                         "title" : "End Tournament Fail",
                         "text" : "Something went wrong. Please try again.",
-                        "type" : "error"
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
                     });
                 });
         });
@@ -237,6 +245,7 @@ $(document).ready(function(e) {
             "title" : "Finalize Tournament",
             "text" : "Do you want to finalize it?",
             "type" : "warning",
+            "customClass" : "sweet-alert-custom",
             "showCancelButton" : true,
             "showConfirmButton" : true,
             "confirmButtonText" : "Yes, finalize it.",
@@ -258,6 +267,7 @@ $(document).ready(function(e) {
                             "title" : "Finalize Tournament Success",
                             "text" : data.message[0],
                             "type" : "success",
+                            "customClass" : "sweet-alert-custom",
                             "showConfirmButton" : false,
                             "timer" : 1000
                         });
@@ -276,7 +286,8 @@ $(document).ready(function(e) {
                         swal({
                             "title" : "Finalize Tournament Fail",
                             "text" : html_error_message,
-                            "type" : "error"
+                            "type" : "error",
+                            "customClass" : "sweet-alert-custom"
                         });
                     }
                 })
@@ -284,7 +295,8 @@ $(document).ready(function(e) {
                     swal({
                         "title" : "Finalize Tournament Fail",
                         "text" : "Something went wrong. Please try again.",
-                        "type" : "error"
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
                     });
                 });
         });

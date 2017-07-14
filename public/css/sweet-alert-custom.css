@@ -1,0 +1,36 @@
+.sweet-alert-custom {
+    background-color: #292E3A;
+    border: 1px solid transparent;
+    box-shadow: 0 5px 15px rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+}
+.sweet-alert-custom .sa-icon.sa-success::before,
+.sweet-alert-custom .sa-icon.sa-success::after {
+    background: #292E3A;
+}
+.sweet-alert-custom .sa-icon.sa-success .sa-fix {
+    background-color: #292E3A;
+}
+.sweet-alert-custom h1,
+.sweet-alert-custom h2,
+.sweet-alert-custom h3,
+.sweet-alert-custom h4,
+.sweet-alert-custom h5,
+.sweet-alert-custom h6,
+.sweet-alert-custom p {
+    color: #D8D8D8;
+}
+.sweet-alert-custom input {
+    color: #000;
+}
+.sweet-alert-custom .sa-error-container {
+    background-color: #292E3A;
+}
+.sweet-alert-custom button.cancel {
+    background : linear-gradient(to bottom, #ba1f1f, #ba3f3f);
+    border-color: #ba3f3f;
+}
+.sweet-alert-custom button.confirm {
+    background : linear-gradient(to bottom, #1f872b, #20bc36);
+    border-color: #31aa53;
+}

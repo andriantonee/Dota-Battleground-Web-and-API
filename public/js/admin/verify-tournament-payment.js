@@ -18,6 +18,7 @@ $(document).ready(function (e) {
             "title" : "Approve Tournament Payment",
             "text" : "Are you sure want to approve this tournament payment? (Registration ID = " + tournament_registration_confirmation_id + ")",
             "type" : "warning",
+            "customClass" : "sweet-alert-custom",
             "showCancelButton" : true,
             "showConfirmButton" : true,
             "confirmButtonText" : "Yes, i want.",
@@ -39,6 +40,7 @@ $(document).ready(function (e) {
                             "title" : "Approve Tournament Payment Success",
                             "text" : data.message[0],
                             "type" : "success",
+                            "customClass" : "sweet-alert-custom",
                             "showConfirmButton" : false,
                             "timer" : 1000
                         });
@@ -55,7 +57,8 @@ $(document).ready(function (e) {
                         swal({
                             "title" : "Approve Tournament Payment Fail",
                             "text" : swal_text,
-                            "type" : "error"
+                            "type" : "error",
+                            "customClass" : "sweet-alert-custom"
                         });
                     }
                 })
@@ -63,7 +66,8 @@ $(document).ready(function (e) {
                     swal({
                         "title" : "Approve Tournament Payment Fail",
                         "text" : "Something went wrong. Please try again.",
-                        "type" : "error"
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
                     });
                 });
         });
@@ -78,6 +82,7 @@ $(document).ready(function (e) {
             "title" : "Decline Tournament Payment",
             "text" : "Are you sure want to decline this tournament payment? (Registration ID = " + tournament_registration_confirmation_id + ")",
             "type" : "warning",
+            "customClass" : "sweet-alert-custom",
             "showCancelButton" : true,
             "showConfirmButton" : true,
             "confirmButtonText" : "Yes, i want.",
@@ -99,6 +104,7 @@ $(document).ready(function (e) {
                             "title" : "Decline Tournament Payment Success",
                             "text" : data.message[0],
                             "type" : "success",
+                            "customClass" : "sweet-alert-custom",
                             "showConfirmButton" : false,
                             "timer" : 1000
                         });
@@ -115,7 +121,8 @@ $(document).ready(function (e) {
                         swal({
                             "title" : "Decline Tournament Payment Fail",
                             "text" : swal_text,
-                            "type" : "error"
+                            "type" : "error",
+                            "customClass" : "sweet-alert-custom"
                         });
                     }
                 })
@@ -123,7 +130,8 @@ $(document).ready(function (e) {
                     swal({
                         "title" : "Decline Tournament Payment Fail",
                         "text" : "Something went wrong. Please try again.",
-                        "type" : "error"
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
                     });
                 });
         });

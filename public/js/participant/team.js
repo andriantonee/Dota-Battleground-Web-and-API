@@ -10,6 +10,7 @@ $(document).on("click", ".join-with-password", function(e) {
         "title" : "Join team \"" + team_name + "\"",
         "text" : "Enter Join Code",
         "type" : "input",
+        "customClass" : "sweet-alert-custom",
         "showCancelButton" : true,
         "showConfirmButton" : true,
         "confirmButtonText" : "Join",
@@ -44,16 +45,18 @@ $(document).on("click", ".join-with-password", function(e) {
                         "title" : "Join Team Success",
                         "text" : data.message[0],
                         "type" : "success",
+                        "customClass" : "sweet-alert-custom",
                         "showConfirmButton" : false,
                         "timer" : 1000
                     });
 
-                    if (refresh == true) {
-                        location.reload();
-                    } else {
-                        that.parent().parent().find(".team-count").html(data.count);
-                        that.parent().empty();
-                    }                    
+                    // if (refresh == true) {
+                    //     location.reload();
+                    // } else {
+                    //     that.parent().parent().find(".team-count").html(data.count);
+                    //     that.parent().empty();
+                    // }
+                    location.reload();
                 } else {
                     var swal_text = "";
                     $.each(data.message, function(index, value) {
@@ -66,7 +69,8 @@ $(document).on("click", ".join-with-password", function(e) {
                     swal({
                         "title" : "Join Team Fail",
                         "text" : swal_text,
-                        "type" : "error"
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
                     });
                 }
             })
@@ -74,7 +78,8 @@ $(document).on("click", ".join-with-password", function(e) {
                 swal({
                     "title" : "Join Team Fail",
                     "text" : "Something went wrong.\n Please try again.",
-                    "type" : "error"
+                    "type" : "error",
+                    "customClass" : "sweet-alert-custom"
                 });
             });
     });
@@ -92,6 +97,7 @@ $(document).on("click", ".join-without-password", function(e) {
         "title" : "Join team \"" + team_name + "\"",
         "text" : "Do you want to join the team?",
         "type" : "info",
+        "customClass" : "sweet-alert-custom",
         "showCancelButton" : true,
         "showConfirmButton" : true,
         "confirmButtonText" : "Yes, i want.",
@@ -113,16 +119,18 @@ $(document).on("click", ".join-without-password", function(e) {
                         "title" : "Join Team Success",
                         "text" : data.message[0],
                         "type" : "success",
+                        "customClass" : "sweet-alert-custom",
                         "showConfirmButton" : false,
                         "timer" : 1000
                     });
 
-                    if (refresh == true) {
-                        location.reload();
-                    } else {
-                        that.parent().parent().find(".team-count").html(data.count);
-                        that.parent().remove();
-                    }
+                    // if (refresh == true) {
+                    //     location.reload();
+                    // } else {
+                    //     that.parent().parent().find(".team-count").html(data.count);
+                    //     that.parent().remove();
+                    // }
+                    location.reload();
                 } else {
                     var swal_text = "";
                     $.each(data.message, function(index, value) {
@@ -135,7 +143,8 @@ $(document).on("click", ".join-without-password", function(e) {
                     swal({
                         "title" : "Join Team Fail",
                         "text" : swal_text,
-                        "type" : "error"
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
                     });
                 }
             })
@@ -143,7 +152,8 @@ $(document).on("click", ".join-without-password", function(e) {
                 swal({
                     "title" : "Join Team Fail",
                     "text" : "Something went wrong. Please try again.",
-                    "type" : "error"
+                    "type" : "error",
+                    "customClass" : "sweet-alert-custom"
                 });
             });
     });
@@ -161,6 +171,7 @@ $(document).on("click", ".accept-invite-request", function(e) {
         "title" : "Accept invitation from team \"" + team_name + "\"",
         "text" : "Do you want to accept this invitation?",
         "type" : "info",
+        "customClass" : "sweet-alert-custom",
         "showCancelButton" : true,
         "showConfirmButton" : true,
         "confirmButtonText" : "Yes, i want.",
@@ -182,16 +193,18 @@ $(document).on("click", ".accept-invite-request", function(e) {
                         "title" : "Accept Team Invitation Success",
                         "text" : data.message[0],
                         "type" : "success",
+                        "customClass" : "sweet-alert-custom",
                         "showConfirmButton" : false,
                         "timer" : 1000
                     });
 
-                    if (refresh == true) {
-                        location.reload();
-                    } else {
-                        that.parent().parent().find(".team-count").html(data.count);
-                        that.parent().remove();
-                    }
+                    // if (refresh == true) {
+                    //     location.reload();
+                    // } else {
+                    //     that.parent().parent().find(".team-count").html(data.count);
+                    //     that.parent().remove();
+                    // }
+                    location.reload();
                 } else {
                     var swal_text = "";
                     $.each(data.message, function(index, value) {
@@ -204,7 +217,8 @@ $(document).on("click", ".accept-invite-request", function(e) {
                     swal({
                         "title" : "Accept Team Invitation Fail",
                         "text" : swal_text,
-                        "type" : "error"
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
                     });
                 }
             })
@@ -212,7 +226,8 @@ $(document).on("click", ".accept-invite-request", function(e) {
                 swal({
                     "title" : "Accept Team Invitation Fail",
                     "text" : "Something went wrong. Please try again.",
-                    "type" : "error"
+                    "type" : "error",
+                    "customClass" : "sweet-alert-custom"
                 });
             });
     });
@@ -231,6 +246,7 @@ $(document).on("click", ".reject-invite-request", function(e) {
         "title" : "Reject invitation from team \"" + team_name + "\"",
         "text" : "Do you want to reject this invitation?",
         "type" : "warning",
+        "customClass" : "sweet-alert-custom",
         "showCancelButton" : true,
         "showConfirmButton" : true,
         "confirmButtonText" : "Yes, i want.",
@@ -252,23 +268,25 @@ $(document).on("click", ".reject-invite-request", function(e) {
                         "title" : "Reject Team Invitation Success",
                         "text" : data.message[0],
                         "type" : "success",
+                        "customClass" : "sweet-alert-custom",
                         "showConfirmButton" : false,
                         "timer" : 1000
                     });
 
-                    var join_html = "";
-                    if (with_password == true) {
-                        join_html = join_html + 
-                            "<button class=\"btn btn-default join-with-password\" style=\"font-size: 20px;\" data-team-id=\"" + team_id + "\" data-team-name=\"" + team_name + "\" data-refresh=\"" + refresh + "\">" +
-                                "<i class=\"glyphicon glyphicon-log-in\"></i>&nbsp;&nbsp;Join Team" +
-                            "</button>";
-                    } else {
-                        join_html = join_html + 
-                            "<button class=\"btn btn-default join-without-password\" style=\"font-size: 20px;\" data-team-id=\"" + team_id + "\" data-team-name=\"" + team_name + "\" data-refresh=\"" + refresh + "\">" +
-                                "<i class=\"glyphicon glyphicon-log-in\"></i>&nbsp;&nbsp;Join Team" +
-                            "</button>";
-                    }
-                    that.parent().html(join_html);
+                    // var join_html = "";
+                    // if (with_password == true) {
+                    //     join_html = join_html + 
+                    //         "<button class=\"btn btn-default join-with-password\" style=\"font-size: 20px;\" data-team-id=\"" + team_id + "\" data-team-name=\"" + team_name + "\" data-refresh=\"" + refresh + "\">" +
+                    //             "<i class=\"glyphicon glyphicon-log-in\"></i>&nbsp;&nbsp;Join Team" +
+                    //         "</button>";
+                    // } else {
+                    //     join_html = join_html + 
+                    //         "<button class=\"btn btn-default join-without-password\" style=\"font-size: 20px;\" data-team-id=\"" + team_id + "\" data-team-name=\"" + team_name + "\" data-refresh=\"" + refresh + "\">" +
+                    //             "<i class=\"glyphicon glyphicon-log-in\"></i>&nbsp;&nbsp;Join Team" +
+                    //         "</button>";
+                    // }
+                    // that.parent().html(join_html);
+                    location.reload();
                 } else {
                     var swal_text = "";
                     $.each(data.message, function(index, value) {
@@ -281,7 +299,8 @@ $(document).on("click", ".reject-invite-request", function(e) {
                     swal({
                         "title" : "Reject Team Invitation Fail",
                         "text" : swal_text,
-                        "type" : "error"
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
                     });
                 }
             })
@@ -289,7 +308,8 @@ $(document).on("click", ".reject-invite-request", function(e) {
                 swal({
                     "title" : "Reject Team Invitation Fail",
                     "text" : "Something went wrong. Please try again.",
-                    "type" : "error"
+                    "type" : "error",
+                    "customClass" : "sweet-alert-custom"
                 });
             });
     });

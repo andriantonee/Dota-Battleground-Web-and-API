@@ -22,6 +22,7 @@
         <link href="{{ asset('css/participant/modify-button.css') }}" rel="stylesheet">
         <link href="{{ asset('css/participant/modify-well.css') }}" rel="stylesheet">
         <link href="{{ asset('css/participant/modify-icon.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/sweet-alert-custom.css') }}" rel="stylesheet">
         <link href="{{ asset('css/participant/header.css') }}" rel="stylesheet">
         <link href="{{ asset('css/participant/footer.css') }}" rel="stylesheet">
         <style type="text/css">
