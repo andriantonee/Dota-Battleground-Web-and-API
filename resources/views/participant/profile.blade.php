@@ -47,6 +47,28 @@
             border-bottom: none !important;
         }
 
+        div.popover.editable-container.editable-popup {
+            background-color: #292E3A;
+            border: 1px solid transparent;
+            box-shadow: 0 5px 15px rgba(0,0,0,.5);
+            -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+        }
+        div.popover.editable-container.editable-popup > .arrow:after {
+            border-bottom-color: #292E3A;
+        }
+        div.popover.editable-container.editable-popup h3.popover-title {
+            background-color: #292E3A;
+            color: #D8D8D8;
+        }
+        div.popover.editable-container.editable-popup button.editable-cancel {
+            background : linear-gradient(to bottom, #ba1f1f, #ba3f3f);
+            border-color: #ba3f3f;
+        }
+        div.popover.editable-container.editable-popup button.editable-submit {
+            background : linear-gradient(to bottom, #1f872b, #20bc36);
+            border-color: #31aa53;
+        }
+
         /* Profile Picture Modal */
         .fileinput-new #btn-file-size-profile-picture {
             width: 150px;
