@@ -289,7 +289,7 @@ class ValidatorHelper
             'description' => 'required|string|max:65535',
             'logo' => 'required|mimes:jpeg,png|max:1024',
             'type' => 'required|integer|in:1,2',
-            'league_id' => 'integer|min:0|max:4294967295',
+            'league_id' => 'required|integer|min:0|max:4294967295',
             'city' => 'filled|integer|exists:cities,id',
             'address' => 'string|max:255',
             'max_participant' => 'required|integer|min:3|max:256',
@@ -301,7 +301,8 @@ class ValidatorHelper
             'prize_other' => 'string|max:65535',
             'entry_fee' => 'required|integer|min:1|max:999999',
             'registration_closed' => 'required|string|date_format:d/m/Y H:i',
-            'upload_identification_card' => 'filled|integer|in:0,1',
+            // 'upload_identification_card' => 'filled|integer|in:0,1',
+            'upload_identification_card' => 'required|integer|in:0,1',
             'start_date' => 'required|string|date_format:d/m/Y',
             'end_date' => 'required|string|date_format:d/m/Y'
         ];
@@ -318,6 +319,7 @@ class ValidatorHelper
             'type.required' => 'Type is required.',
             'type.integer' => 'Type must be an integer.',
             'type.in' => 'Type can support Single Elimination or Double Elimination only.',
+            'league_id.required' => 'League ID is required.',
             'league_id.integer' => 'League ID must be an integer.',
             'league_id.min' => 'League ID has a minimum :min value.',
             'league_id.max' => 'League ID has a maximum :max value.',
@@ -351,7 +353,10 @@ class ValidatorHelper
             'registration_closed.required' => 'Registration Closed is required.',
             'registration_closed.string' => 'Registration Closed must be a string.',
             'registration_closed.date_format' => 'Registration Closed does not match the format :format.',
-            'upload_identification_card.filled' => 'Upload Identification Card must not empty.',
+            // 'upload_identification_card.filled' => 'Upload Identification Card must not empty.',
+            // 'upload_identification_card.integer' => 'Upload Identification Card must be an integer.',
+            // 'upload_identification_card.in' => 'Upload Identification Card can support 0 or 1 only.',
+            'upload_identification_card.required' => 'Upload Identification Card is required.',
             'upload_identification_card.integer' => 'Upload Identification Card must be an integer.',
             'upload_identification_card.in' => 'Upload Identification Card can support 0 or 1 only.',
             'start_date.required' => 'Start Date is required.',
@@ -366,15 +371,25 @@ class ValidatorHelper
         if ($validator->fails()) {
             return $validator->errors()->all();
         } else {
-            if (array_key_exists('league_id', $data)) {
+            // if (array_key_exists('league_id', $data)) {
                 if (Tournament::checkLeagueIDExists($data['league_id'])) {
                     return ['League ID '.$data['league_id'].' has been used.'];
-                } else {
-                    return null;
                 }
-            } else {
-                return null;
+            // }
+
+            if (date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $data['registration_closed']))) < date('Y-m-d H:i:00')) {
+                return ['Registration Closed Date must greater than ' . date('Y-m-d H:i') . '.'];
             }
+
+            if (date('Y-m-d 00:00:00', strtotime(str_replace('/', '-', $data['start_date']))) < date('Y-m-d 00:00:00', strtotime(str_replace('/', '-', $data['registration_closed'])))) {
+                return ['Start Date must greater or equal to Registration Closed Date.'];
+            }
+
+            if (date('Y-m-d 00:00:00', strtotime(str_replace('/', '-', $data['end_date']))) <= date('Y-m-d 23:59:59', strtotime(str_replace('/', '-', $data['start_date'])))) {
+                return ['End Date must greater to Start Date.'];
+            }
+
+            return null;
         }
     }
 
@@ -382,7 +397,7 @@ class ValidatorHelper
     {
         $rule = [
             'description' => 'required|string|max:65535',
-            'league_id' => 'integer|min:0|max:4294967295',
+            'league_id' => 'required|integer|min:0|max:4294967295',
             'city' => 'filled|integer|exists:cities,id',
             'address' => 'string|max:255',
             'prize_1st' => 'string|max:255',
@@ -394,6 +409,7 @@ class ValidatorHelper
             'description.required' => 'Description is required.',
             'description.string' => 'Description must be a string.',
             'description.max' => 'Description has a maximum :max characters only.',
+            'league_id.required' => 'League ID is required.',
             'league_id.integer' => 'League ID must be an integer.',
             'league_id.min' => 'League ID has a minimum :min value.',
             'league_id.max' => 'League ID has a maximum :max value.',
@@ -416,19 +432,19 @@ class ValidatorHelper
         if ($validator->fails()) {
             return $validator->errors()->all();
         } else {
-            if (array_key_exists('league_id', $data)) {
-                if ($data['league_id']) {
+            // if (array_key_exists('league_id', $data)) {
+                // if ($data['league_id']) {
                     if (Tournament::checkLeagueIDExists($data['league_id'], $tournament_id)) {
                         return ['League ID '.$data['league_id'].' has been used.'];
                     } else {
                         return null;
                     }
-                } else {
-                    return null;
-                }
-            } else {
-                return null;
-            }
+            //     } else {
+            //         return null;
+            //     }
+            // } else {
+            //     return null;
+            // }
         }
     }
 

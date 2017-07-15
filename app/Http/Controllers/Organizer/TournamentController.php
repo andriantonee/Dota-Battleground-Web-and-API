@@ -89,15 +89,16 @@ class TournamentController extends BaseController
             'prize_other' => $request->input('prize_other'),
             'entry_fee' => $request->input('entry_fee'),
             'registration_closed' => $request->input('registration_closed'),
+            'upload_identification_card' => 1,
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date')
         ];
         if ($request->input('city')) {
             $data['city'] = $request->input('city');
         }
-        if (array_key_exists('upload_identification_card', $dataRequest)) {
-            $data['upload_identification_card'] = $request->input('upload_identification_card');
-        }
+        // if (array_key_exists('upload_identification_card', $dataRequest)) {
+        //     $data['upload_identification_card'] = $request->input('upload_identification_card');
+        // }
 
         if (!$validatorResponse = ValidatorHelper::validateTournamentCreateRequest($data)) {
             DB::beginTransaction();
@@ -119,7 +120,8 @@ class TournamentController extends BaseController
                     'prize_other' => $data['prize_other'] ?: null,
                     'entry_fee' => $data['entry_fee'],
                     'registration_closed' => date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $data['registration_closed']))),
-                    'need_identifications' => array_key_exists('upload_identification_card', $data) ? $data['upload_identification_card'] : 0,
+                    // 'need_identifications' => array_key_exists('upload_identification_card', $data) ? $data['upload_identification_card'] : 0,
+                    'need_identifications' => $data['upload_identification_card'],
                     'start_date' => date('Y-m-d', strtotime(str_replace('/', '-', $data['start_date']))),
                     'end_date' => date('Y-m-d', strtotime(str_replace('/', '-', $data['end_date'])))
                 ]);

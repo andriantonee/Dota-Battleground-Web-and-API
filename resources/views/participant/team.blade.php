@@ -73,13 +73,13 @@
         </div>
         @if (count($teams) > 0)
             @foreach ($teams as $key_team => $team)
-                {{-- @if (($key_team + 1) % 10 == 1) --}}
+                @if (($key_team + 1) % 10 == 1)
                     @if ($key_team + 1 == 1)
-                        <div id="team-list-container-{{ ceil(($key_team + 1) / 1) }}" style="width: 700px;margin-left: 15px;margin-top: 20px;">
+                        <div id="team-list-container-{{ ceil(($key_team + 1) / 10) }}" style="width: 700px;margin-left: 15px;margin-top: 20px;">
                     @else
-                        <div id="team-list-container-{{ ceil(($key_team + 1) / 1) }}" style="display: none;width: 700px;margin-left: 15px;margin-top: 20px;">
+                        <div id="team-list-container-{{ ceil(($key_team + 1) / 10) }}" style="display: none;width: 700px;margin-left: 15px;margin-top: 20px;">
                     @endif
-                {{-- @endif --}}
+                @endif
                     <a class="team-wrapper" href="{{ url('/team/'.$team->id) }}">
                         <div class="row well-custom" style="padding: 10px 0px;">
                             <div class="col-xs-2">
@@ -126,9 +126,9 @@
                             </div>
                         </div>
                     </a>
-                {{-- @if (($key_team + 1) % 10 == 0 || ($key_team + 1) == count($teams)) --}}
+                @if (($key_team + 1) % 10 == 0 || ($key_team + 1) == count($teams))
                     </div>
-                {{-- @endif --}}
+                @endif
             @endforeach
             <nav aria-label="Page navigation" style="text-align: center;">
                 <ul id="team-pagination" class="pagination pagination-custom">
@@ -137,7 +137,7 @@
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    @for ($page_start = 1; $page_start <= (ceil(count($teams) / 1)); $page_start++)
+                    @for ($page_start = 1; $page_start <= (ceil(count($teams) / 10)); $page_start++)
                         @if ($page_start == 1)
                             <li class="active btn-custom">
                         @else
@@ -146,7 +146,7 @@
                             <a href="#team-list-container-{{ $page_start }}">{{ $page_start }}</a>
                         </li>
                     @endfor
-                    @if (ceil(count($teams) / 1) == 1)
+                    @if (ceil(count($teams) / 10) == 1)
                         <li class="disabled">
                     @else
                         <li>

@@ -1,0 +1,16 @@
+.league-id-tooltip {
+    color: #afaeae;
+}
+.league-id-tooltip:hover {
+    color: #cccccc;
+}
+p.tooltip-title-modified {
+    margin: 0;
+    text-align: left;
+}
+a.tooltip-title-modified {
+    color: #afaeae;
+}
+a.tooltip-title-modified:hover {
+    color: #cccccc;
+}

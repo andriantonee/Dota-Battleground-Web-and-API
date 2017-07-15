@@ -5,6 +5,7 @@
 @section('style')
     <link href="{{ asset('vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/organizer/sidebar.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/organizer/league-id-tooltip.css') }}" rel="stylesheet">
     <style type="text/css">
         .text-left {
             text-align: left !important;
@@ -72,9 +73,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="tournament-league-id" class="col-xs-offset-2 col-xs-3 control-label text-left">League ID&nbsp;<i class="fa fa-question-circle" aria-hidden="true"></i></label>
+                            <label for="tournament-league-id" class="col-xs-offset-2 col-xs-3 control-label text-left">League ID*&nbsp;<a role="button" class="league-id-tooltip"><i class="fa fa-question-circle" aria-hidden="true"></i></a></label>
                             <div class="col-xs-2">
-                                <input type="text" class="form-control" id="tournament-league-id" name="league_id">
+                                <input type="text" class="form-control" id="tournament-league-id" name="league_id" required="required">
                             </div>
                         </div>
                         <div class="form-group">
@@ -145,7 +146,7 @@
                                 <input type="number" class="form-control" id="tournament-entry-fee" name="entry_fee" min="1" max="999999" step="1" required="required">
                             </div>
                         </div>
-                        <div class="form-group" style="margin-bottom: 0px;">
+                        <div class="form-group"{{--  style="margin-bottom: 0px;" --}}>
                             <label for="tournament-registration-closed" class="col-xs-offset-2 col-xs-3 control-label text-left">Registration Closed*</label>
                             <div class="col-xs-3">
                                 <div class="input-group date" id="registration-closed-datetimepicker">
@@ -156,7 +157,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <div class="col-xs-offset-5 col-xs-5">
                                 <div class="checkbox">
                                     <label>
@@ -164,7 +165,7 @@
                                     </label>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label for="tournament-start-date" class="col-xs-offset-2 col-xs-3 control-label text-left">Start Date*</label>
                             <div class="col-xs-2">
@@ -208,4 +209,5 @@
     <script src="{{ asset('vendor/moment/min/moment.min.js') }}"></script>
     <script src="{{ asset('vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script src="{{ asset('js/organizer/tournament-create.js') }}"></script>
+    <script src="{{ asset('js/organizer/league-id-tooltip.js') }}"></script>
 @endsection
