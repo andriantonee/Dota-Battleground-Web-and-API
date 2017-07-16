@@ -44,9 +44,10 @@ class ProfileController extends BaseController
                                                 ->orderBy('matches_participants.side', 'ASC');
                                         }
                                     ])
+                                    ->where('scheduled_time', '>', date('Y-m-d H:i:s'))
                                     ->whereHas('participants', function($participants) use($member) {
                                         $participants->whereHas('members', function($members) use($member) {
-                                            $members->where('members.id', $member->id); 
+                                            $members->where('members.id', $member->id);
                                         });
                                     })
                                     ->orderBy('round', 'ASC');
@@ -58,11 +59,12 @@ class ProfileController extends BaseController
             ->whereHas('tournament', function($tournament) use($member) {
                 $tournament->where('start', 1)
                     ->whereHas('matches', function($matches) use($member) {
-                        $matches->whereHas('participants', function($participants) use($member) {
-                            $participants->whereHas('members', function($members) use($member) {
-                                $members->where('members.id', $member->id); 
+                        $matches->where('scheduled_time', '>', date('Y-m-d H:i:s'))
+                            ->whereHas('participants', function($participants) use($member) {
+                                $participants->whereHas('members', function($members) use($member) {
+                                    $members->where('members.id', $member->id);
+                                });
                             });
-                        });
                     });
             })
             ->orderBy('tournaments_registrations.created_at', 'DESC')

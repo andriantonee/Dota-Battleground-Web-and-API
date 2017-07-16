@@ -168,6 +168,7 @@ class TeamController extends BaseController
                                                     ->orderBy('matches_participants.side', 'ASC');
                                             }
                                         ])
+                                        ->where('scheduled_time', '>', date('Y-m-d H:i:s'))
                                         ->whereHas('participants', function($participants) use($team) {
                                             $participants->where('tournaments_registrations.teams_id', $team->id);
                                         })
@@ -180,9 +181,10 @@ class TeamController extends BaseController
                 ->whereHas('tournament', function($tournament) use($team) {
                     $tournament->where('start', 1)
                         ->whereHas('matches', function($matches) use($team) {
-                            $matches->whereHas('participants', function($participants) use($team) {
-                                $participants->where('tournaments_registrations.teams_id', $team->id);
-                            });
+                            $matches->where('scheduled_time', '>', date('Y-m-d H:i:s'))
+                                ->whereHas('participants', function($participants) use($team) {
+                                    $participants->where('tournaments_registrations.teams_id', $team->id);
+                                });
                         });
                 })
                 ->orderBy('created_at', 'DESC')
