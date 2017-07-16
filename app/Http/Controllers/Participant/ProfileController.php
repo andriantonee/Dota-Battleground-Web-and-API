@@ -150,6 +150,116 @@ class ProfileController extends BaseController
         return view('participant.profile', compact('identification_file_name', 'teams', 'schedules', 'registrations', 'in_progress_tournaments', 'completed_tournaments'));
     }
 
+    public function getProfile(Request $request)
+    {
+        $member = $request->user();
+        $member_json = [
+            'id' => $member->id,
+            'email' => $member->email,
+            'name' => $member->name,
+            'steam32_id' => $member->steam32_id,
+            'image' => $member->picture_file_name ? asset('storage/member/'.$participant->picture_file_name) : asset('img/default-profile.jpg')
+        ];
+
+        return response()->json(['code' => 200, 'message' => ['Get Profile success.'], 'user' => $member_json]);
+    }
+
+    public function getMySchedule(Request $request)
+    {
+        $member = $request->user();
+        $schedules = $member->tournaments_registrations()
+            ->select('tournaments_registrations.id', 'tournaments_registrations.tournaments_id', 'tournaments_registrations.teams_id', 'tournaments_registrations.created_at')
+            ->with([
+                'tournament' => function($tournament) use($member) {
+                    $tournament->select('tournaments.id', 'tournaments.name', DB::raw('MAX(`matches`.`round`) AS max_round'))
+                        ->join('matches', 'tournaments.id', '=', 'matches.tournaments_id')
+                        ->with([
+                            'matches' => function($matches) use($member) {
+                                $matches->select('id', 'tournaments_id', 'scheduled_time', 'round')
+                                    ->with([
+                                        'participants' => function($participants) {
+                                            $participants->select('tournaments_registrations.teams_id', 'matches_participants.side')
+                                                ->with([
+                                                    'team' => function($team) {
+                                                        $team->select('id', 'name');
+                                                    }
+                                                ])
+                                                ->whereIn('matches_participants.side', [1, 2])
+                                                ->orderBy('matches_participants.side', 'ASC');
+                                        }
+                                    ])
+                                    ->whereHas('participants', function($participants) use($member) {
+                                        $participants->whereHas('members', function($members) use($member) {
+                                            $members->where('members.id', $member->id); 
+                                        });
+                                    })
+                                    ->orderBy('round', 'ASC');
+                            }
+                        ])
+                        ->groupBy('tournaments.id');
+                }
+            ])
+            ->whereHas('tournament', function($tournament) use($member) {
+                $tournament->where('start', 1)
+                    ->whereHas('matches', function($matches) use($member) {
+                        $matches->whereHas('participants', function($participants) use($member) {
+                            $participants->whereHas('members', function($members) use($member) {
+                                $members->where('members.id', $member->id); 
+                            });
+                        });
+                    });
+            })
+            ->orderBy('tournaments_registrations.created_at', 'DESC')
+            ->get();
+
+        $schedules_json = [];
+        foreach ($schedules as $key_schedule => $registration) {
+            foreach ($registration->matches as $key_match => $match) {
+                $round_name = 'Finals';
+                if ($match->round < 0) {
+                    $round_name = 'Lower Round '.abs($match->round);
+                } else if ($match->round == 0) {
+                    $round_name = 'Bronze Match';
+                } else if ($match->round < $registration->tournament->max_round - 1) {
+                    $round_name = 'Semifinals';
+                }
+
+                $player_1 = 'TBD';
+                $player_2 = 'TBD';
+                foreach ($match->participants as $participant) {
+                    if ($participant->side == 1) {
+                        $player_1 = $participant->team->name;
+                    } else if ($participant->side == 2) {
+                        $player_2 = $participant->team->name;
+                    }
+                }
+
+                $schedules_json[] = [
+                    'tournament_name' => $registration->tournament->name,
+                    'round_name' => $round_name,
+                    'player_1' => $player_1,
+                    'player_2' => $player_2,
+                    'scheduled_time' => strtotime($match->scheduled_time)
+                ];
+            }
+        }
+
+        return response()->json(['code' => 200, 'message' => ['Get Schedules success.'], 'schedules' => $schedules_json]);
+    }
+
+    public function getMyIdentification(Request $request)
+    {
+        $member = $request->user();
+        $identification = $member->identifications()
+            ->orderBy('created_at', 'DESC')
+            ->value('identification_file_name');
+        $identification = [
+            'image' => $identification ? asset('storage/member/identification/'.$identification) : asset('img/holder328x178.png')
+        ];
+
+        return response()->json(['code' => 200, 'message' => ['Get Identification success.'], 'identification' => $identification]);
+    }
+
     public function update(Request $request)
     {
         $dataRequest = $request->all();

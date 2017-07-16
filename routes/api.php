@@ -21,13 +21,17 @@ Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function
     Route::get('/team/search', 'TeamController@searchTeam');
 
     Route::group(['middleware' => ['auth:api']], function() {
-        Route::get('/profile', 'ProfileController@show');
+        Route::get('/profile', 'ProfileController@getProfile');
+        Route::get('/my-schedule', 'ProfileController@getMySchedule');
         Route::put('/profile', 'ProfileController@update');
         Route::put('/password', 'ProfileController@updatePassword');
         Route::post('/profile-picture', 'ProfileController@updateProfilePicture');
         Route::delete('/profile-picture', 'ProfileController@deleteProfilePicture');
+        Route::get('/my-identification', 'ProfileController@getMyIdentification');
         Route::post('/identification', 'ProfileController@updateIdentification');
+        Route::get('/my-team', 'TeamController@getMyTeam');
         Route::post('/team', 'TeamController@store');
+        Route::get('/my-team/{id}', 'TeamController@getMyTeamDetail');
         Route::put('/team/{id}', 'TeamController@update');
         Route::post('/team/{id}/picture', 'TeamController@updatePicture');
         Route::delete('/team/{id}/picture', 'TeamController@deletePicture');

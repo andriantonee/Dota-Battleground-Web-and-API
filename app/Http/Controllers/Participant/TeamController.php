@@ -63,7 +63,8 @@ class TeamController extends BaseController
                 $teams_json[$key_team] = [
                     'id' => $team->id,
                     'name' => $team->name,
-                    'image' => $team->picture_file_name ? asset('storage/team/'.$team->picture_file_name) : asset('img/default-group.png')
+                    'image' => $team->picture_file_name ? asset('storage/team/'.$team->picture_file_name) : asset('img/default-group.png'),
+                    'number_of_members' => $team->details_count
                 ];
             }
 
@@ -71,6 +72,27 @@ class TeamController extends BaseController
         } else {
             return view('participant.team', compact('teams', 'name'));
         }
+    }
+
+    public function getTeam(Request $request)
+    {
+        $member = $request->user();
+        $teams = $member->teams()
+            ->select('teams.id', 'teams.name', 'teams.picture_file_name')
+            ->orderBy('teams.created_at', 'ASC')
+            ->withCount('details')
+            ->get();
+        $teams_json = [];
+        foreach ($teams as $key_team => $team) {
+            $teams_json[$key_team] = [
+                'id' => $team->id,
+                'name' => $team->name,
+                'image' => $team->picture_file_name ? asset('storage/team/'.$team->picture_file_name) : asset('img/default-group.png'),
+                'number_of_members' => $team->details_count
+            ];
+        }
+
+        return response()->json(['code' => 200, 'message' => ['Get Schedules success.'], 'teams' => $teams_json]);
     }
 
     public function show($id, Request $request)
