@@ -3,6 +3,8 @@ $(document).ready(function (e) {
         "order" : [[6, "asc"]]
     });
 
+    $("#tournament-payment-table_paginate").find(".pagination").addClass("pagination-custom");
+
     $("#show-image-modal").on("shown.bs.modal", function(e) {
         var btn_trigger = $(e.relatedTarget);
 
