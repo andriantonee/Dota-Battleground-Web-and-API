@@ -87,3 +87,12 @@
 .table-schedule > thead{
   background: linear-gradient(to right, #232520, #272A30);
 }
+
+.table-no-border > tbody > tr > td, 
+.table-no-border > tbody > tr > th, 
+.table-no-border > tfoot > tr > td, 
+.table-no-border > tfoot > tr > th, 
+.table-no-border > thead > tr > td, 
+.table > thead > tr > th {
+    border: none;
+}

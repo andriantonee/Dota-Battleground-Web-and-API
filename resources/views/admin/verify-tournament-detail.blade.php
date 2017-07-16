@@ -4,6 +4,7 @@
 
 @section('style')
     <link href="{{ asset('css/organizer/sidebar.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/participant/modify-pagination.css') }}" rel="stylesheet">
     <style type="text/css">
         .verify-tournament-detail-header {
             border-bottom: 1px solid #e3e3e3;
@@ -65,7 +66,7 @@
                 </div>
                 <div class="row verify-tournament-detail-body">
                     <div class="col-xs-12">
-                        <table id="tournament-detail-table" class="table table-striped">
+                        <table id="tournament-detail-table" class="table table-schedule table-striped table-no-border">
                             <tbody>
                                 <tr>
                                     <td>ID</td>

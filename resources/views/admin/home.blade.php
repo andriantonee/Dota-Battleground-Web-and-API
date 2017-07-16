@@ -37,7 +37,7 @@
                 </div>
                 <div class="row verify-tournament-body">
                     <div class="col-xs-12">
-                        <table id="tournament-table" class="table table-bordered table-hover">
+                        <table id="tournament-table" class="table table-schedule table-bordered table-hover table-striped">
                             <thead>
                                 <tr>
                                     <th>ID</th>

@@ -7,6 +7,7 @@
     <link href="{{ asset('css/participant/search-input.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
     <style type="text/css">
+
         button.list-group-item:focus {
             outline: none;
         }

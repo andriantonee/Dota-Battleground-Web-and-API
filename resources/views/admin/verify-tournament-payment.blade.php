@@ -42,7 +42,7 @@
                 </div>
                 <div class="row verify-tournament-payment-body">
                     <div class="col-xs-12">
-                        <table id="tournament-payment-table" class="table table-bordered">
+                        <table id="tournament-payment-table" class="table table-schedule table-bordered table-hover table-striped">
                             <thead>
                                 <tr>
                                     <th>ID</th>
