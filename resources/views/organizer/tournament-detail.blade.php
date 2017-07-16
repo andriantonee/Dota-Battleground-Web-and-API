@@ -72,6 +72,10 @@
             overflow: hidden;
             width: 100px;
         }
+        #identification-img {
+            height: 300px;
+            width: 100%;
+        }
     </style>
 @endsection
 
@@ -140,7 +144,7 @@
                             <li><a href="#brackets-tab" data-toggle="tab">Brackets</a></li>
                             @if ($tournament->start && count($tournament->registrations) >= 2)
                                 <li><a href="#schedule-tab" data-toggle="tab">Schedule</a></li>
-                                <li><a href="#report-match-tab" data-toggle="tab">Report Match</a></li>
+                                {{-- <li><a href="#report-match-tab" data-toggle="tab">Report Match</a></li> --}}
                                 <li><a href="#live-match-tab" data-toggle="tab">Live Match</a></li>
                             @endif
                         </ul>
@@ -353,9 +357,11 @@
                                                                                 <p style="font-size: 16px;font-weight: bold;margin: 0;">{{ $member->name }}</p>
                                                                             </td>
                                                                             <td style="width: 38px;vertical-align: middle;">
-                                                                                <button class="btn btn-default">
-                                                                                    <i class="fa fa-file-text-o"></i>
-                                                                                </button>
+                                                                                {{-- @if ($tournament->need_identifications == 1) --}}
+                                                                                    <button class="btn btn-default" data-src="{{ asset('storage/member/identification/'.$member->identification_file_name) }}" data-toggle="modal" data-target="#show-identification-modal">
+                                                                                        <i class="fa fa-file-text-o"></i>
+                                                                                    </button>
+                                                                                {{-- @endif --}}
                                                                             </td>
                                                                         </tr>
                                                                     @endforeach
@@ -689,7 +695,7 @@
                                             </table>
                                         @endif
                                     </div>
-                                    <div class="tab-pane fade" id="report-match-tab">
+                                    {{-- <div class="tab-pane fade" id="report-match-tab">
                                         @if ($tournament->type == 1)
                                             <table class="table table-bordered table-striped table-content-centered table-schedule" style="margin-bottom: 0;">
                                                 <thead>
@@ -871,7 +877,7 @@
                                                 </tbody>
                                             </table>
                                         @endif
-                                    </div>
+                                    </div> --}}
                                     <div class="tab-pane fade" id="live-match-tab">
                                         @if (count($tournament->live_matches) > 0)
                                             <div class="live-match-group-list">
@@ -948,6 +954,17 @@
         </div>
     </div>
 
+    <!-- Show Image Modal -->
+    <div class="modal modal-remove-padding-right" id="show-identification-modal" tabindex="-1" role="dialog" aria-labelledby="show-identification-modal-label">
+        <div class="modal-dialog modal-dialog-fixed-width-500" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <img id="identification-img" src="">
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Schedule Modal -->
     <div class="modal modal-remove-padding-right" id="schedule-modal" tabindex="-1" role="dialog" aria-labelledby="schedule-modal-label">
         <div class="modal-dialog modal-dialog-fixed-width-500" role="document">
@@ -989,7 +1006,7 @@
         </div>
     </div>
 
-    <!-- Report Match Modal -->
+    {{-- <!-- Report Match Modal -->
     <div class="modal modal-remove-padding-right" id="report-match-modal" tabindex="-1" role="dialog" aria-labelledby="report-match-modal-label">
         <div class="modal-dialog modal-dialog-fixed-width-500" role="document">
             <div class="modal-content modal-content-custom">
@@ -1035,7 +1052,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection
 
 @section('footer')

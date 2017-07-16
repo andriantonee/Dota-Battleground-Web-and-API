@@ -17,8 +17,19 @@ class TournamentController extends BaseController
     public function detail($id)
     {
         $tournament = Tournament::select('*')
-            ->with('city')
-            ->doesntHave('approval')
+            ->with([
+                'city',
+                'approval' => function($approval) {
+                    $approval->select('tournaments_id', 'members_id', 'accepted', 'created_at')
+                        ->with([
+                            'member' => function($member) {
+                                $member->select('id', 'name');
+                            }
+                        ]);
+                }
+            ])
+            ->withCount('registrations')
+            // ->doesntHave('approval')
             ->find($id);
         if ($tournament) {
             $tournament->description = str_replace(PHP_EOL, '<br />', $tournament->description);
@@ -91,6 +102,53 @@ class TournamentController extends BaseController
         }
     }
 
+    public function undo($id)
+    {
+        $tournament = Tournament::select('*')
+            ->withCount('registrations')
+            ->whereHas('approval')
+            ->find($id);
+        if ($tournament) {
+            if ($tournament->start == 0 && $tournament->registrations_count <= 0) {
+                // Continue
+            } else {
+                return response()->json(['code' => 400, 'message' => ['Cannot Undo this tournament anymore.']]);
+            }
+
+            $tournament_approval = $tournament->approval;
+            if ($tournament_approval->accepted == 1) {
+                $action = 'Accepted';
+            } else {
+                $action = 'Rejected';
+            }
+
+            DB::beginTransaction();
+            try {
+                if ($tournament_approval->accepted == 1) {
+                    $destroy_challonge = GuzzleHelper::destroyTournamentChallonge($tournament);
+                    if ($destroy_challonge) {
+                        $tournament->challonges_id = null;
+                        $tournament->challonges_url = null;
+                        $tournament->save();
+                    } else {
+                        DB::rollBack();
+                        return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
+                    }
+                }
+
+                $tournament_approval->delete();
+
+                DB::commit();
+                return response()->json(['code' => 200, 'message' => ['Undo '.$action.' tournament success.']]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
+            }
+        } else {
+            return response()->json(['code' => 404, 'message' => ['Tournament ID is invalid.']]);
+        }
+    }
+
     public function verifyTournamentPaymentIndex()
     {
         $tournament_registration_confirmations = TournamentRegistrationConfirmation::select('*')
@@ -99,17 +157,34 @@ class TournamentController extends BaseController
                     $registration->select('id', 'tournaments_id', 'teams_id')
                         ->with([
                             'tournament' => function($tournament) {
-                                $tournament->select('id', 'name', 'entry_fee');
+                                $tournament->select('id', 'name', 'max_participant', 'entry_fee', 'start')
+                                    ->withCount([
+                                        'registrations' => function($registrations) {
+                                            $registrations->whereHas('confirmation', function($confirmation) {
+                                                $confirmation->whereHas('approval', function($approval) {
+                                                    $approval->where('status', 1);
+                                                });
+                                            });
+                                        }
+                                    ]);
                             },
                             'team' => function($team) {
                                 $team->select('id', 'name');
                             }
                         ]);
+                },
+                'approval' => function($approval) {
+                    $approval->select('tournaments_registrations_confirmations_id', 'members_id', 'status', 'created_at')
+                        ->with([
+                            'member' => function($member) {
+                                $member->select('id', 'name');
+                            }
+                        ]);
                 }
             ])
-            ->whereDoesntHave('approval', function($approval) {
-                $approval->where('tournaments_registrations_confirmations_approvals.status', 1);
-            })
+            // ->whereDoesntHave('approval', function($approval) {
+            //     $approval->where('tournaments_registrations_confirmations_approvals.status', 1);
+            // })
             ->get();
 
         return view('admin.verify-tournament-payment', compact('tournament_registration_confirmations'));
@@ -210,6 +285,65 @@ class TournamentController extends BaseController
 
             DB::commit();
             return response()->json(['code' => 200, 'message' => ['Approve tournament payment success.']]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
+        }
+    }
+
+    public function undoPayment($id, Request $request)
+    {
+        $tournament_registration_confirmation = TournamentRegistrationConfirmation::whereHas('approval')->find($id);
+        if ($tournament_registration_confirmation) {
+            $tournament_registration = $tournament_registration_confirmation->registration;
+            $tournament = $tournament_registration->tournament;
+            if ($tournament->start == 0) {
+                // Continue
+            } else {
+                return response()->json(['code' => 400, 'message' => ['Cannot undo this tournament payment anymore.']]);
+            }
+        } else {
+            return response()->json(['code' => 404, 'message' => ['Tournament Registration Confirmation ID is invalid.']]);
+        }
+
+        DB::beginTransaction();
+        try {
+            $tournament_registration_confirmation_approval = $tournament_registration_confirmation->approval;
+            if ($tournament_registration_confirmation_approval->status == 1) {
+                $action = 'Accepted';
+            } else {
+                $action = 'Rejected';
+            }
+
+            if ($tournament_registration_confirmation_approval->status == 1) {
+                $destroy_challonge_participant = GuzzleHelper::destroyTournamentChallongeParticipant($tournament_registration);
+                if ($destroy_challonge_participant) {
+                    $tournament_registration->challonges_participants_id = null;
+                    $tournament_registration->save();
+
+                    if ($tournament->need_identifications) {
+                        $members = $tournament_registration->members()
+                            ->select('members.id', 'tournaments_registrations_details.qr_identifier')
+                            ->get();
+                        foreach ($members as $member) {
+                            $qr_file_name = md5($member->qr_identifier);
+                            Storage::delete('public/tournament/qr/'.$qr_file_name.'.png');
+
+                            $tournament_registration->members()->updateExistingPivot($member->id, [
+                                'qr_identifier' => null
+                            ]);
+                        }
+                    }
+                } else {
+                    DB::rollBack();
+                    return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
+                }
+            }
+
+            $tournament_registration_confirmation_approval->delete();
+
+            DB::commit();
+            return response()->json(['code' => 200, 'message' => ['Undo '.$action.' tournament payment success.']]);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);

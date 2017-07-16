@@ -157,7 +157,7 @@ class TournamentController extends BaseController
                                     $team->select('id', 'name', 'picture_file_name');
                                 },
                                 'members' => function($members) {
-                                    $members->select('id', 'name', 'picture_file_name');
+                                    $members->select('members.id', 'members.name', 'members.picture_file_name', 'tournaments_registrations_details.identification_file_name');
                                 },
                             ])
                             ->whereHas('confirmation', function($confirmation) {

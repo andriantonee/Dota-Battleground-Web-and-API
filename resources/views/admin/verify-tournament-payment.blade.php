@@ -52,7 +52,8 @@
                                     <th>Transfer Bank</th>
                                     <th>First Confirmed Date</th>
                                     <th>Last Confirmed Date</th>
-                                    <th></th>
+                                    <th>Status</th>
+                                    <th style="width: 70px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -66,9 +67,39 @@
                                         <td>{{ $tournament_registration_confirmation->created_at->format('d F Y H:i:s') }}</td>
                                         <td>{{ $tournament_registration_confirmation->updated_at->format('d F Y H:i:s') }}</td>
                                         <td class="text-center">
+                                            @if ($tournament_registration_confirmation->approval)
+                                                @if ($tournament_registration_confirmation->approval->status == 1)
+                                                    <span class="label label-success">Accepted</span>
+                                                @else
+                                                    <span class="label label-danger">Rejected</span>
+                                                @endif
+                                            @else
+                                                <span class="label label-warning">Pending</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
                                             <button class="btn btn-default btn-xs btn-info btn-width-25" data-src="{{ asset('storage/tournament/confirmation/'.$tournament_registration_confirmation->confirmation_file_name) }}" data-toggle="modal" data-target="#show-image-modal"><i class="fa fa-picture-o"></i></button>
-                                            <button class="btn btn-default btn-xs btn-success btn-width-25 btn-approve-tournament-payment" data-id="{{ $tournament_registration_confirmation->tournaments_registrations_id }}"><i class="fa fa-check"></i></button>
-                                            <button class="btn btn-default btn-xs btn-danger btn-width-25 btn-decline-tournament-payment" data-id="{{ $tournament_registration_confirmation->tournaments_registrations_id }}"><i class="fa fa-times"></i></button>
+                                            @if ($tournament_registration_confirmation->approval)
+                                                @if ($tournament_registration_confirmation->approval->status == 1)
+                                                    <button class="btn btn-default btn-xs btn-primary btn-width-25 approved-tooltip-info" data-action="Accepted" data-name="{{ $tournament_registration_confirmation->approval->member->name }}" data-date="{{ $tournament_registration_confirmation->approval->created_at->format('d F Y H:i:s') }}"><i class="fa fa-info"></i></button>
+                                                @else
+                                                    <button class="btn btn-default btn-xs btn-primary btn-width-25 approved-tooltip-info" data-action="Rejected" data-name="{{ $tournament_registration_confirmation->approval->member->name }}" data-date="{{ $tournament_registration_confirmation->approval->created_at->format('d F Y H:i:s') }}"><i class="fa fa-info"></i></button>
+                                                @endif
+                                                @if ($tournament_registration_confirmation->registration->tournament->start == 0)
+                                                    @if ($tournament_registration_confirmation->approval->status == 1)
+                                                        <button class="btn btn-default btn-xs btn-primary btn-width-25 btn-undo-tournament-payment" data-id="{{ $tournament_registration_confirmation->tournaments_registrations_id }}" data-action="Accepted"><i class="fa fa-undo"></i></button>
+                                                    @else
+                                                        <button class="btn btn-default btn-xs btn-primary btn-width-25 btn-undo-tournament-payment" data-id="{{ $tournament_registration_confirmation->tournaments_registrations_id }}" data-action="Rejected"><i class="fa fa-undo"></i></button>
+                                                    @endif
+                                                @endif
+                                            @else
+                                                @if ($tournament_registration_confirmation->registration->tournament->start == 0)
+                                                    @if ($tournament_registration_confirmation->registration->tournament->registrations_count < $tournament_registration_confirmation->registration->tournament->max_participant)
+                                                        <button class="btn btn-default btn-xs btn-success btn-width-25 btn-approve-tournament-payment" data-id="{{ $tournament_registration_confirmation->tournaments_registrations_id }}"><i class="fa fa-check"></i></button>
+                                                    @endif
+                                                    <button class="btn btn-default btn-xs btn-danger btn-width-25 btn-decline-tournament-payment" data-id="{{ $tournament_registration_confirmation->tournaments_registrations_id }}"><i class="fa fa-times"></i></button>
+                                                @endif
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

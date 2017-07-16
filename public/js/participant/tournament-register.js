@@ -43,7 +43,7 @@ $(document).ready(function() {
                                 "</div>";
                         });
                         $("#list-member-container").html(members_HTML);
-                        $("#player-left").html("5");
+                        $("#player-left").html(max);
 
                         $("#team").val(team_id);
 

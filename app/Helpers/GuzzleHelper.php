@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Match;
 use App\Team;
 use App\Tournament;
+use App\TournamentRegistration;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
 
@@ -91,6 +92,27 @@ class GuzzleHelper
         }
     }
 
+    public static function destroyTournamentChallonge(Tournament $tournament)
+    {
+        $http = new GuzzleClient();
+
+        try {
+            if ($tournament->challonges_id) {
+                $response = $http->delete('https://api.challonge.com/v1/tournaments/'.$tournament->challonges_id.'.json', [
+                    'form_params' => [
+                        'api_key' => env('CHALLONGE_API_KEY', '')
+                    ]
+                ]);
+
+                return json_decode($response->getBody()->__toString(), false);
+            } else {
+                return true;
+            }
+        } catch (RequestException $e) {
+            return null;
+        }
+    }
+
     public static function createTournamentChallongeParticipant(Tournament $tournament, Team $team)
     {
         $http = new GuzzleClient();
@@ -109,6 +131,32 @@ class GuzzleHelper
             ]);
 
             return json_decode($response->getBody()->__toString(), false);
+        } catch (RequestException $e) {
+            return null;
+        }
+    }
+
+    public static function destroyTournamentChallongeParticipant(TournamentRegistration $tournament_registration)
+    {
+        $http = new GuzzleClient();
+
+        try {
+            $tournament = $tournament_registration->tournament;
+            if ($tournament->challonges_id) {
+                if ($tournament_registration->challonges_participants_id) {
+                    $response = $http->delete('https://api.challonge.com/v1/tournaments/'.$tournament->challonges_id.'/participants/'.$tournament_registration->challonges_participants_id.'.json', [
+                        'form_params' => [
+                            'api_key' => env('CHALLONGE_API_KEY', '')
+                        ]
+                    ]);
+
+                    return json_decode($response->getBody()->__toString(), false);
+                } else {
+                    return true;
+                }
+            } else {
+                return true;
+            }
         } catch (RequestException $e) {
             return null;
         }

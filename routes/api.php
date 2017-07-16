@@ -70,8 +70,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function() {
     Route::group(['middleware' => ['auth:api']], function() {
         Route::post('/tournament/{id}/approve', 'TournamentController@approve');
         Route::post('/tournament/{id}/decline', 'TournamentController@decline');
+        Route::post('/tournament/{id}/undo', 'TournamentController@undo');
         Route::post('/tournament-payment/{id}/approve', 'TournamentController@approvePayment');
         Route::post('/tournament-payment/{id}/decline', 'TournamentController@declinePayment');
+        Route::post('/tournament-payment/{id}/undo', 'TournamentController@undoPayment');
 
         Route::put('/dota-2/abilities', 'Dota2Controller@updateAbilities');
         Route::put('/dota-2/heroes', 'Dota2Controller@updateHeroes');

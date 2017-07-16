@@ -4,6 +4,12 @@ $(document).ready(function(e) {
         "sideBySide" : true
     });
 
+    $("#show-identification-modal").on("shown.bs.modal", function(e) {
+        var btn_trigger = $(e.relatedTarget);
+
+        $("#identification-img").attr("src", btn_trigger.data("src"));
+    });
+
 	$("#form-tournament-settings").on("submit", function(e) {
         e.preventDefault();
 

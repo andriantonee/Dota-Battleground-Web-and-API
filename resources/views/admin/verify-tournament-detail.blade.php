@@ -45,6 +45,19 @@
     <div id="wrapper">
         <div id="page-wrapper">
             <div class="container-fluid well well-transparent">
+                @if ($tournament->approval)
+                    @if ($tournament->approval->accepted == 1)
+                        <div class="alert alert-success alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            Accepted by <strong>{{ $tournament->approval->member->name }}</strong> at <strong>{{ $tournament->approval->created_at->format('d F Y H:i:s') }}</strong>.
+                        </div>
+                    @else
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            Rejected by <strong>{{ $tournament->approval->member->name }}</strong> at <strong>{{ $tournament->approval->created_at->format('d F Y H:i:s') }}</strong>.
+                        </div>
+                    @endif
+                @endif
                 <div class="row verify-tournament-detail-header">
                     <div class="col-xs-12">
                         <h2>{{ $tournament->name }}</h2>
@@ -144,8 +157,22 @@
                 </div>
                 <div class="row verify-tournament-detail-footer">
                     <div class="col-xs-12 text-center">
-                        <button id="btn-approve-tournament" class="btn btn-success" data-tournament-name="{{ $tournament->name }}"><i class="fa fa-fw fa-check"></i>&nbsp;Approve</button>
-                        <button id="btn-decline-tournament" class="btn btn-danger" data-tournament-name="{{ $tournament->name }}"><i class="fa fa-fw fa-times"></i>&nbsp;Decline</button>
+                        @if ($tournament->approval)
+                            @if ($tournament->start == 0 && $tournament->registrations_count <= 0)
+                                @if ($tournament->approval->accepted == 1)
+                                    <button id="btn-undo-tournament" class="btn btn-primary" data-action="Accepted" data-tournament-name="{{ $tournament->name }}">
+                                        <i class="fa fa-fw fa-undo"></i>&nbsp;Undo Accepted Tournament
+                                    </button>
+                                @else
+                                    <button id="btn-undo-tournament" class="btn btn-primary" data-action="Rejected" data-tournament-name="{{ $tournament->name }}">
+                                        <i class="fa fa-fw fa-undo"></i>&nbsp;Undo Rejected Tournament
+                                    </button>
+                                @endif
+                            @endif
+                        @else
+                            <button id="btn-approve-tournament" class="btn btn-success" data-tournament-name="{{ $tournament->name }}"><i class="fa fa-fw fa-check"></i>&nbsp;Approve</button>
+                            <button id="btn-decline-tournament" class="btn btn-danger" data-tournament-name="{{ $tournament->name }}"><i class="fa fa-fw fa-times"></i>&nbsp;Decline</button>
+                        @endif
                     </div>
                 </div>
             </div>
