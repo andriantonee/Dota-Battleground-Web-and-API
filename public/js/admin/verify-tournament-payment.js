@@ -1,9 +1,10 @@
 $(document).ready(function (e) {
     window.dTablesTournamentPayment = $("#tournament-payment-table").DataTable({
-        "order" : [[6, "asc"]]
+        "order" : [[6, "asc"]],
+        "drawCallback" : function(settings) {
+            $("#tournament-payment-table_paginate").find(".pagination").addClass("pagination-custom");
+        }
     });
-
-    $("#tournament-payment-table_paginate").find(".pagination").addClass("pagination-custom");
 
     $("#show-image-modal").on("shown.bs.modal", function(e) {
         var btn_trigger = $(e.relatedTarget);
