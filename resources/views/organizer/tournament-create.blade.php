@@ -59,7 +59,7 @@
                         <div class="form-group">
                             <label for="tournament-logo" class="col-xs-offset-2 col-xs-3 control-label text-left">Logo*</label>
                             <div class="col-xs-5">
-                                <input type="file" class="form-control" id="tournament-logo" name="logo" accept="image/jpeg, image/png" required="required">
+                                <input type="file" id="tournament-logo" name="logo" accept="image/jpeg, image/png" required="required">
                             </div>
                         </div>
                         <div class="form-group">
@@ -98,7 +98,7 @@
                         <div class="form-group">
                             <label for="max-participant" class="col-xs-offset-2 col-xs-3 control-label text-left">Max Participant*</label>
                             <div class="col-xs-2">
-                                <input type="number" class="form-control" id="max-participant" name="max_participant" min="3" max="256" step="1" value="3" required="required">
+                                <input type="number" class="form-control" id="max-participant" name="max_participant" min="2" max="256" step="1" value="2" required="required">
                             </div>
                             <div class="col-xs-1">
                                 <label class="control-label text-left" style="font-weight: normal;">Teams</label>

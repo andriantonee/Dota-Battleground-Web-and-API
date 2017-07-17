@@ -12,6 +12,10 @@
 .table-custom.table-striped > tbody > tr:nth-child(2n+1) > th {
    background-color:#444b5e;
 }
+.table-hover.table-striped> tbody > tr:nth-child(2n+1):hover > td,
+.table-hover.table-striped > tbody > tr:nth-child(2n+1):hover > th {
+   background-color: #39424b;
+}
 
 .table-custom > tbody > tr > td, 
 .table-custom > tbody > tr > th, 

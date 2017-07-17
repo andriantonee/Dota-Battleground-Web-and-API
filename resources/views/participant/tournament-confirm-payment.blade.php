@@ -113,7 +113,7 @@
                                         <p>Upload Proof of Payment</p>
                                         <img id="proof-payment" src="{{ asset('storage/tournament/confirmation/'.$tournament_registration->confirmation->confirmation_file_name) }}">
                                     </td>
-                                    <td><input type="file" id="transfer-confirmation-file-name" name="confirmation_file_name" class="form-control" accept="image/jpeg, image/png" required="required"></td>
+                                    <td><input type="file" id="transfer-confirmation-file-name" name="confirmation_file_name" accept="image/jpeg, image/png" required="required"></td>
                                 </tr>
                             @else
                                 <tr>

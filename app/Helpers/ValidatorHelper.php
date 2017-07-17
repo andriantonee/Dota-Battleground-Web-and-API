@@ -292,7 +292,7 @@ class ValidatorHelper
             'league_id' => 'required|integer|min:0|max:4294967295',
             'city' => 'filled|integer|exists:cities,id',
             'address' => 'string|max:255',
-            'max_participant' => 'required|integer|min:3|max:256',
+            'max_participant' => 'required|integer|min:2|max:256',
             'team_size' => 'required|integer|in:1,5',
             'rules' => 'required|string|max:65535',
             'prize_1st' => 'string|max:255',
