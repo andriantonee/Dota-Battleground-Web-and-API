@@ -73,8 +73,12 @@
                                     <td>{{ $tournament->id }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Name</td>
+                                    <td>Tournament Name</td>
                                     <td>{{ $tournament->name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Organizer Name</td>
+                                    <td>{{ $tournament->owner->name }}</td>
                                 </tr>
                                 <tr>
                                     <td>Description</td>

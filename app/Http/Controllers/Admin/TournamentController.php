@@ -19,6 +19,9 @@ class TournamentController extends BaseController
         $tournament = Tournament::select('*')
             ->with([
                 'city',
+                'owner' => function($owner) {
+                    $owner->select('id', 'name');
+                },
                 'approval' => function($approval) {
                     $approval->select('tournaments_id', 'members_id', 'accepted', 'created_at')
                         ->with([
@@ -66,7 +69,7 @@ class TournamentController extends BaseController
                     $tournament->approval()->save($tournament_approval);
                     
                     DB::commit();
-                    return response()->json(['code' => 200, 'message' => ['Decline tournament success.']]);
+                    return response()->json(['code' => 200, 'message' => ['Approve tournament success.']]);
                 } else {
                     DB::rollBack();
                     return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
