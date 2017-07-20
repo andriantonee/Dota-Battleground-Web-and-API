@@ -74,7 +74,7 @@ class TeamController extends BaseController
         }
     }
 
-    public function getTeam(Request $request)
+    public function getMyTeam(Request $request)
     {
         $member = $request->user();
         $teams = $member->teams()
