@@ -228,7 +228,7 @@ class TeamController extends BaseController
                 'image' => $team->picture_file_name ? asset('storage/team/'.$team->picture_file_name) : asset('img/default-group.png'),
                 'join_code' => $team->join_password
             ];
-            $team_details = $team->details()
+            $teams_details = $team->details()
                 ->select('members.id', 'members.name', 'members.steam32_id', 'members.picture_file_name', 'teams_details.members_privilege', 'teams_details.created_at')
                 ->orderBy('teams_details.members_privilege', 'DESC')
                 ->orderBy('teams_details.created_at', 'ASC')
