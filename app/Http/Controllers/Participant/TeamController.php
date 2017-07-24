@@ -234,7 +234,7 @@ class TeamController extends BaseController
                 ->orderBy('teams_details.created_at', 'ASC')
                 ->get();
             $team_details_json = [];
-            foreach ($teams_details as $key_team_detail => $team_detail) {
+            foreach ($team_details as $key_team_detail => $team_detail) {
                 $team_details_json[$key_team_detail] = [
                     'id' => $team_detail->id,
                     'name' => $team_detail->name,

@@ -17,6 +17,7 @@ Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function
     Route::post('/login', 'AuthController@login');
     Route::post('/register', 'AuthController@register');
     Route::get('/tournament', 'TournamentController@index');
+    Route::get('/tournament/{id}/detail', 'TournamentController@getTournamentDetail');
     Route::get('/team', 'TeamController@index');
     Route::get('/team/search', 'TeamController@searchTeam');
 
@@ -42,7 +43,9 @@ Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function
         Route::post('/team/{id}/reject-invitation', 'TeamController@rejectInvitation');
         Route::delete('/team/{id}/kick-member/{member_id}', 'TeamController@kickMember');
         Route::get('/team/{id}/member', 'TeamController@member');
+        Route::get('/tournament/{id}/register', 'TournamentController@registerAPIIndex');
         Route::post('/tournament/{id}/register', 'TournamentController@register');
+        Route::get('/tournament/confirm-payment/{id}', 'TournamentController@confirmPaymentAPIIndex');
         Route::post('/tournament/confirm-payment/{id}', 'TournamentController@confirmPayment');
         Route::post('/dota-2/match/{id}/comment', 'Dota2MatchController@postComment');
         Route::post('/logout', 'AuthController@logout');
