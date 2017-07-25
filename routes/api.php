@@ -58,6 +58,8 @@ Route::group(['prefix' => 'organizer', 'namespace' => 'Organizer'], function() {
 
     Route::group(['middleware' => ['auth:api']], function() {
         Route::put('/password', 'ProfileController@updatePassword');
+        Route::get('/my-tournament', 'TournamentController@getMyTournament');
+        Route::get('/my-tournament/{id}', 'TournamentController@getMyTournamentDetail');
         Route::post('/tournament/create', 'TournamentController@store');
         Route::put('/tournament/{id}', 'TournamentController@update');
         Route::put('/tournament/{id}/type', 'TournamentController@updateType');
@@ -66,6 +68,10 @@ Route::group(['prefix' => 'organizer', 'namespace' => 'Organizer'], function() {
         Route::put('/tournament/{id}/finalize', 'TournamentController@finalize');
         Route::put('/match/{id}/schedule', 'MatchController@updateSchedule');
         Route::put('/match/{id}/score', 'MatchController@updateScore');
+        Route::get('/match/{id}/team-attendance', 'MatchController@getMatchTeamAttendance');
+        Route::get('/match/{id}/attendance', 'MatchController@getAttendance');
+        Route::post('/match/{id}/attendance', 'MatchController@postAttendance');
+        // Route::post('/match/{id}/start', 'MatchController@start');
         Route::post('/dota-2/match/{id}/comment', 'Dota2MatchController@postComment');
         Route::post('logout', 'AuthController@logout');
     });

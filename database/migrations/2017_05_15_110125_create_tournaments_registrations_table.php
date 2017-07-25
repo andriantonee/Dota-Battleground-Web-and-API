@@ -18,6 +18,7 @@ class CreateTournamentsRegistrationsTable extends Migration
             $table->unsignedBigInteger('tournaments_id');
             $table->unsignedBigInteger('teams_id');
             $table->unsignedBigInteger('challonges_participants_id')->nullable();
+            $table->boolean('disqualification')->default('0');
             $table->timestamps();
 
             $table->unique(['tournaments_id', 'teams_id']);
