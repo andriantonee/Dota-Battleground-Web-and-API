@@ -43,4 +43,9 @@ class Match extends Model
     {
         return $this->hasMany('App\Dota2LiveMatch', 'matches_id', 'id');
     }
+
+    public function attendances()
+    {
+        return $this->hasMany('App\MatchAttendance', 'matches_id', 'id');
+    }
 }

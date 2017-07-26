@@ -1,0 +1,1 @@
+"C:\xampp\php\php.exe" "D:\Kuliah\Tugas Akhir (Skripsi)\Web & API\artisan" auto:disqualified

@@ -630,4 +630,41 @@ class ValidatorHelper
             return null;
         }
     }
+
+    public static function validateMatchAttendanceRequest(array $data)
+    {
+        $rule = [
+            'qr_identifier' => 'required|string|max:255',
+        ];
+        $message = [
+            'comment.required' => 'Comment is required.',
+            'comment.string' => 'Comment must be a string.',
+            'comment.max' => 'Comment has a maximum :max characters only.',
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            return null;
+        }
+    }
+
+    public static function validateGetMatchTeamAttendanceRequest(array $data)
+    {
+        $rule = [
+            'tournament_registration_id' => 'required|integer'
+        ];
+        $message = [
+            'tournament_registration_id.required' => 'Tournament Registration ID is required.',
+            'tournament_registration_id.integer' => 'Tournament Registration ID must be an integer.'
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            return null;
+        }
+    }
 }

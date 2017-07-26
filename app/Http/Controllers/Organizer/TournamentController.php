@@ -61,6 +61,141 @@ class TournamentController extends BaseController
         return view('organizer.tournament', compact('tournaments', 'status'));
     }
 
+    public function getMyTournament(Request $request)
+    {
+        $organizer = $request->user();
+        $tournaments = Tournament::select('id', 'name', 'logo_file_name', 'type', 'cities_id', 'entry_fee', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'members_id')
+            ->where('members_id', $organizer->id)
+            ->whereHas('approval', function($approval) {
+                $approval->where('tournaments_approvals.accepted', 1);
+            })
+            ->where('start', 1)
+            ->where('complete', 0)
+            ->get();
+
+        $tournaments_json = [];
+        foreach ($tournaments as $key_tournament => $tournament) {
+            $tournaments_json[$key_tournament] = [
+                'id' => $tournament->id,
+                'image' => asset('storage/tournament/'.$tournament->logo_file_name),
+                'name' => $tournament->name,
+                'start_date' => strtotime($tournament->start_date),
+                'end_date' => strtotime($tournament->end_date),
+                'registration_closed' => strtotime($tournament->registration_closed),
+                'entry_fee' => $tournament->entry_fee
+            ];
+
+            $tournament_status = '';
+            if (date('Y-m-d H:i:s' <= $tournament->registration_closed)) {
+                $tournament_status = 'Upcoming';
+            } else {
+                if ($tournament->start == 0) {
+                    $tournament_status = 'Upcoming';
+                } else {
+                    if ($tournament->complete == 0) {
+                        $tournament_status = 'In Progress';
+                    } else {
+                        $tournament_status = 'Complete';
+                    }
+                }
+            }
+            $tournaments_json[$key_tournament]['status'] = $tournament_status;
+        }
+
+        return response()->json(['code' => 200, 'message' => ['Get Tournament success.'], 'tournaments' => $tournaments_json]);
+    }
+
+    public function getMyTournamentDetail($id, Request $request)
+    {
+        $organizer = $request->user();
+        $tournament = Tournament::select('id')
+            ->where('members_id', $organizer->id)
+            ->whereHas('approval', function($approval) {
+                $approval->where('tournaments_approvals.accepted', 1);
+            })
+            ->where('start', 1)
+            ->where('complete', 0)
+            ->find($id);
+        if ($tournament) {
+            $max_round = $tournament->matches()->max('round');
+            $matches = $tournament->matches()
+                ->select('id', 'tournaments_id', 'scheduled_time', 'round')
+                ->with([
+                    'participants' => function($participants) {
+                        $participants->select('tournaments_registrations.id AS id', 'tournaments_registrations.teams_id AS teams_id', 'matches_participants.side')
+                            ->with([
+                                'team' => function($team) {
+                                    $team->select('id', 'name', 'picture_file_name');
+                                }
+                            ]);
+                    }
+                ])
+                ->whereHas('participants', function($participants) {
+                    $participants->select('matches_participants.matches_id AS matches_id')
+                        ->whereNull('matches_participants.matches_result')
+                        ->where(function($side) {
+                            $side->where('matches_participants.side', 1)
+                                ->orWhere('matches_participants.side', 2);
+                        })
+                        ->groupBy('matches_participants.matches_id')
+                        ->havingRaw('COUNT(*) = 2');
+                })
+                ->get();
+
+            $matches_json = [];
+            foreach ($matches as $key_match => $match) {
+                if ($match->round < 0) {
+                    $round = 'Lower Round '.abs($match->round);
+                } else if ($match->round == 0) {
+                    $round = 'Bronze Match';
+                } else if ($match->round < $max_round - 1) {
+                    $round = 'Round '.$match->round;
+                } else if ($match->round == $max_round - 1) {
+                    $round = 'Semifinals';
+                } else {
+                    $round = 'Finals';
+                }
+
+                $player_1_id = 0;
+                $player_1 = 'TBD';
+                $player_1_image = asset('img/default-group.png');
+                $player_2_id = 0;
+                $player_2 = 'TBD';
+                $player_2_image = asset('img/default-group.png');
+                foreach ($match->participants as $participant) {
+                    if ($participant->side == 1) {
+                        $player_1_id = $participant->id;
+                        $player_1 = $participant->team->name;
+                        if ($participant->team->picture_file_name) {
+                            $player_1_image = asset('storage/team/'.$participant->team->picture_file_name);
+                        }
+                    } else if ($participant->side == 2) {
+                        $player_2_id = $participant->id;
+                        $player_2 = $participant->team->name;
+                        if ($participant->team->picture_file_name) {
+                            $player_2_image = asset('storage/team/'.$participant->team->picture_file_name);
+                        }
+                    }
+                }
+
+                $matches_json[$round][] = [
+                    'id' => $match->id,
+                    'player_1_id' => $player_1_id,
+                    'player_1' => $player_1,
+                    'player_1_image' => $player_1_image,
+                    'player_2_id' => $player_2_id,
+                    'player_2' => $player_2,
+                    'player_2_image' => $player_2_image,
+                    'scheduled_date' => strtotime($match->scheduled_time) ?: 0
+                ];
+            }
+
+            return response()->json(['code' => 200, 'message' => ['Get Tournament Detail success.'], 'matches' => $matches_json]);
+        } else {
+            return response()->json(['code' => 404, 'message' => ['Tournament ID is invalid.']]);
+        }
+    }
+
     public function create()
     {
         $cities = City::select('id', 'name')->get();
