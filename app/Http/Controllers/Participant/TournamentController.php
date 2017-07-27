@@ -421,9 +421,9 @@ class TournamentController extends BaseController
                 }
             }
 
-            return response()->json(['code' => 200, 'message' => 'Get Tournament Detail success.', 'tournament' => $tournament_json, 'matches' => $matches_json, 'live_matches_json' => $live_matches_json]);
+            return response()->json(['code' => 200, 'message' => ['Get Tournament Detail success.'], 'tournament' => $tournament_json, 'matches' => $matches_json, 'live_matches_json' => $live_matches_json]);
         } else {
-            return response()->json(['code' => 404, 'message' => 'Tournament ID is invalid.']);
+            return response()->json(['code' => 404, 'message' => ['Tournament ID is invalid.']]);
         }
     }
 
