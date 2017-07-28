@@ -132,7 +132,7 @@
                                 </tr>
                                 <tr>
                                     <td class="vertical-middle font-bold">
-                                        <p>Upload Proof of Payment</p>
+                                        <p>Upload Proof of Payment ha</p>
                                         <img id="proof-payment" src="" style="display: none;">
                                     </td>
                                     <td><input type="file" id="transfer-confirmation-file-name" name="confirmation_file_name" class="form-control" accept="image/jpeg, image/png" required="required"></td>
