@@ -6,6 +6,7 @@
     <link href="{{ asset('css/participant/footer.css') }}" rel="stylesheet">
     <link href="{{ asset('css/participant/search-input.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/participant/modify-pagination.css') }}" rel="stylesheet">
     <style type="text/css">
 
         button.list-group-item:focus {
@@ -238,35 +239,72 @@
             </div>
             <div class="col-xs-8">
                 @if (count($tournaments) > 0)
-                    @foreach ($tournaments as $tournament)
-                        <a href="{{ url('/tournament/'.$tournament->id) }}" class="well-custom tournament-list-group-item">
-                            <div class="tournament-list-group-item-logo">
-                                <img src="{{ asset('storage/tournament/'.$tournament->logo_file_name) }}">
-                            </div>
-                            <div class="tournament-list-group-item-detail-1">
-                                <h4 class="tournament-list-group-item-detail-1-name" style="color: #f45138;">{{ $tournament->name }}</h4>
-                                <p class="tournament-list-group-item-detail-1-organizer-name" style="color:#afaeae">{{ $tournament->owner->name }}</p>
-                                <p class="tournament-list-group-item-detail-1-event-date">{{ date('d F Y', strtotime($tournament->start_date)) }} - {{ date('d F Y', strtotime($tournament->end_date)) }}</p>
-                            </div>
-                            <div class="tournament-list-group-item-detail-2">
-                                <h4 class="tournament-list-group-item-detail-2-price" style="color: #fc7b67;">Rp. {{ number_format($tournament->entry_fee, 0, ',', '.') }} / Team</h4>
-                                <p class="tournament-list-group-item-detail-2-registration-closed">Registration Before {{ date('d F Y H:i', strtotime($tournament->registration_closed)) }}</p>
-                                @if (date('Y-m-d H:i:s') <= $tournament->registration_closed)
-                                    <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Upcoming</p>
-                                @else
-                                    @if ($tournament->start == 0)
+                    @foreach ($tournaments as $key_tournament => $tournament)
+                        @if (($key_tournament + 1) % 10 == 1)
+                            @if ($key_tournament + 1 == 1)
+                                <div id="tournament-list-container-{{ ceil(($key_tournament + 1) / 10) }}">
+                            @else
+                                <div id="tournament-list-container-{{ ceil(($key_tournament + 1) / 10) }}" style="display: none;">
+                            @endif
+                        @endif
+                            <a href="{{ url('/tournament/'.$tournament->id) }}" class="well-custom tournament-list-group-item">
+                                <div class="tournament-list-group-item-logo">
+                                    <img src="{{ asset('storage/tournament/'.$tournament->logo_file_name) }}">
+                                </div>
+                                <div class="tournament-list-group-item-detail-1">
+                                    <h4 class="tournament-list-group-item-detail-1-name" style="color: #f45138;">{{ $tournament->name }}</h4>
+                                    <p class="tournament-list-group-item-detail-1-organizer-name" style="color:#afaeae">{{ $tournament->owner->name }}</p>
+                                    <p class="tournament-list-group-item-detail-1-event-date">{{ date('d F Y', strtotime($tournament->start_date)) }} - {{ date('d F Y', strtotime($tournament->end_date)) }}</p>
+                                </div>
+                                <div class="tournament-list-group-item-detail-2">
+                                    <h4 class="tournament-list-group-item-detail-2-price" style="color: #fc7b67;">Rp. {{ number_format($tournament->entry_fee, 0, ',', '.') }} / Team</h4>
+                                    <p class="tournament-list-group-item-detail-2-registration-closed">Registration Before {{ date('d F Y H:i', strtotime($tournament->registration_closed)) }}</p>
+                                    @if (date('Y-m-d H:i:s') <= $tournament->registration_closed)
                                         <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Upcoming</p>
                                     @else
-                                        @if ($tournament->complete == 0)
-                                            <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">In Progress</p>
+                                        @if ($tournament->start == 0)
+                                            <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Upcoming</p>
                                         @else
-                                            <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Complete</p>
+                                            @if ($tournament->complete == 0)
+                                                <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">In Progress</p>
+                                            @else
+                                                <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Complete</p>
+                                            @endif
                                         @endif
                                     @endif
-                                @endif
+                                </div>
+                            </a>
+                        @if (($key_tournament + 1) % 10 == 0 || ($key_tournament + 1) == count($tournaments))
                             </div>
-                        </a>
+                        @endif
                     @endforeach
+                    <nav aria-label="Page navigation" style="text-align: center;">
+                        <ul id="tournament-pagination" class="pagination pagination-custom">
+                            <li class="disabled">
+                                <a href="#previous" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            @for ($page_start = 1; $page_start <= (ceil(count($tournaments) / 10)); $page_start++)
+                                @if ($page_start == 1)
+                                    <li class="active btn-custom">
+                                @else
+                                    <li>
+                                @endif
+                                    <a href="#tournament-list-container-{{ $page_start }}">{{ $page_start }}</a>
+                                </li>
+                            @endfor
+                            @if (ceil(count($tournaments) / 10) == 1)
+                                <li class="disabled">
+                            @else
+                                <li>
+                            @endif
+                                <a href="#next" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 @else
                     <div class="text-center" style="opacity: 0.2;">
                         <div>
@@ -288,4 +326,5 @@
     <script src="{{ asset('vendor/moment/min/moment.min.js') }}"></script>
     <script src="{{ asset('vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script src="{{ asset('js/participant/tournament.js') }}"></script>
+    <script src="{{ asset('js/participant/tournament-pagination.js') }}"></script>
 @endsection

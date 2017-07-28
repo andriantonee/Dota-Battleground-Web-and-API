@@ -74,7 +74,7 @@ class TeamController extends BaseController
         }
     }
 
-    public function getTeam(Request $request)
+    public function getMyTeam(Request $request)
     {
         $member = $request->user();
         $teams = $member->teams()
@@ -208,6 +208,46 @@ class TeamController extends BaseController
             return view('participant.team-detail', compact('team', 'inTeam', 'isTeamLeader'));
         } else {
             abort(404);
+        }
+    }
+
+    public function getMyTeamDetail($id, Request $request)
+    {
+        $member = $request->user();
+        $team = $member->teams()
+            ->select('teams.id', 'teams.name', 'teams.picture_file_name', 'teams.join_password')
+            ->find($id);
+        if ($team) {
+            $is_leader_json = false;
+            if ($member->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2) {
+                $is_leader_json = true;
+            }
+            $team_json = [
+                'id' => $team->id,
+                'name' => $team->name,
+                'image' => $team->picture_file_name ? asset('storage/team/'.$team->picture_file_name) : asset('img/default-group.png'),
+                'join_code' => $team->join_password
+            ];
+            $teams_details = $team->details()
+                ->select('members.id', 'members.name', 'members.steam32_id', 'members.picture_file_name', 'teams_details.members_privilege', 'teams_details.created_at')
+                ->orderBy('teams_details.members_privilege', 'DESC')
+                ->orderBy('teams_details.created_at', 'ASC')
+                ->get();
+            $team_details_json = [];
+            foreach ($teams_details as $key_team_detail => $team_detail) {
+                $team_details_json[$key_team_detail] = [
+                    'id' => $team_detail->id,
+                    'name' => $team_detail->name,
+                    'steam32_id' => $team_detail->steam32_id,
+                    'image' => $team_detail->picture_file_name ? asset('storage/member/'.$team_detail->picture_file_name) : asset('img/default-profile.jpg'),
+                    'status' => ($team_detail->members_privilege == 2 ? 'Captain' : ''),
+                    'joined_at' => strtotime($team_detail->created_at)
+                ];
+            }
+
+            return response()->json(['code' => 200, 'message' => ['Get Team Detail success.'], 'team' => $team_json, 'is_leader' => $is_leader_json, 'teams_details' => $team_details_json]);
+        } else {
+            return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
         }
     }
 

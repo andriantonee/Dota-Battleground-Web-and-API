@@ -41,12 +41,14 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Name</th>
+                                    <th>Tournament Name</th>
+                                    <th>Organizer Name</th>
                                     <th>Entry Fee</th>
                                     <th>Registration Closed</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Created Date</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -54,11 +56,23 @@
                                     <tr class="tournament-table-row" data-id="{{ $tournament->id }}">
                                         <td>{{ $tournament->id }}</td>
                                         <td>{{ $tournament->name }}</td>
+                                        <td>{{ $tournament->owner->name }}</td>
                                         <td>Rp. {{ number_format($tournament->entry_fee, 0, ',', '.') }}</td>
                                         <td>{{ date('d F Y H:i', strtotime($tournament->registration_closed)) }}</td>
                                         <td>{{ date('d F Y', strtotime($tournament->start_date)) }}</td>
                                         <td>{{ date('d F Y', strtotime($tournament->end_date)) }}</td>
                                         <td>{{ $tournament->created_at->format('d F Y H:i:s') }}</td>
+                                        <td class="text-center">
+                                            @if ($tournament->approval)
+                                                @if ($tournament->approval->accepted == 1)
+                                                    <span class="label label-success">Accepted</span>
+                                                @else
+                                                    <span class="label label-danger">Rejected</span>
+                                                @endif
+                                            @else
+                                                <span class="label label-warning">Pending</span>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

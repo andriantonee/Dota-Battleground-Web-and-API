@@ -3,6 +3,18 @@ $(document).ready(function (e) {
         "order" : [[6, "asc"]],
         "drawCallback" : function(settings) {
             $("#tournament-payment-table_paginate").find(".pagination").addClass("pagination-custom");
+            $(".approved-tooltip-info").tooltip({
+                "delay" : 250,
+                "html" : true,
+                "title": function() {
+                    var action = $(this).data("action");
+                    var name = $(this).data("name");
+                    var date = $(this).data("date");
+
+                    return "<span class=\"tooltip-action\">" + action + "</span> by <strong class=\"tooltip-name\">" + name + "</strong> at <strong class=\"tooltip-date\">" + date + "</strong>.";
+                },
+                "trigger" : "click"
+            });
         }
     });
 
@@ -12,7 +24,7 @@ $(document).ready(function (e) {
         $("#confirmation-tournament-payment-img").attr("src", btn_trigger.data("src"));
     });
 
-    $(".btn-approve-tournament-payment").on("click", function(e) {
+    $(document).on("click", ".btn-approve-tournament-payment", function(e) {
         e.preventDefault();
 
         var tournament_registration_confirmation_id = $(this).data("id");
@@ -77,7 +89,7 @@ $(document).ready(function (e) {
         });
     });
 
-    $(".btn-decline-tournament-payment").on("click", function(e) {
+    $(document).on("click", ".btn-decline-tournament-payment", function(e) {
         e.preventDefault();
 
         var tournament_registration_confirmation_id = $(this).data("id");
@@ -142,20 +154,7 @@ $(document).ready(function (e) {
         });
     });
 
-    $(".approved-tooltip-info").tooltip({
-        "delay" : 250,
-        "html" : true,
-        "title": function() {
-            var action = $(this).data("action");
-            var name = $(this).data("name");
-            var date = $(this).data("date");
-
-            return "<span class=\"tooltip-action\">" + action + "</span> by <strong class=\"tooltip-name\">" + name + "</strong> at <strong class=\"tooltip-date\">" + date + "</strong>.";
-        },
-        "trigger" : "click"
-    });
-
-    $(".btn-undo-tournament-payment").on("click", function(e) {
+    $(document).on("click", ".btn-undo-tournament-payment", function(e) {
         e.preventDefault();
 
         var tournament_registration_confirmation_id = $(this).data("id");
