@@ -60,8 +60,11 @@ class Dota2LiveMatchRadiantPlayersUpdated implements ShouldBroadcast
             ->where('side', 1)
             ->first()
             ->dota2_live_match_players()
-            ->select('id', 'dota2_heroes_id', 'kills', 'death', 'assists', 'last_hits', 'denies', 'gold', 'level', 'gold_per_min', 'xp_per_min', 'respawn_timer', 'position_x', 'position_y', 'net_worth')
+            ->select('id', 'name', 'members_id', 'dota2_heroes_id', 'kills', 'death', 'assists', 'last_hits', 'denies', 'gold', 'level', 'gold_per_min', 'xp_per_min', 'respawn_timer', 'position_x', 'position_y', 'net_worth')
             ->with([
+                'member' => function($member) {
+                    $member->select('id', 'name');
+                },
                 'hero' => function($hero) {
                     $hero->select('id', 'name', 'picture_file_name');
                 }

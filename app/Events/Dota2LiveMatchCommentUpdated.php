@@ -62,7 +62,8 @@ class Dota2LiveMatchCommentUpdated implements ShouldBroadcast
         $comment->detail = str_replace(PHP_EOL, '<br />', $comment->detail);
 
         return [
-            'comment' => $comment,
+            'comment' => array_merge($comment->relationsToArray(), $comment->attributesToArray()),
+            'comment_mobile' => array_merge($comment->attributesToArray(), $comment->relationsToArray())
         ];
     }
 }
