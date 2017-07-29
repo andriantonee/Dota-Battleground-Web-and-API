@@ -59,11 +59,12 @@ class Dota2LiveMatchCommentUpdated implements ShouldBroadcast
                 $member->select('id', 'name', 'picture_file_name');
             }
         ]);
+        $comment_mobile = $comment->toArray();
         $comment->detail = str_replace(PHP_EOL, '<br />', $comment->detail);
 
         return [
-            'comment' => array_merge($comment->relationsToArray(), $comment->attributesToArray()),
-            'comment_mobile' => array_merge($comment->attributesToArray(), $comment->relationsToArray())
+            'comment' => $comment,
+            'comment_mobile' => $comment_mobile
         ];
     }
 }
