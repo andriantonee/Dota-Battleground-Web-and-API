@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Participant;
 use App\Helpers\ValidatorHelper;
 use App\Identification;
 use App\Member;
+use App\Notification;
 use DB;
 use Hash;
 use Illuminate\Http\Request;
@@ -512,5 +513,56 @@ class ProfileController extends BaseController
         } else {
             return response()->json(['code' => 400, 'message' => $validatorResponse]);
         }
+    }
+
+    public function getMyNotification(Request $request)
+    {
+        $member = $request->user();
+        $notifications = $member->notifications()
+            ->with([
+                'member_join_team' => function($member_join_team) {
+                    $member_join_team->with([
+                            'team' => function($team) {
+                                $team->select('id', 'name');
+                            },
+                            'member' => function($member) {
+                                $member->select('id', 'name');
+                            }
+                        ]);
+                },
+                'team_invitation' => function($team_invitation) {
+                    $team_invitation->with([
+                            'team' => function($team) {
+                                $team->select('id', 'name');
+                            }
+                        ]);
+                }
+            ])
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
+        $notifications_json = [];
+        foreach ($notifications as $notification) {
+            $notifications_json[] = [
+                'id' => $notification->id,
+                'read_status' => $notification->read_status,
+                'member_join_team' => $notification->member_join_team,
+                'team_invitation' => $notification->team_invitation,
+                'created_at' => strtotime($notification->created_at)
+            ];
+        }
+
+        return response()->json(['code' => 200, 'message' => ['Get Notification Success.'], 'notifications' => $notifications_json]);
+    }
+
+    public function postNotification($id)
+    {
+        $notification = Notification::find($id);
+        if ($notification) {
+            $notification->read_status = 1;
+            $notification->save();
+        }
+
+        return response()->json(['code' => 200, 'message' => ['Post Notification Success.']]);
     }
 }
