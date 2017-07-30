@@ -304,7 +304,7 @@ class TournamentController extends BaseController
                 'name' => $tournament->name,
                 'description' => $tournament->description,
                 'image' => asset('storage/tournament/'.$tournament->logo_file_name),
-                'challonges_url' => "http://challonge.com/".$tournament->challonges_url.".svg",
+                'challonges_url' => $tournament->challonges_url,
                 'city' => $tournament->city ? $tournament->city->name : '-',
                 'owner' => $tournament->owner ? $tournament->owner->name : '-',
                 'address' => $tournament->address ?: '-',
