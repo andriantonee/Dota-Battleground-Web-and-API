@@ -46,8 +46,15 @@ class TeamController extends BaseController
 
         $member_id = null;
         if ($request->segment(1) == 'api') {
-            if ($request->user()) {
-                $member_id = $request->user()->id;
+            if ($request->bearerToken()) {
+                $accessTokenID = (new Parser)->parse($request->bearerToken())->getHeader('jti');
+                $access = DB::table('oauth_access_tokens')
+                    ->where('id', $accessTokenID)
+                    ->where('expires_at', '>', date('Y-m-d H:i:s'))
+                    ->first();
+                if ($access) {
+                    $member_id = $access->user_id;
+                }
             }
         } else {
             if ($request->input('participant_model')) {
@@ -64,6 +71,8 @@ class TeamController extends BaseController
                     'id' => $team->id,
                     'name' => $team->name,
                     'image' => $team->picture_file_name ? asset('storage/team/'.$team->picture_file_name) : asset('img/default-group.png'),
+                    'in_team' => count($team->details) > 0 ? 1 : 0,
+                    'has_invitation' => count($team->invitation_list) > 0 ? 1 : 0,
                     'number_of_members' => $team->details_count
                 ];
             }

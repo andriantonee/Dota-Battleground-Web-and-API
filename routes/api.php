@@ -24,6 +24,8 @@ Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function
     Route::get('/dota-2/match/{id}/comment', 'Dota2MatchController@getComment');
 
     Route::group(['middleware' => ['auth:api']], function() {
+        Route::get('/my-notification', 'ProfileController@getMyNotification');
+        Route::post('/my-notification/{id}', 'ProfileController@postNotification');
         Route::get('/profile', 'ProfileController@getProfile');
         Route::get('/my-schedule', 'ProfileController@getMySchedule');
         Route::put('/profile', 'ProfileController@update');
