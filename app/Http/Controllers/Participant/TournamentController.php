@@ -97,7 +97,7 @@ class TournamentController extends BaseController
                 ];
 
                 $tournament_status = '';
-                if (date('Y-m-d H:i:s' <= $tournament->registration_closed)) {
+                if (date('Y-m-d H:i:s') <= $tournament->registration_closed) {
                     $tournament_status = 'Upcoming';
                 } else {
                     if ($tournament->start == 0) {
@@ -304,8 +304,9 @@ class TournamentController extends BaseController
                 'name' => $tournament->name,
                 'description' => $tournament->description,
                 'image' => asset('storage/tournament/'.$tournament->logo_file_name),
-                'challonges_url' => $tournament->challonges_url,
+                'challonges_url' => "http://challonge.com/".$tournament->challonges_url.".svg",
                 'city' => $tournament->city ? $tournament->city->name : '-',
+                'owner' => $tournament->owner ? $tournament->owner->name : '-',
                 'address' => $tournament->address ?: '-',
                 'max_participant' => $tournament->max_participant,
                 'team_size' => $tournament->team_size,
@@ -324,6 +325,12 @@ class TournamentController extends BaseController
                 $tournament_json['type'] = 'Single Elimination';
             } else if ($tournament->type == 2) {
                 $tournament_json['type'] = 'Double Elimination';
+            }
+            
+            if (date('Y-m-d H:i:s') <= $tournament->registration_closed) {
+                $tournament_json['registration_status'] = true;
+            } else {
+                $tournament_json['registration_status'] = false;
             }
 
             $matches_json = [];
@@ -508,7 +515,7 @@ class TournamentController extends BaseController
             $teams_json[] = [
                 'id' => $team->id,
                 'name' => $team->name,
-                'image' => $team->picture_file_name ? asset('storage/member/'.$team->picture_file_name) : asset('img/default-profile.jpg'),
+                'image' => $team->picture_file_name ? asset('storage/team/'.$team->picture_file_name) : asset('img/default-group.png'),
                 'number_of_valid_members' => $team->details_count
             ];
         }
@@ -777,7 +784,7 @@ class TournamentController extends BaseController
                 }
 
                 DB::commit();
-                return response()->json(['code' => 200, 'message' => ['Payment Confirmation Information has been updated.'], 'image_url' => asset('storage/tournament/confirmation/'.$tournament_registration_confirmation->confirmation_file_name)]);
+                return response()->json(['code' => 200, 'message' => ['Payment Confirmation Information has been updated.'], 'file_path' => asset('storage/tournament/confirmation/'.$tournament_registration_confirmation->confirmation_file_name)]);
             } catch (\Exception $e) {
                 DB::rollBack();
                 if ($path) {

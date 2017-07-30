@@ -30,6 +30,8 @@ Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function
         Route::delete('/profile-picture', 'ProfileController@deleteProfilePicture');
         Route::get('/my-identification', 'ProfileController@getMyIdentification');
         Route::post('/identification', 'ProfileController@updateIdentification');
+        Route::get('/my-tournament', 'ProfileController@getMyTournament');
+        Route::get('/my-register', 'ProfileController@getMyRegister');
         Route::get('/my-team', 'TeamController@getMyTeam');
         Route::post('/team', 'TeamController@store');
         Route::get('/my-team/{id}', 'TeamController@getMyTeamDetail');

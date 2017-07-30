@@ -166,6 +166,143 @@ class ProfileController extends BaseController
         return response()->json(['code' => 200, 'message' => ['Get Profile success.'], 'user' => $member_json]);
     }
 
+    public function getMyTournament(Request $request) 
+    {
+        $member = $request->user();
+        $in_progress_tournaments = $member->tournaments_registrations()
+            ->select('tournaments_registrations.id', 'tournaments_registrations.tournaments_id', 'tournaments_registrations.teams_id', 'tournaments_registrations.created_at', 'tournaments_registrations_details.qr_identifier')
+            ->with([
+                'tournament' => function($tournament) {
+                    $tournament->select('id', 'name', 'logo_file_name', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'members_id');
+                },
+                'team' => function($team) {
+                    $team->select('id', 'name');
+                }
+            ])
+            ->whereHas('tournament', function($tournament) {
+                $tournament->where('start', 1)
+                    ->where('complete', 0);
+            })
+            ->whereHas('confirmation', function($confirmation) {
+                $confirmation->whereHas('approval', function($approval) {
+                    $approval->where('status', 1);
+                });
+            })
+            ->orderBy('tournaments_registrations.created_at', 'DESC')
+            ->get();
+        $in_progress_tournaments = $in_progress_tournaments->map(function($tournaments_registrations, $key) {
+            if ($tournaments_registrations->qr_identifier) {
+                $qr_file_name = md5($tournaments_registrations->qr_identifier);
+                $tournaments_registrations->qr_identifier = $qr_file_name;
+            }
+
+            return $tournaments_registrations;
+        });
+        $completed_tournaments = $member->tournaments_registrations()
+            ->select('tournaments_registrations.id', 'tournaments_registrations.tournaments_id', 'tournaments_registrations.teams_id', 'tournaments_registrations.created_at')
+            ->with([
+                'tournament' => function($tournament) {
+                    $tournament->select('id', 'name', 'logo_file_name', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'members_id');
+                },
+                'team' => function($team) {
+                    $team->select('id', 'name');
+                }
+            ])
+            ->whereHas('tournament', function($tournament) {
+                $tournament->where('start', 1)
+                    ->where('complete', 1);
+            })
+            ->whereHas('confirmation', function($confirmation) {
+                $confirmation->whereHas('approval', function($approval) {
+                    $approval->where('status', 1);
+                });
+            })
+            ->orderBy('tournaments_registrations.created_at', 'DESC')
+            ->get();
+        
+        $in_progress_tournaments_json = [];
+        foreach ($in_progress_tournaments as $in_progress_tournament) {
+            $in_progress_tournaments_json[] = [
+                'id' => $in_progress_tournament->tournament->id,
+                'image' => asset('storage/tournament/'.$in_progress_tournament->tournament->logo_file_name),
+                'tournament_name' => $in_progress_tournament->tournament->name,
+                'team_name' => $in_progress_tournament->team->name,
+                'start_date' => strtotime($in_progress_tournament->tournament->start_date),
+                'end_date' => strtotime($in_progress_tournament->tournament->end_date),
+                'qr_identifier' => $in_progress_tournament->qr_identifier ? asset('storage/tournament/qr/'.$in_progress_tournament->qr_identifier.'.png') : null
+            ];
+        }
+        
+        $completed_tournaments_json = [];
+        foreach ($completed_tournaments as $completed_tournament) {
+            $completed_tournaments_json[] = [
+                'id' => $completed_tournament->tournament->id,
+                'image' => asset('storage/tournament/'.$completed_tournament->tournament->logo_file_name),
+                'tournament_name' => $completed_tournament->tournament->name,
+                'team_name' => $completed_tournament->team->name,
+                'start_date' => strtotime($completed_tournament->tournament->start_date),
+                'end_date' => strtotime($completed_tournament->tournament->end_date)
+            ];
+        }
+        
+        return response()->json(['code' => 200, 'message' => ['Get My Tournament success.'], 'in_progress_tournaments' => $in_progress_tournaments_json, 'completed_tournaments' => $completed_tournaments_json]);
+    }
+    
+    public function getMyRegister(Request $request) 
+    {
+        $member = $request->user();
+        
+        $registrations = $member->teams()
+            ->select('teams.id', 'teams.name')
+            ->with([
+                'tournaments_registrations' => function($tournaments_registrations) {
+                    $tournaments_registrations->select('id', 'tournaments_id', 'teams_id', 'created_at')
+                        ->with([
+                            'tournament' => function($tournament) {
+                                $tournament->select('id', 'name');
+                            },
+                            'confirmation' => function($confirmation) {
+                                $confirmation->select('tournaments_registrations_id')
+                                    ->with([
+                                        'approval' => function($approval) {
+                                            $approval->select('tournaments_registrations_confirmations_id', 'status');
+                                        }
+                                    ]);
+                            }
+                        ])
+                        ->withCount('members')
+                        ->orderBy('created_at', 'DESC');
+                }
+            ])
+            ->whereHas('details', function($details) use($member) {
+                $details->where('members.id', $member->id)
+                    ->where('teams_details.members_privilege', 2);
+            })
+            ->whereHas('tournaments_registrations')
+            ->orderBy('teams.created_at', 'ASC')
+            ->get();                    
+        
+        $registrations_json = [];
+        foreach ($registrations as $registration) {
+            $tournaments_registrations_json = []; 
+            foreach ($registration->tournaments_registrations as $tournament_registration) {
+                  $tournaments_registrations_json[] = [
+                      'id' => $tournament_registration->id,
+                      'name' => $tournament_registration->tournament->name,
+                      'team_size' => $tournament_registration->members_count,
+                      'register_at' => strtotime($tournament_registration->created_at),
+                      'status' => $tournament_registration->confirmation ? ($tournament_registration->confirmation->approval ? ($tournament_registration->confirmation->approval->status == 1 ? "Accepted" : "Rejected") : "Pending") : "Not Confirmed"
+                  ];
+            }
+            $registrations_json[] = [
+                'team_name' => $registration->name,
+                'tournaments_registrations' => $tournaments_registrations_json
+            ];
+        }
+        
+        return response()->json(['code' => 200, 'message' => ['Get My Register success.'], 'registrations' => $registrations_json]);
+    }
+    
     public function getMySchedule(Request $request)
     {
         $member = $request->user();
@@ -255,11 +392,9 @@ class ProfileController extends BaseController
         $identification = $member->identifications()
             ->orderBy('created_at', 'DESC')
             ->value('identification_file_name');
-        $identification = [
-            'image' => $identification ? asset('storage/member/identification/'.$identification) : asset('img/holder328x178.png')
-        ];
+        $identification = $identification ? asset('storage/member/identification/'.$identification) : asset('img/holder328x178.png');
 
-        return response()->json(['code' => 200, 'message' => ['Get Identification success.'], 'identification' => $identification]);
+        return response()->json(['code' => 200, 'message' => ['Get Identification success.'], 'file_path' => $identification]);
     }
 
     public function update(Request $request)
