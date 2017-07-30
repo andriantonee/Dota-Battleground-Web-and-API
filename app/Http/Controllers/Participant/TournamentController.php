@@ -221,6 +221,17 @@ class TournamentController extends BaseController
         }
     }
 
+    public function showBracket($id)
+    {
+        $tournament = Tournament::find($id);
+
+        if ($tournament) {
+            return view('participant.tournament-bracket', compact('tournament'));
+        } else {
+            abort(404);
+        }
+    }
+
     public function getTournamentDetail($id)
     {
         $tournament = Tournament::with([

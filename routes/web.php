@@ -15,6 +15,7 @@ Route::group(['middleware' => ['exchange:participant,1', 'notification'], 'names
     Route::get('/', 'HomeController@index');
     Route::get('/tournament', 'TournamentController@index');
     Route::get('/tournament/{id}', 'TournamentController@show');
+    Route::get('/tournament/{id}/bracket', 'TournamentController@showBracket');
     Route::get('/team', 'TeamController@index');
     Route::get('/team/{id}', 'TeamController@show');
     Route::get('/dota-2/match/{id}', 'Dota2MatchController@show');
