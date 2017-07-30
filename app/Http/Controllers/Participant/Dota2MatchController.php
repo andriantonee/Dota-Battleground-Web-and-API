@@ -173,6 +173,120 @@ class Dota2MatchController extends BaseController
         }
     }
 
+    public function showAPI($id)
+    {
+        $dota2_live_match = Dota2LiveMatch::select('id', 'matches_id', 'leagues_id', 'series_type', 'spectators', 'duration', 'roshan_respawn_timer')->find($id);
+        if ($dota2_live_match) {
+            $match = $dota2_live_match->match;
+            if ($match) {
+                // Continue
+            } else {
+                return response()->json(['code' => 404, 'message' => ['Dota 2 Match ID is invalid.']]);
+            }
+
+            $radiant = $dota2_live_match->dota2_live_match_teams()
+                ->select('id', 'dota2_teams_name', 'tournaments_registrations_id', 'dota2_live_matches_id', 'series_wins', 'score', 'tower_state', 'barracks_state', 'side', 'matches_result')
+                ->with([
+                    'tournament_registration' => function($tournament_registration) {
+                        $tournament_registration->select('id', 'teams_id')
+                            ->with([
+                                'team' => function($team) {
+                                    $team->select('id', 'name', 'picture_file_name');
+                                }
+                            ]);
+                    },
+                    'heroes_pick' => function($heroes_pick) {
+                        $heroes_pick->select('dota2_heroes.id AS id', 'dota2_heroes.name AS name', 'dota2_heroes.picture_file_name AS picture_file_name', 'dota2_live_matches_teams_picks.pick_order AS pick_order');
+                    },
+                    'heroes_ban' => function($heroes_ban) {
+                        $heroes_ban->select('dota2_heroes.id AS id', 'dota2_heroes.name AS name', 'dota2_heroes.picture_file_name AS picture_file_name', 'dota2_live_matches_teams_bans.ban_order AS ban_order');
+                    },
+                    'dota2_live_match_players' => function($dota2_live_match_players) {
+                        $dota2_live_match_players->select('id', 'name', 'members_id', 'dota2_live_matches_teams_id', 'dota2_heroes_id', 'kills', 'death', 'assists', 'last_hits', 'denies', 'gold', 'level', 'gold_per_min', 'xp_per_min', 'respawn_timer', 'position_x', 'position_y', 'net_worth')
+                            ->with([
+                                'member' => function($member) {
+                                    $member->select('id', 'name');
+                                },
+                                'hero' => function($hero) {
+                                    $hero->select('id', 'name', 'picture_file_name');
+                                }
+                            ])
+                            ->orderBy('player_order', 'ASC');
+                    }
+                ])
+                ->where('side', 1)
+                ->first();
+            foreach ($radiant->dota2_live_match_players as $dota2_live_match_player) {
+                $dota2_live_match_player->items = $dota2_live_match_player->items()
+                    ->select('dota2_items.id AS id', 'dota2_items.name AS name', 'dota2_items.picture_file_name AS picture_file_name', 'dota2_live_matches_players_items.item_order AS item_order')
+                    ->orderBy('dota2_live_matches_players_items.item_order', 'ASC')
+                    ->get();
+            }
+
+            $dire = $dota2_live_match->dota2_live_match_teams()
+                ->select('id', 'dota2_teams_name', 'tournaments_registrations_id', 'dota2_live_matches_id', 'series_wins', 'score', 'tower_state', 'barracks_state', 'side', 'matches_result')
+                ->with([
+                    'tournament_registration' => function($tournament_registration) {
+                        $tournament_registration->select('id', 'teams_id')
+                            ->with([
+                                'team' => function($team) {
+                                    $team->select('id', 'name', 'picture_file_name');
+                                }
+                            ]);
+                    },
+                    'heroes_pick' => function($heroes_pick) {
+                        $heroes_pick->select('dota2_heroes.id AS id', 'dota2_heroes.name AS name', 'dota2_heroes.picture_file_name AS picture_file_name', 'dota2_live_matches_teams_picks.pick_order AS pick_order');
+                    },
+                    'heroes_ban' => function($heroes_ban) {
+                        $heroes_ban->select('dota2_heroes.id AS id', 'dota2_heroes.name AS name', 'dota2_heroes.picture_file_name AS picture_file_name', 'dota2_live_matches_teams_bans.ban_order AS ban_order');
+                    },
+                    'dota2_live_match_players' => function($dota2_live_match_players) {
+                        $dota2_live_match_players->select('id', 'name', 'members_id', 'dota2_live_matches_teams_id', 'dota2_heroes_id', 'kills', 'death', 'assists', 'last_hits', 'denies', 'gold', 'level', 'gold_per_min', 'xp_per_min', 'respawn_timer', 'position_x', 'position_y', 'net_worth')
+                            ->with([
+                                'member' => function($member) {
+                                    $member->select('id', 'name');
+                                },
+                                'hero' => function($hero) {
+                                    $hero->select('id', 'name', 'picture_file_name');
+                                }
+                            ])
+                            ->orderBy('player_order', 'ASC');
+                    }
+                ])
+                ->where('side', 2)
+                ->first();
+            foreach ($dire->dota2_live_match_players as $dota2_live_match_player) {
+                $dota2_live_match_player->items = $dota2_live_match_player->items()
+                    ->select('dota2_items.id AS id', 'dota2_items.name AS name', 'dota2_items.picture_file_name AS picture_file_name', 'dota2_live_matches_players_items.item_order AS item_order')
+                    ->orderBy('dota2_live_matches_players_items.item_order', 'ASC')
+                    ->get();
+            }
+
+            return response()->json(['code' => 200, 'message' => ['Get Dota 2 Match success.'], 'dota2_live_match' => $dota2_live_match, 'radiant' => $radiant, 'dire' => $dire]);
+        } else {
+            return response()->json(['code' => 404, 'message' => ['Dota 2 Match ID is invalid.']]);
+        }
+    }
+
+    public function getComment($id, Request $request)
+    {
+        $dota2_live_match = Dota2LiveMatch::find($id);
+        if ($dota2_live_match) {
+            $dota2_live_match_comments = $dota2_live_match->comments()
+                ->with([
+                    'member' => function($member) {
+                        $member->select('id', 'name', 'picture_file_name');
+                    }
+                ])
+                ->orderBy('created_at', 'DESC')
+                ->get();
+
+            return response()->json(['code' => 200, 'message' => ['Get Dota 2 Match success.'], 'dota2_live_match_comments' => $dota2_live_match_comments]);
+        } else {
+            return response()->json(['code' => 404, 'message' => ['Dota 2 Match ID is invalid.']]);
+        }
+    }
+
     public function postComment($id, Request $request)
     {
         $dota2_live_match = Dota2LiveMatch::find($id);

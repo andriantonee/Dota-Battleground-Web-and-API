@@ -472,8 +472,8 @@ class Dota2Controller extends BaseController
          * Socket Testing (Firing Broadcast)
          *
          */
-        // $dota2_live_match = Dota2LiveMatch::find('3230425517');
-        // event(new Dota2LiveMatchUpdated($dota2_live_match));
+        // $dota2_live_match = Dota2LiveMatch::find('3234831963');
+        // event(new Dota2LiveMatchUpdated($dota2_live_match, [], [], [], []));
         // event(new Dota2LiveMatchPlayersItemsUpdated($dota2_live_match));
         // event(new Dota2LiveMatchRadiantPlayersUpdated($dota2_live_match, []));
         // event(new Dota2LiveMatchDirePlayersUpdated($dota2_live_match, []));
