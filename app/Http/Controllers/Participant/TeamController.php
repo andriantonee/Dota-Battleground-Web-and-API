@@ -143,8 +143,8 @@ class TeamController extends BaseController
         if ($team) {
             $inTeam = false;
             $isTeamLeader = false;
-            if ($request->input('participant_model')) {
-                $member_team = Member::find($request->input('participant_model')->id)->teams()->withPivot('members_privilege')->find($id);
+            if ($member_id) {
+                $member_team = Member::find($member_id)->teams()->withPivot('members_privilege')->find($id);
                 if ($member_team) {
                     $inTeam = true;
                     if ($member_team->pivot->members_privilege == 2) {
