@@ -71,9 +71,10 @@ class TeamController extends BaseController
                     'id' => $team->id,
                     'name' => $team->name,
                     'image' => $team->picture_file_name ? asset('storage/team/'.$team->picture_file_name) : asset('img/default-group.png'),
-                    'in_team' => count($team->details) > 0 ? 1 : 0,
-                    'has_invitation' => count($team->invitation_list) > 0 ? 1 : 0,
-                    'number_of_members' => $team->details_count
+                    'in_team' => count($team->details) > 0 ? true : false,
+                    'has_invitation' => count($team->invitation_list) > 0 ? true : false,
+                    'number_of_members' => $team->details_count,
+                    'join_code' => $team->join_password
                 ];
             }
 
@@ -107,8 +108,21 @@ class TeamController extends BaseController
     public function show($id, Request $request)
     {
         $member_id = null;
-        if ($request->input('participant_model')) {
-            $member_id = $request->input('participant_model')->id;
+        if ($request->segment(1) == 'api') {
+            if ($request->bearerToken()) {
+                $accessTokenID = (new Parser)->parse($request->bearerToken())->getHeader('jti');
+                $access = DB::table('oauth_access_tokens')
+                    ->where('id', $accessTokenID)
+                    ->where('expires_at', '>', date('Y-m-d H:i:s'))
+                    ->first();
+                if ($access) {
+                    $member_id = $access->user_id;
+                }
+            }
+        } else {
+            if ($request->input('participant_model')) {
+                $member_id = $request->input('participant_model')->id;
+            }
         }
 
         $team = Team::select('id', 'name', 'picture_file_name', 'join_password', 'created_at')
@@ -214,9 +228,37 @@ class TeamController extends BaseController
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
-            return view('participant.team-detail', compact('team', 'inTeam', 'isTeamLeader'));
+            if ($request->segment(1) == 'api') {
+                $team_json = [
+                    'id' => $team->id,
+                    'name' => $team->name,
+                    'image' => $team->picture_file_name ? asset('storage/team/'.$team->picture_file_name) : asset('img/default-group.png'),
+                    'join_code' => $team->join_password
+                ];
+                
+                $team_details_json = [];
+                foreach ($team->details as $key_team_detail => $team_detail) {
+                    $team_details_json[$key_team_detail] = [
+                        'id' => $team_detail->id,
+                        'name' => $team_detail->name,
+                        'steam32_id' => $team_detail->steam32_id ? $team_detail->steam32_id : '-',
+                        'image' => $team_detail->picture_file_name ? asset('storage/member/'.$team_detail->picture_file_name) : asset('img/default-profile.jpg'),
+                        'status' => ($team_detail->members_privilege == 2 ? 'Captain' : ''),
+                        'joined_at' => strtotime($team_detail->created_at)
+                    ];
+                }
+                
+                return response()->json(['code' => 200, 'message' => ['Get Team Detail success.'], 'team' => $team_json, 'in_team' => $inTeam, 'is_leader' => $isTeamLeader, 'teams_details' => $team_details_json]);
+            } else {
+                return view('participant.team-detail', compact('team', 'inTeam', 'isTeamLeader'));
+            }
         } else {
-            abort(404);
+            if ($request->segment(1) == 'api') {
+                return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
+            }
+            else {
+                abort(404);
+            }
         }
     }
 
@@ -247,7 +289,7 @@ class TeamController extends BaseController
                 $team_details_json[$key_team_detail] = [
                     'id' => $team_detail->id,
                     'name' => $team_detail->name,
-                    'steam32_id' => $team_detail->steam32_id,
+                    'steam32_id' => $team_detail->steam32_id ? $team_detail->steam32_id : '-',
                     'image' => $team_detail->picture_file_name ? asset('storage/member/'.$team_detail->picture_file_name) : asset('img/default-profile.jpg'),
                     'status' => ($team_detail->members_privilege == 2 ? 'Captain' : ''),
                     'joined_at' => strtotime($team_detail->created_at)

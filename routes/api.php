@@ -19,6 +19,7 @@ Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function
     Route::get('/tournament', 'TournamentController@index');
     Route::get('/tournament/{id}/detail', 'TournamentController@getTournamentDetail');
     Route::get('/team', 'TeamController@index');
+    Route::get('/team/{id}', 'TeamController@show');
     Route::get('/team/search', 'TeamController@searchTeam');
     Route::get('/dota-2/match/{id}', 'Dota2MatchController@showAPI');
     Route::get('/dota-2/match/{id}/comment', 'Dota2MatchController@getComment');
