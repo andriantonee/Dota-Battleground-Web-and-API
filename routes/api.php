@@ -73,6 +73,7 @@ Route::group(['prefix' => 'organizer', 'namespace' => 'Organizer'], function() {
         Route::put('/tournament/{id}/start', 'TournamentController@start');
         Route::put('/tournament/{id}/end', 'TournamentController@end');
         Route::put('/tournament/{id}/finalize', 'TournamentController@finalize');
+        Route::get('/match/{id}/schedule', 'MatchController@getSchedule');
         Route::put('/match/{id}/schedule', 'MatchController@updateSchedule');
         Route::put('/match/{id}/score', 'MatchController@updateScore');
         Route::get('/match/{id}/team-attendance', 'MatchController@getMatchTeamAttendance');

@@ -1061,6 +1061,10 @@
 @section('script')
     <script src="{{ asset('vendor/moment/min/moment.min.js') }}"></script>
     <script src="{{ asset('vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script type="text/javascript">
+        var minDateSchedule = moment("{{ $tournament->start_date." 00:00:00" }}", "YYYY-MM-DD HH:mm:ss");
+        var maxDateSchedule = moment("{{ $tournament->end_date." 23:59:59" }}", "YYYY-MM-DD HH:mm:ss");
+    </script>
     <script src="{{ asset('js/organizer/tournament-detail.js') }}"></script>
     <script src="{{ asset('js/organizer/league-id-tooltip.js') }}"></script>
 @endsection

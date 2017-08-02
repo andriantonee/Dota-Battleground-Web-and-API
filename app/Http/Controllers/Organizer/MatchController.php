@@ -13,6 +13,35 @@ use Illuminate\Http\Request;
 
 class MatchController extends BaseController
 {
+    public function getSchedule($id, Request $request)
+    {
+        $match = Match::find($id);
+        $organizer = $request->user();
+        if ($match) {
+            $tournament = $match->tournament;
+            if ($tournament->owner()->find($organizer->id)) {
+                // Continue
+            } else {
+                return response()->json(['code' => 404, 'message' => ['Member is not an owner of this Tournament']]);
+            }
+        } else {
+            return response()->json(['code' => 404, 'message' => ['Match ID is invalid.']]);
+        }
+
+        $match_childs_count = $match->childs()->count('*');
+        if ($match_childs_count > 0) {
+            $match_childs_scheduled_set_count = $match->childs()->whereNotNull('scheduled_time')->count('*');
+            if ($match_childs_scheduled_set_count > 0) {
+                $min_scheduled_time = $match->childs()->max('scheduled_time');
+                return response()->json(['code' => 200, 'message' => ['Get Minimum Scheduled Time success.'], 'minDateTime' => date('Y-m-d H:i:s', strtotime($min_scheduled_time))]);
+            } else {
+                return response()->json(['code' => 200, 'message' => ['Get Minimum Scheduled Time success.'], 'minDateTime' => date('Y-m-d H:i:s', strtotime($tournament->start_date))]);
+            }
+        } else {
+            return response()->json(['code' => 200, 'message' => ['Get Minimum Scheduled Time success.'], 'minDateTime' => date('Y-m-d H:i:s', strtotime($tournament->start_date))]);
+        }
+    }
+
     public function updateSchedule($id, Request $request)
     {
         $match = Match::find($id);
@@ -56,6 +85,10 @@ class MatchController extends BaseController
                 if (date('Y-m-d H:i:s', strtotime($tournament->start_date)) > date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $data['scheduled_time'])))) {
                     return response()->json(['code' => 400, 'message' => ['Match Scheduled Time must be greater or equal '.date('d/m/Y H:i:s', strtotime($tournament->start_date)).'.']]);
                 }
+            }
+
+            if (date('Y-m-d 23:59:59', strtotime($tournament->end_date)) < date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $data['scheduled_time'])))) {
+                return response()->json(['code' => 400, 'message' => ['Match Scheduled Time must not be greater than '.date('d/m/Y 23:59:59', strtotime($tournament->end_date))]]);
             }
 
             DB::beginTransaction();

@@ -1,7 +1,9 @@
 $(document).ready(function(e) {
     $("#schedule-date-and-time-datetimepicker").datetimepicker({
         "format" : "DD/MM/YYYY HH:mm:ss",
-        "sideBySide" : true
+        "sideBySide" : true,
+        "minDate" : minDateSchedule,
+        "maxDate" : maxDateSchedule
     });
 
     $("#show-identification-modal").on("shown.bs.modal", function(e) {
@@ -325,6 +327,28 @@ $(document).ready(function(e) {
         } else {
             scheduled_time = "";
         }
+
+        $.ajax({
+            "type" : "GET",
+            "url" : api_url + "match/" + match_id + "/schedule",
+            "headers" : {
+                "Accept" : "application/json",
+                "Authorization" : "Bearer " + document.cookie.replace(/(?:(?:^|.*;\s*)organizer_token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
+            }
+        })
+            .done(function(data) {
+                if (data.code == 200) {
+                    $("#schedule-date-and-time-datetimepicker").datetimepicker("destroy");
+                    minDateSchedule = moment(data.minDateTime, "YYYY-MM-DD HH:mm:ss");
+                    $("#schedule-date-and-time-datetimepicker").datetimepicker({
+                        "format" : "DD/MM/YYYY HH:mm:ss",
+                        "sideBySide" : true,
+                        "minDate" : minDateSchedule,
+                        "maxDate" : maxDateSchedule
+                    });
+                    $("#schedule-date-and-time").val(scheduled_time).trigger("change");
+                }
+            });
 
         $("#schedule-round-match-title").html(round + " - Match " + match);
         $("#schedule-versus-title").html(player_1 + " VS " + player_2);
