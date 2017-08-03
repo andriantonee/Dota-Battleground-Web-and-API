@@ -18,6 +18,7 @@ class CreateTeamsTable extends Migration
             $table->string('name', 255);
             $table->string('picture_file_name', 255)->nullable();
             $table->string('join_password', 255)->nullable();
+            $table->unsignedTinyInteger('status')->default('1');
             $table->timestamps();
 
             $table->unique('name');

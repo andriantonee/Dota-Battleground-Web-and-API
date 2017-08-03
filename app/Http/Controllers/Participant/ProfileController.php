@@ -23,6 +23,7 @@ class ProfileController extends BaseController
             ->select('teams.id', 'teams.name', 'teams.picture_file_name')
             ->orderBy('teams.created_at', 'ASC')
             ->withCount('details')
+            ->where('status', 1)
             ->get();
         $schedules = $member->tournaments_registrations()
             ->select('tournaments_registrations.id', 'tournaments_registrations.tournaments_id', 'tournaments_registrations.teams_id', 'tournaments_registrations.created_at')

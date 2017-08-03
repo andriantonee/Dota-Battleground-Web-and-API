@@ -128,6 +128,10 @@
                             <a role="button" class="btn btn-default" data-toggle="modal" data-target="#invite-members-modal" style="position: absolute;right: 0px;top: 40px;width: 148px;">
                                 <i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;Invite Members
                             </a>
+                        @else
+                            <button class="btn btn-default btn-custom btn-reject" id="btn-leave-team" data-team-name="{{ $team->name }}" style="font-size: 20px;position: absolute;right: 0;top: 10px;">
+                                <i class="glyphicon glyphicon-log-out" style="color:#fc5d5d"></i>&nbsp;&nbsp;Leave
+                            </button>
                         @endif
                     @else
                         @if ($participant)
@@ -510,6 +514,11 @@
                             </div>
                         </form>
                     </div>
+                    <div class="modal-footer" style="margin: 0 10px;text-align: center;">
+                        <button class="btn btn-default btn-custom btn-reject" id="btn-disband-team" data-team-name="{{ $team->name }}" style="font-size: 20px;">
+                            <i class="glyphicon glyphicon-remove" style="color:#fc5d5d"></i>&nbsp;&nbsp;Disband
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -552,6 +561,8 @@
     @if ($inTeam)
         @if ($isTeamLeader)
             <script src="{{ asset('js/participant/team-detail.js') }}"></script>
+        @else
+            <script src="{{ asset('js/participant/team-detail-member.js') }}"></script>
         @endif
     @else
         @if ($participant)

@@ -49,6 +49,8 @@ Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function
         Route::post('/team/{id}/accept-invitation', 'TeamController@acceptInvitation');
         Route::post('/team/{id}/reject-invitation', 'TeamController@rejectInvitation');
         Route::delete('/team/{id}/kick-member/{member_id}', 'TeamController@kickMember');
+        Route::post('/team/{id}/leave', 'TeamController@leave');
+        Route::delete('/team/{id}/disband', 'TeamController@disband');
         Route::get('/team/{id}/member', 'TeamController@member');
         Route::get('/tournament/{id}/register', 'TournamentController@registerAPIIndex');
         Route::post('/tournament/{id}/register', 'TournamentController@register');

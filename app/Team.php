@@ -63,6 +63,7 @@ class Team extends Model
                         });
                 }
             ])
+            ->where('teams.status', 1)
             ->orderBy('teams.created_at', 'DESC');
         if ($search_keyword) {
             $teams = $teams->where('name', 'LIKE', '%'.$search_keyword.'%');
@@ -95,6 +96,7 @@ class Team extends Model
             ->whereDoesntHave('tournaments', function($tournaments) use($tournament_id) {
                 $tournaments->where('tournaments_id', $tournament_id);
             })
+            ->where('status', 1)
             ->orderBy('name', 'ASC')
             ->get();
 

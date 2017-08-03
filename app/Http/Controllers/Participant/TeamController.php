@@ -32,6 +32,7 @@ class TeamController extends BaseController
                         });
                 }
             ])
+            ->where('teams.status', 1)
             ->orderBy('teams.created_at', 'DESC');
         if ($search_keyword) {
             $teams = $teams->where('name', 'LIKE', '%'.$search_keyword.'%');
@@ -89,8 +90,9 @@ class TeamController extends BaseController
         $member = $request->user();
         $teams = $member->teams()
             ->select('teams.id', 'teams.name', 'teams.picture_file_name')
-            ->orderBy('teams.created_at', 'ASC')
             ->withCount('details')
+            ->where('teams.status', 1)
+            ->orderBy('teams.created_at', 'ASC')
             ->get();
         $teams_json = [];
         foreach ($teams as $key_team => $team) {
@@ -139,6 +141,7 @@ class TeamController extends BaseController
                         });
                 }
             ])
+            ->where('status', 1)
             ->find($id);
         if ($team) {
             $inTeam = false;
@@ -266,37 +269,41 @@ class TeamController extends BaseController
     {
         $member = $request->user();
         $team = $member->teams()
-            ->select('teams.id', 'teams.name', 'teams.picture_file_name', 'teams.join_password')
+            ->select('teams.id', 'teams.name', 'teams.picture_file_name', 'teams.join_password', 'teams.status')
             ->find($id);
         if ($team) {
-            $is_leader_json = false;
-            if ($member->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2) {
-                $is_leader_json = true;
-            }
-            $team_json = [
-                'id' => $team->id,
-                'name' => $team->name,
-                'image' => $team->picture_file_name ? asset('storage/team/'.$team->picture_file_name) : asset('img/default-group.png'),
-                'join_code' => $team->join_password
-            ];
-            $teams_details = $team->details()
-                ->select('members.id', 'members.name', 'members.steam32_id', 'members.picture_file_name', 'teams_details.members_privilege', 'teams_details.created_at')
-                ->orderBy('teams_details.members_privilege', 'DESC')
-                ->orderBy('teams_details.created_at', 'ASC')
-                ->get();
-            $team_details_json = [];
-            foreach ($teams_details as $key_team_detail => $team_detail) {
-                $team_details_json[$key_team_detail] = [
-                    'id' => $team_detail->id,
-                    'name' => $team_detail->name,
-                    'steam32_id' => $team_detail->steam32_id ? $team_detail->steam32_id : '-',
-                    'image' => $team_detail->picture_file_name ? asset('storage/member/'.$team_detail->picture_file_name) : asset('img/default-profile.jpg'),
-                    'status' => ($team_detail->members_privilege == 2 ? 'Captain' : ''),
-                    'joined_at' => strtotime($team_detail->created_at)
+            if ($team->status == 1) {
+                $is_leader_json = false;
+                if ($member->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2) {
+                    $is_leader_json = true;
+                }
+                $team_json = [
+                    'id' => $team->id,
+                    'name' => $team->name,
+                    'image' => $team->picture_file_name ? asset('storage/team/'.$team->picture_file_name) : asset('img/default-group.png'),
+                    'join_code' => $team->join_password
                 ];
-            }
+                $teams_details = $team->details()
+                    ->select('members.id', 'members.name', 'members.steam32_id', 'members.picture_file_name', 'teams_details.members_privilege', 'teams_details.created_at')
+                    ->orderBy('teams_details.members_privilege', 'DESC')
+                    ->orderBy('teams_details.created_at', 'ASC')
+                    ->get();
+                $team_details_json = [];
+                foreach ($teams_details as $key_team_detail => $team_detail) {
+                    $team_details_json[$key_team_detail] = [
+                        'id' => $team_detail->id,
+                        'name' => $team_detail->name,
+                        'steam32_id' => $team_detail->steam32_id ? $team_detail->steam32_id : '-',
+                        'image' => $team_detail->picture_file_name ? asset('storage/member/'.$team_detail->picture_file_name) : asset('img/default-profile.jpg'),
+                        'status' => ($team_detail->members_privilege == 2 ? 'Captain' : ''),
+                        'joined_at' => strtotime($team_detail->created_at)
+                    ];
+                }
 
-            return response()->json(['code' => 200, 'message' => ['Get Team Detail success.'], 'team' => $team_json, 'is_leader' => $is_leader_json, 'teams_details' => $team_details_json]);
+                return response()->json(['code' => 200, 'message' => ['Get Team Detail success.'], 'team' => $team_json, 'is_leader' => $is_leader_json, 'teams_details' => $team_details_json]);
+            } else {
+                return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
+            }
         } else {
             return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
         }
@@ -357,11 +364,15 @@ class TeamController extends BaseController
     {
         $team = Team::find($id);
         if ($team) {
-            $isTeamLeader = $request->user()->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
-            if ($isTeamLeader) {
-                // Continue
+            if ($team->status == 1) {
+                $isTeamLeader = $request->user()->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
+                if ($isTeamLeader) {
+                    // Continue
+                } else {
+                    return response()->json(['code' => 403, 'message' => ['Member is not a leader of the team.']]);
+                }
             } else {
-                return response()->json(['code' => 403, 'message' => ['Member is not a leader of the team.']]);
+                return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
             }
         } else {
             return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
@@ -410,11 +421,15 @@ class TeamController extends BaseController
     {
         $team = Team::find($id);
         if ($team) {
-            $isTeamLeader = $request->user()->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
-            if ($isTeamLeader) {
-                // Continue
+            if ($team->status == 1) {
+                $isTeamLeader = $request->user()->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
+                if ($isTeamLeader) {
+                    // Continue
+                } else {
+                    return response()->json(['code' => 403, 'message' => ['Member is not a leader of the team.']]);
+                }
             } else {
-                return response()->json(['code' => 403, 'message' => ['Member is not a leader of the team.']]);
+                return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
             }
         } else {
             return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
@@ -442,11 +457,15 @@ class TeamController extends BaseController
     {
         $team = Team::find($id);
         if ($team) {
-            $isTeamLeader = $request->user()->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
-            if ($isTeamLeader) {
-                // Continue
+            if ($team->status == 1) {
+                $isTeamLeader = $request->user()->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
+                if ($isTeamLeader) {
+                    // Continue
+                } else {
+                    return response()->json(['code' => 403, 'message' => ['Member is not a leader of the team.']]);
+                }
             } else {
-                return response()->json(['code' => 403, 'message' => ['Member is not a leader of the team.']]);
+                return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
             }
         } else {
             return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
@@ -467,9 +486,13 @@ class TeamController extends BaseController
         $member = $request->user();
 
         if ($team) {
-            $inTeam = $member->teams()->find($id) ? true : false;
-            if ($inTeam) {
-                return response()->json(['code' => 400, 'message' => ['You are already part of the team.']]);
+            if ($team->status == 1) {
+                $inTeam = $member->teams()->find($id) ? true : false;
+                if ($inTeam) {
+                    return response()->json(['code' => 400, 'message' => ['You are already part of the team.']]);
+                }
+            } else {
+                return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
             }
         } else {
             return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
@@ -515,11 +538,15 @@ class TeamController extends BaseController
     {
         $team = Team::find($id);
         if ($team) {
-            $isTeamLeader = $request->user()->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
-            if ($isTeamLeader) {
-                // Continue
+            if ($team->status == 1) {
+                $isTeamLeader = $request->user()->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
+                if ($isTeamLeader) {
+                    // Continue
+                } else {
+                    return response()->json(['code' => 403, 'message' => ['Member is not a leader of the team.']]);
+                }
             } else {
-                return response()->json(['code' => 403, 'message' => ['Member is not a leader of the team.']]);
+                return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
             }
         } else {
             return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
@@ -564,11 +591,15 @@ class TeamController extends BaseController
     {
         $team = Team::find($id);
         if ($team) {
-            $isTeamLeader = $request->user()->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
-            if ($isTeamLeader) {
-                // Continue
+            if ($team->status == 1) {
+                $isTeamLeader = $request->user()->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
+                if ($isTeamLeader) {
+                    // Continue
+                } else {
+                    return response()->json(['code' => 403, 'message' => ['Member is not a leader of the team.']]);
+                }
             } else {
-                return response()->json(['code' => 403, 'message' => ['Member is not a leader of the team.']]);
+                return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
             }
         } else {
             return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
@@ -624,21 +655,25 @@ class TeamController extends BaseController
         $member = $request->user();
 
         if ($team) {
-            $inTeam = $member->teams()->find($id) ? true : false;
-            if (!$inTeam) {
-                $is_exists_in_team_invitation_list = $team->invitation_list()
-                    ->whereHas('parent', function($parent) use($member) {
-                        $parent->where('notifications.members_id', $member->id);
-                    })
-                    ->where('invitation_status', 1)
-                    ->exists();
-                if ($is_exists_in_team_invitation_list) {
-                    // Continue
+            if ($team->status == 1) {
+                $inTeam = $member->teams()->find($id) ? true : false;
+                if (!$inTeam) {
+                    $is_exists_in_team_invitation_list = $team->invitation_list()
+                        ->whereHas('parent', function($parent) use($member) {
+                            $parent->where('notifications.members_id', $member->id);
+                        })
+                        ->where('invitation_status', 1)
+                        ->exists();
+                    if ($is_exists_in_team_invitation_list) {
+                        // Continue
+                    } else {
+                        return response()->json(['code' => 400, 'message' => ['You don\'t have invitation from this team.']]);
+                    }
                 } else {
-                    return response()->json(['code' => 400, 'message' => ['You don\'t have invitation from this team.']]);
+                    return response()->json(['code' => 400, 'message' => ['You are already part of the team.']]);
                 }
             } else {
-                return response()->json(['code' => 400, 'message' => ['You are already part of the team.']]);
+                return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
             }
         } else {
             return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
@@ -693,16 +728,20 @@ class TeamController extends BaseController
         $member = $request->user();
 
         if ($team) {
-            $is_exists_in_team_invitation_list = $team->invitation_list()
-                ->whereHas('parent', function($parent) use($member) {
-                    $parent->where('notifications.members_id', $member->id);
-                })
-                ->where('invitation_status', 1)
-                ->exists();
-            if ($is_exists_in_team_invitation_list) {
-                // Continue
+            if ($team->status == 1) {
+                $is_exists_in_team_invitation_list = $team->invitation_list()
+                    ->whereHas('parent', function($parent) use($member) {
+                        $parent->where('notifications.members_id', $member->id);
+                    })
+                    ->where('invitation_status', 1)
+                    ->exists();
+                if ($is_exists_in_team_invitation_list) {
+                    // Continue
+                } else {
+                    return response()->json(['code' => 400, 'message' => ['You don\'t have invitation from this team.']]);
+                }
             } else {
-                return response()->json(['code' => 400, 'message' => ['You don\'t have invitation from this team.']]);
+                return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
             }
         } else {
             return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
@@ -743,14 +782,18 @@ class TeamController extends BaseController
         $kicked_member = Member::find($member_id);
 
         if ($team) {
-            $isTeamLeader = $member->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
-            if ($isTeamLeader) {
-                $isKickedMemberTeamLeader = $kicked_member->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
-                if ($isKickedMemberTeamLeader) {
-                    return response()->json(['code' => 400, 'message' => ['Member cannot kick Team Leader out of the team.']]);
+            if ($team->status == 1) {
+                $isTeamLeader = $member->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
+                if ($isTeamLeader) {
+                    $isKickedMemberTeamLeader = $kicked_member->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
+                    if ($isKickedMemberTeamLeader) {
+                        return response()->json(['code' => 400, 'message' => ['Member cannot kick Team Leader out of the team.']]);
+                    }
+                } else {
+                    return response()->json(['code' => 403, 'message' => ['Member is not a leader of the team.']]);
                 }
             } else {
-                return response()->json(['code' => 403, 'message' => ['Member is not a leader of the team.']]);
+                return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
             }
         } else {
             return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
@@ -762,6 +805,82 @@ class TeamController extends BaseController
 
             DB::commit();
             return response()->json(['code' => 200, 'message' => [$kicked_member->name.' is no longer part of the team.']]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
+        }
+    }
+
+    public function leave($id, Request $request)
+    {
+        $team = Team::find($id);
+        $member = $request->user();
+
+        if ($team) {
+            if ($team->status == 1) {
+                $isPartOfTeam = $member->teams()->select('teams.*', 'teams_details.members_privilege')->find($id);
+                if ($isPartOfTeam) {
+                    if ($isPartOfTeam->members_privilege == 1) {
+                        // Continue
+                    } else {
+                        return response()->json(['code' => 400, 'message' => ['Only Member can use this action.']]);
+                    }
+                } else {
+                    return response()->json(['code' => 403, 'message' => ['Member is not a part of the team.']]);
+                }
+            } else {
+                return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
+            }
+        } else {
+            return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
+        }
+
+        DB::beginTransaction();
+        try {
+            $team->details()->detach($member->id);
+
+            DB::commit();
+            return response()->json(['code' => 200, 'message' => ['Member has leave this Team successfully.']]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
+        }
+    }
+
+    public function disband($id, Request $request)
+    {
+        $team = Team::find($id);
+        $member = $request->user();
+
+        if ($team) {
+            if ($team->status == 1) {
+                $isPartOfTeam = $member->teams()->select('teams.*', 'teams_details.members_privilege')->find($id);
+                if ($isPartOfTeam) {
+                    if ($isPartOfTeam->members_privilege == 2) {
+                        // Continue
+                    } else {
+                        return response()->json(['code' => 400, 'message' => ['Only Leader can use this action.']]);
+                    }
+                } else {
+                    return response()->json(['code' => 403, 'message' => ['Member is not a part of the team.']]);
+                }
+            } else {
+                return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
+            }
+        } else {
+            return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
+        }
+
+        DB::beginTransaction();
+        try {
+            $listMemberGotKicked = $team->details()->where('members.id', '<>', $member->id)->pluck('members.id');
+            $team->details()->detach($listMemberGotKicked->toArray());
+            
+            $team->status = 0;
+            $team->save();
+
+            DB::commit();
+            return response()->json(['code' => 200, 'message' => ['Team has been successfully Disband.']]);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
@@ -817,11 +936,15 @@ class TeamController extends BaseController
         $member = $request->user();
 
         if ($team) {
-            $isTeamLeader = $member->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
-            if ($isTeamLeader) {
-                // Continue
+            if ($team->status == 1) {
+                $isTeamLeader = $member->teams()->withPivot('members_privilege')->find($id)->pivot->members_privilege == 2;
+                if ($isTeamLeader) {
+                    // Continue
+                } else {
+                    return response()->json(['code' => 403, 'message' => ['Member is not a leader of the team.']]);
+                }
             } else {
-                return response()->json(['code' => 403, 'message' => ['Member is not a leader of the team.']]);
+                return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);
             }
         } else {
             return response()->json(['code' => 404, 'message' => ['Team ID is invalid.']]);

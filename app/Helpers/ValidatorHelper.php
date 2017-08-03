@@ -502,30 +502,34 @@ class ValidatorHelper
         } else {
             $team = Team::find($data['team']);
             if ($team) {
-                $team_leader = $team->details()->withPivot('members_privilege')->find($leader_id);
-                if ($team_leader) {
-                    if ($team_leader->pivot->members_privilege == 2) {
-                        foreach ($data['members'] as $member_id) {
-                            $team_member = $team->details()->find($member_id);
-                            if ($team_member) {
-                                if ($team_member->steam32_id) {
-                                    if ($must_have_identifications) {
-                                        if (!$team_member->identifications()->exists()) {
-                                            return ['Each member must upload an identity card.'];
+                if ($team->status == 1) {
+                    $team_leader = $team->details()->withPivot('members_privilege')->find($leader_id);
+                    if ($team_leader) {
+                        if ($team_leader->pivot->members_privilege == 2) {
+                            foreach ($data['members'] as $member_id) {
+                                $team_member = $team->details()->find($member_id);
+                                if ($team_member) {
+                                    if ($team_member->steam32_id) {
+                                        if ($must_have_identifications) {
+                                            if (!$team_member->identifications()->exists()) {
+                                                return ['Each member must upload an identity card.'];
+                                            }
                                         }
+                                    } else {
+                                        return ['Each member must assign their Steam ID 32-bit.'];
                                     }
                                 } else {
-                                    return ['Each member must assign their Steam ID 32-bit.'];
+                                    return ['Each member must be a part of the team.'];
                                 }
-                            } else {
-                                return ['Each member must be a part of the team.'];
                             }
+                        } else {
+                            return ['You are not a team leader of this team.'];
                         }
                     } else {
-                        return ['You are not a team leader of this team.'];
+                        return ['You are not a part of this team.'];
                     }
                 } else {
-                    return ['You are not a part of this team.'];
+                    return ['Team ID is invalid.'];
                 }
             } else {
                 return ['Team ID is invalid.'];

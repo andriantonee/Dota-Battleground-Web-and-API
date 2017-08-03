@@ -9,13 +9,11 @@ $(document).ready(function(e) {
             $("#start-date-datetimepicker").datetimepicker("destroy");
             $("#start-date-datetimepicker").datetimepicker({
                 "format" : "DD/MM/YYYY",
-                "sideBySide" : true,
                 "minDate" : minStartDateSchedule
             });
         });
     $("#start-date-datetimepicker").datetimepicker({
         "format" : "DD/MM/YYYY",
-        "sideBySide" : true,
         "minDate" : minStartDateSchedule
     })
         .on("dp.change", function(e) {
@@ -23,13 +21,11 @@ $(document).ready(function(e) {
             $("#end-date-datetimepicker").datetimepicker("destroy");
             $("#end-date-datetimepicker").datetimepicker({
                 "format" : "DD/MM/YYYY",
-                "sideBySide" : true,
                 "minDate" : minEndDateSchedule
             });
         });
     $("#end-date-datetimepicker").datetimepicker({
         "format" : "DD/MM/YYYY",
-        "sideBySide" : true,
         "minDate" : minEndDateSchedule
     });
 
