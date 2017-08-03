@@ -448,6 +448,37 @@ class ValidatorHelper
         }
     }
 
+    public static function validateTournamentUpdateRequestAdmin(array $data, Tournament $tournament)
+    {
+        $rule = [
+            'start_date' => 'required|string|date_format:d/m/Y',
+            'end_date' => 'required|string|date_format:d/m/Y'
+        ];
+        $message = [
+            'start_date.required' => 'Start Date is required.',
+            'start_date.string' => 'Start Date must be a string.',
+            'start_date.date_format' => 'Start Date does not match the format :format.',
+            'end_date.required' => 'End Date is required.',
+            'end_date.string' => 'End Date must be a string.',
+            'end_date.date_format' => 'End Date does not match the format :format.'
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            if (date('Y-m-d 00:00:00', strtotime(str_replace('/', '-', $data['start_date']))) < date('Y-m-d 00:00:00', strtotime($tournament->registration_closed))) {
+                return ['Start Date must greater or equal to Registration Closed Date.'];
+            }
+
+            if (date('Y-m-d 00:00:00', strtotime(str_replace('/', '-', $data['end_date']))) <= date('Y-m-d 23:59:59', strtotime(str_replace('/', '-', $data['start_date'])))) {
+                return ['End Date must greater to Start Date.'];
+            }
+
+            return null;
+        }
+    }
+
     public static function validateTournamentRegisterRequest(array $data, $leader_id, $tournament_id, $must_have_identifications, $team_size)
     {
         $rule = [

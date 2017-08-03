@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\GuzzleHelper;
+use App\Helpers\ValidatorHelper;
 use App\Tournament;
 use App\TournamentApproval;
 use App\TournamentRegistrationConfirmation;
@@ -48,6 +49,37 @@ class TournamentController extends BaseController
             return view('admin.verify-tournament-detail', compact('tournament'));
         } else {
             abort(404);
+        }
+    }
+
+    public function update($id, Request $request)
+    {
+        $member = $request->user();
+        $tournament = Tournament::find($id);
+        if ($tournament) {
+            $data = [
+                'start_date' => $request->input('start_date'),
+                'end_date' => $request->input('end_date')
+            ];
+
+            if (!$validatorResponse = ValidatorHelper::validateTournamentUpdateRequestAdmin($data, $tournament)) {
+                DB::beginTransaction();
+                try {
+                    $tournament->start_date = date('Y-m-d', strtotime(str_replace('/', '-', $data['start_date'])));
+                    $tournament->end_date = date('Y-m-d', strtotime(str_replace('/', '-', $data['end_date'])));
+                    $tournament->save();
+
+                    DB::commit();
+                    return response()->json(['code' => 200, 'message' => ['Tournament has been updated.']]);
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
+                }
+            } else {
+                return response()->json(['code' => 400, 'message' => $validatorResponse]);
+            }
+        } else {
+            return response()->json(['code' => 404, 'message' => 'Tournament ID is invalid.']);
         }
     }
 

@@ -1,4 +1,75 @@
 $(document).ready(function (e) {
+    $("#start-date-datetimepicker").datetimepicker({
+        "format" : "DD/MM/YYYY",
+        "sideBySide" : true,
+        "minDate" : minStartDateSchedule
+    })
+        .on("dp.change", function(e) {
+            minEndDateSchedule = e.date;
+            $("#end-date-datetimepicker").datetimepicker("destroy");
+            $("#end-date-datetimepicker").datetimepicker({
+                "format" : "DD/MM/YYYY",
+                "sideBySide" : true,
+                "minDate" : minEndDateSchedule
+            });
+        });
+    $("#end-date-datetimepicker").datetimepicker({
+        "format" : "DD/MM/YYYY",
+        "sideBySide" : true,
+        "minDate" : minEndDateSchedule
+    });
+
+    $("#form-tournament-update").on("submit", function(e) {
+        e.preventDefault();
+
+        var data = $(this).serialize();
+        var btn_update = Ladda.create(document.querySelector("#btn-update-tournament"));
+
+        $.ajax({
+            "type" : "POST",
+            "url" : api_url + "tournament/" + location.pathname.split("/")[3] + "/update",
+            "headers" : {
+                "Accept" : "application/json",
+                "Authorization" : "Bearer " + document.cookie.replace(/(?:(?:^|.*;\s*)admin_token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
+            },
+            "data" : data,
+            "beforeSend" : function() {
+                $("#tournament-update-alert-container").parent().hide();
+                $("#tournament-update-alert-container").empty();
+                btn_update.start();
+            }
+        })
+            .done(function(data) {
+                var li_message = "";
+                $.each(data.message, function(index, value) {
+                    li_message += "<li>" + value + "</li>";
+                });
+                if (data.code == 200) {
+                    $("#tournament-update-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-success");
+                } else {
+                    $("#tournament-update-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-danger");
+                }
+                $("#tournament-update-alert-container").parent().show();
+                $("#tournament-update-alert-container").append(li_message);
+
+                $('html, body').animate({
+                    scrollTop: $("#tournament-update-alert-container").parent().offset().top
+                }, 1000);
+            })
+            .fail(function() {
+                $("#tournament-update-alert-container").parent().removeClass("alert-success alert-danger").addClass("alert-danger");
+                $("#tournament-update-alert-container").parent().show();
+                $("#tournament-update-alert-container").append("<li>Something went wrong. Please try again.</li>");
+
+                $('html, body').animate({
+                    scrollTop: $("#tournament-update-alert-container").parent().offset().top
+                }, 1000);
+            })
+            .always(function() {
+                btn_update.stop();
+            });
+    });
+
     $("#btn-approve-tournament").on("click", function(e) {
         e.preventDefault();
 
@@ -27,7 +98,7 @@ $(document).ready(function (e) {
             })
                 .done(function(data) {
                     if (data.code == 200) {
-                        that.parent().parent().remove();
+                        // that.parent().parent().remove();
 
                         swal({
                             "title" : "Approve Tournament Success",
@@ -96,7 +167,7 @@ $(document).ready(function (e) {
             })
                 .done(function(data) {
                     if (data.code == 200) {
-                        that.parent().parent().remove();
+                        // that.parent().parent().remove();
 
                         swal({
                             "title" : "Decline Tournament Success",
@@ -166,7 +237,7 @@ $(document).ready(function (e) {
             })
                 .done(function(data) {
                     if (data.code == 200) {
-                        that.parent().parent().remove();
+                        // that.parent().parent().remove();
 
                         swal({
                             "title" : "Undo " + action + " Tournament Success",

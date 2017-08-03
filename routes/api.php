@@ -89,6 +89,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function() {
     Route::post('/login', 'AuthController@login');
 
     Route::group(['middleware' => ['auth:api']], function() {
+        Route::post('/tournament/{id}/update', 'TournamentController@update');
         Route::post('/tournament/{id}/approve', 'TournamentController@approve');
         Route::post('/tournament/{id}/decline', 'TournamentController@decline');
         Route::post('/tournament/{id}/undo', 'TournamentController@undo');
