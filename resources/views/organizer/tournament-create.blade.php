@@ -208,6 +208,11 @@
 @section('script')
     <script src="{{ asset('vendor/moment/min/moment.min.js') }}"></script>
     <script src="{{ asset('vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script type="text/javascript">
+        var minRegistrationClosedDateScheduled = moment();
+        var minStartDateSchedule = moment().hour(0).minute(0).second(0);
+        var minEndDateSchedule = moment().hour(0).minute(0).second(0);
+    </script>
     <script src="{{ asset('js/organizer/tournament-create.js') }}"></script>
     <script src="{{ asset('js/organizer/league-id-tooltip.js') }}"></script>
 @endsection

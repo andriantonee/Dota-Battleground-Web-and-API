@@ -1,15 +1,36 @@
 $(document).ready(function(e) {
     $("#registration-closed-datetimepicker").datetimepicker({
         "format" : "DD/MM/YYYY HH:mm",
-        "sideBySide" : true
-    });
+        "sideBySide" : true,
+        "minDate" : minRegistrationClosedDateScheduled
+    })
+        .on("dp.change", function(e) {
+            minStartDateSchedule = e.date.hour(0).minute(0).second(0);
+            $("#start-date-datetimepicker").datetimepicker("destroy");
+            $("#start-date-datetimepicker").datetimepicker({
+                "format" : "DD/MM/YYYY",
+                "sideBySide" : true,
+                "minDate" : minStartDateSchedule
+            });
+        });
     $("#start-date-datetimepicker").datetimepicker({
         "format" : "DD/MM/YYYY",
-        "sideBySide" : true
-    });
+        "sideBySide" : true,
+        "minDate" : minStartDateSchedule
+    })
+        .on("dp.change", function(e) {
+            minEndDateSchedule = e.date.hour(0).minute(0).second(0);
+            $("#end-date-datetimepicker").datetimepicker("destroy");
+            $("#end-date-datetimepicker").datetimepicker({
+                "format" : "DD/MM/YYYY",
+                "sideBySide" : true,
+                "minDate" : minEndDateSchedule
+            });
+        });
     $("#end-date-datetimepicker").datetimepicker({
         "format" : "DD/MM/YYYY",
-        "sideBySide" : true
+        "sideBySide" : true,
+        "minDate" : minEndDateSchedule
     });
 
     $("#form-tournament-create").on("submit", function(e) {
