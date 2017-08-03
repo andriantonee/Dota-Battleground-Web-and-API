@@ -795,7 +795,7 @@ class TournamentController extends BaseController
                 }
 
                 DB::commit();
-                return response()->json(['code' => 200, 'message' => ['Payment Confirmation Information has been updated.'], 'file_path' => asset('storage/tournament/confirmation/'.$tournament_registration_confirmation->confirmation_file_name)]);
+                return response()->json(['code' => 200, 'message' => ['Payment Confirmation Information has been updated.'], 'file_path' => asset('storage/tournament/confirmation/'.$tournament_registration_confirmation->confirmation_file_name), 'image_url' => asset('storage/tournament/confirmation/'.$tournament_registration_confirmation->confirmation_file_name)]);
             } catch (\Exception $e) {
                 DB::rollBack();
                 if ($path) {
