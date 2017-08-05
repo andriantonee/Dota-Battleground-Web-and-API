@@ -181,12 +181,12 @@ class TournamentController extends BaseController
             $tournament->matches = $tournament->matches->groupBy('round');
             $tournament->live_matches = $tournament->matches()
                 ->select('id')
-                ->whereHas('dota2_live_matches')
-                // ->whereHas('dota2_live_matches', function($dota2_live_matches) {
-                //     $dota2_live_matches->whereHas('dota2_live_match_teams', function($dota2_live_match_teams) {
-                //         $dota2_live_match_teams->whereNull('matches_result');
-                //     });
-                // })
+                // ->whereHas('dota2_live_matches')
+                ->whereHas('dota2_live_matches', function($dota2_live_matches) {
+                    $dota2_live_matches->whereHas('dota2_live_match_teams', function($dota2_live_match_teams) {
+                        $dota2_live_match_teams->whereNull('matches_result');
+                    });
+                })
                 ->with([
                     'dota2_live_matches' => function($dota2_live_matches) {
                         $dota2_live_matches->select('id', 'matches_id', 'series_type', 'spectators', 'duration')
@@ -207,10 +207,10 @@ class TournamentController extends BaseController
                                         ->orWhere('side', 2)
                                         ->orderBy('side', 'ASC');
                                 }
-                            ]);
-                            // ->whereHas('dota2_live_match_teams', function($dota2_live_match_teams) {
-                            //     $dota2_live_match_teams->whereNull('matches_result');
-                            // });
+                            ])
+                            ->whereHas('dota2_live_match_teams', function($dota2_live_match_teams) {
+                                $dota2_live_match_teams->whereNull('matches_result');
+                            });
                     }
                 ])
                 ->get();
@@ -276,12 +276,12 @@ class TournamentController extends BaseController
             $tournament->matches = $tournament->matches->groupBy('round');
             $tournament->live_matches = $tournament->matches()
                 ->select('id')
-                ->whereHas('dota2_live_matches')
-                // ->whereHas('dota2_live_matches', function($dota2_live_matches) {
-                //     $dota2_live_matches->whereHas('dota2_live_match_teams', function($dota2_live_match_teams) {
-                //         $dota2_live_match_teams->whereNull('matches_result');
-                //     });
-                // })
+                // ->whereHas('dota2_live_matches')
+                ->whereHas('dota2_live_matches', function($dota2_live_matches) {
+                    $dota2_live_matches->whereHas('dota2_live_match_teams', function($dota2_live_match_teams) {
+                        $dota2_live_match_teams->whereNull('matches_result');
+                    });
+                })
                 ->with([
                     'dota2_live_matches' => function($dota2_live_matches) {
                         $dota2_live_matches->select('id', 'matches_id', 'series_type', 'spectators', 'duration')
@@ -302,10 +302,10 @@ class TournamentController extends BaseController
                                         ->orWhere('side', 2)
                                         ->orderBy('side', 'ASC');
                                 }
-                            ]);
-                            // ->whereHas('dota2_live_match_teams', function($dota2_live_match_teams) {
-                            //     $dota2_live_match_teams->whereNull('matches_result');
-                            // });
+                            ])
+                            ->whereHas('dota2_live_match_teams', function($dota2_live_match_teams) {
+                                $dota2_live_match_teams->whereNull('matches_result');
+                            });
                     }
                 ])
                 ->get();
