@@ -385,7 +385,7 @@ class ValidatorHelper
                 return ['Start Date must greater or equal to Registration Closed Date.'];
             }
 
-            if (date('Y-m-d 00:00:00', strtotime(str_replace('/', '-', $data['end_date']))) <= date('Y-m-d 23:59:59', strtotime(str_replace('/', '-', $data['start_date'])))) {
+            if (date('Y-m-d 23:59:59', strtotime(str_replace('/', '-', $data['end_date']))) <= date('Y-m-d 00:00:00', strtotime(str_replace('/', '-', $data['start_date'])))) {
                 return ['End Date must greater to Start Date.'];
             }
 
@@ -471,7 +471,7 @@ class ValidatorHelper
                 return ['Start Date must greater or equal to Registration Closed Date.'];
             }
 
-            if (date('Y-m-d 00:00:00', strtotime(str_replace('/', '-', $data['end_date']))) <= date('Y-m-d 23:59:59', strtotime(str_replace('/', '-', $data['start_date'])))) {
+            if (date('Y-m-d 23:59:59', strtotime(str_replace('/', '-', $data['end_date']))) <= date('Y-m-d 00:00:00', strtotime(str_replace('/', '-', $data['start_date'])))) {
                 return ['End Date must greater to Start Date.'];
             }
 
