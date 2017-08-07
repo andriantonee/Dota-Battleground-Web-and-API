@@ -592,7 +592,7 @@ class TournamentController extends BaseController
                 }
 
                 DB::commit();
-                return response()->json(['code' => 201, 'message' => ['Your team "'.$team->name.'" success joining tournament "'.$tournament->name.'"'], 'id' => $tournament_registration->id]);
+                return response()->json(['code' => 201, 'message' => ['Your team "'.$team->name.'" success joining tournament "'.$tournament->name.'"'], 'url' => url('tournament/confirm-payment/'.$tournament_registration->id), 'id' => $tournament_registration->id]);
             } catch (\Exception $e) {
                 DB::rollBack();
                 return response()->json(['code' => 500, 'message' => [$e->getMessage()]]);
