@@ -31,6 +31,9 @@
                     <a href="{{ url('/admin') }}"><i class="fa fa-fw fa-trophy"></i> Tournament</a>
                 </li>
                 <li>
+                    <a href="{{ url('/admin/cancelled-tournament') }}"><i class="fa fa-fw fa-times"></i> Cancelled Tournament</a>
+                </li>
+                <li>
                     <a href="{{ url('/admin/verify-tournament-payment') }}"><i class="fa fa-fw fa-usd"></i> Tournament Payment</a>
                 </li>
             </ul>

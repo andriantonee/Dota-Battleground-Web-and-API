@@ -54,6 +54,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['exchange:admin,3'], 'namesp
         Route::get('/', 'HomeController@index');
         Route::get('/verify-tournament/{id}', 'TournamentController@detail');
         Route::get('/verify-tournament-payment', 'TournamentController@verifyTournamentPaymentIndex');
+        Route::get('/cancelled-tournament', 'TournamentController@cancelledTournamentIndex');
         Route::post('/logout', 'AuthController@webLogout');
     });
 });

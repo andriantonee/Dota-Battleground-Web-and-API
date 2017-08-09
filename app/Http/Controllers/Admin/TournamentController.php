@@ -419,4 +419,18 @@ class TournamentController extends BaseController
             return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
         }
     }
+
+    public function cancelledTournamentIndex()
+    {
+        $tournaments = Tournament::select('id', 'name', 'entry_fee', 'registration_closed', 'start_date', 'end_date', 'members_id', 'created_at')
+            ->with([
+                'owner' => function($owner) {
+                    $owner->select('id', 'name');
+                },
+            ])
+            ->where('cancel', 1)
+            ->get();
+
+        return view('admin.cancelled-tournament-index', compact('tournaments'));
+    }
 }
