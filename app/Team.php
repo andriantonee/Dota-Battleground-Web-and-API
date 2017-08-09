@@ -79,7 +79,9 @@ class Team extends Model
             $teams = $teams->withCount([
                 'details' => function($details) {
                     $details->whereNotNull('steam32_id')
-                        ->whereHas('identifications');
+                        ->whereHas('identifications', function($identifications) {
+                            $identifications->where('verified', 1);
+                        });
                 }
             ]);
         } else {

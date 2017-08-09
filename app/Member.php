@@ -15,7 +15,7 @@ class Member extends Model
     protected $keyType = 'integer';
 
     protected $dates = [];
-    protected $fillable = ['email', 'member_type', 'password', 'name'];
+    protected $fillable = ['email', 'member_type', 'password', 'name', 'verified'];
     protected $hidden = ['password'];
 
     public $incrementing = true;
@@ -73,6 +73,12 @@ class Member extends Model
 
     public static function getMemberIDByEmail($email, $member_type)
     {
-        return self::where('email', $email)->where('member_type', $member_type)->value('id');
+        if ($member_type == 1) {
+            return self::where('email', $email)->where('member_type', $member_type)->where('banned', 0)->value('id');
+        } else if ($member_type == 2) {
+            return self::where('email', $email)->where('member_type', $member_type)->where('verified', 1)->where('banned', 0)->value('id');
+        } else {
+            return self::where('email', $email)->where('member_type', $member_type)->value('id');
+        }
     }
 }

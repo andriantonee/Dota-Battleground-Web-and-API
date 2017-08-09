@@ -303,8 +303,7 @@ $(document).ready(function() {
                 $("#settings-alert-container").append(li_message);
 
                 if (data.code == 200) {
-                    $("#default-settings-picture-modal").attr("src", data.file_path);
-                    $("#default-profile-picture-modal").attr("src", data.file_path);
+                    // $("#default-settings-picture-modal").attr("src", data.file_path);
                 }
             })
             .fail(function() {

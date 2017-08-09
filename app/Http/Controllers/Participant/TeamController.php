@@ -970,7 +970,9 @@ class TeamController extends BaseController
             $details = $team->details()
                 ->select('id', 'name', 'picture_file_name')
                 ->whereNotNull('steam32_id')
-                ->whereHas('identifications')
+                ->whereHas('identifications', function($identifications) {
+                    $identifications->where('verified', 1);
+                })
                 ->orderBy('name', 'ASC')
                 ->get();
         } else {

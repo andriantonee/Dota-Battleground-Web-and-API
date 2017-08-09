@@ -12,10 +12,15 @@ class Identification extends Model
     protected $keyType = 'integer';
 
     protected $dates = [];
-    protected $fillable = ['identification_file_name'];
+    protected $fillable = ['identification_file_name', 'verified'];
     protected $hidden = [];
 
     public $incrementing = true;
 
     public $timestamps = true;
+
+    public function member()
+    {
+    	return $this->belongsTo('App\Member', 'members_id', 'id');
+    }
 }

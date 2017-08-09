@@ -17,6 +17,7 @@ class ProfileController extends BaseController
     {
         $member = Member::find($request->input('participant_model')->id);
         $identification_file_name = $member->identifications()
+            ->where('verified', 1)
             ->orderBy('created_at', 'DESC')
             ->value('identification_file_name');
         $teams = $member->teams()
@@ -415,6 +416,7 @@ class ProfileController extends BaseController
     {
         $member = $request->user();
         $identification = $member->identifications()
+            ->where('verified', 1)
             ->orderBy('created_at', 'DESC')
             ->value('identification_file_name');
         $identification = $identification ? asset('storage/member/identification/'.$identification) : asset('img/holder328x178.png');
@@ -530,7 +532,10 @@ class ProfileController extends BaseController
 
         if (!$validatorResponse = ValidatorHelper::validateIdentificationUpdateRequest($data)) {
             $path = $data['identification_file']->storeAs('public/member/identification', time().uniqid().$data['identification_file']->hashName());
-            $identification = new Identification(['identification_file_name' => substr($path, strlen('public/member/identification') + 1)]);
+            $identification = new Identification([
+                'identification_file_name' => substr($path, strlen('public/member/identification') + 1),
+                'verified' => 0
+            ]);
             $member->identifications()->save($identification);
 
             return response()->json(['code' => 200, 'message' => ['Identity Card has been updated.'], 'file_path' => url('/').'/storage/member/identification/'.$identification->identification_file_name]);

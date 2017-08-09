@@ -70,7 +70,8 @@ class AuthController extends BaseController
                     'name' => $data['name'],
                     'email' => $data['email'],
                     'member_type' => $member_type,
-                    'password' => Hash::make($data['password'])
+                    'password' => Hash::make($data['password']),
+                    'verified' => 0
                 ]);
                 $member->save();
 

@@ -590,7 +590,7 @@ class TournamentController extends BaseController
                     $member = Member::select('id', 'steam32_id')->find($member_id);
                     $tournament_registration->members()->attach($member_id, [
                         'steam32_id' => $member->steam32_id,
-                        'identification_file_name' => $tournament->need_identifications ? $member->identifications()->orderBy('created_at', 'DESC')->select('identification_file_name')->first()->identification_file_name : null,
+                        'identification_file_name' => $tournament->need_identifications ? $member->identifications()->where('verified', 1)->orderBy('created_at', 'DESC')->select('identification_file_name')->first()->identification_file_name : null,
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now()
                     ]);

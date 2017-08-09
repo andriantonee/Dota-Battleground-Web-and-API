@@ -511,7 +511,7 @@ class ValidatorHelper
                                 if ($team_member) {
                                     if ($team_member->steam32_id) {
                                         if ($must_have_identifications) {
-                                            if (!$team_member->identifications()->exists()) {
+                                            if (!$team_member->identifications()->where('verified', 1)->exists()) {
                                                 return ['Each member must upload an identity card.'];
                                             }
                                         }

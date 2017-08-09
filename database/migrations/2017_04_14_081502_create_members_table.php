@@ -21,6 +21,8 @@ class CreateMembersTable extends Migration
             $table->string('name', 255);
             $table->string('steam32_id', 255)->nullable();
             $table->string('picture_file_name', 255)->nullable();
+            $table->boolean('verified')->default('1');
+            $table->boolean('banned')->default('0');
             $table->timestamps();
 
             $table->unique(['email', 'member_type']);

@@ -17,6 +17,7 @@ class CreateIdentificationsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('members_id');
             $table->string('identification_file_name', 255);
+            $table->boolean('verified')->default('1');
             $table->timestamps();
 
             $table->foreign('members_id')->references('id')->on('members')->onUpdate('restrict')->onDelete('restrict');

@@ -99,6 +99,12 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function() {
         Route::post('/tournament-payment/{id}/approve', 'TournamentController@approvePayment');
         Route::post('/tournament-payment/{id}/decline', 'TournamentController@declinePayment');
         Route::post('/tournament-payment/{id}/undo', 'TournamentController@undoPayment');
+        Route::post('/identification-card/{id}/approve', 'MemberController@approveIdentificationCard');
+        Route::post('/identification-card/{id}/decline', 'MemberController@declineIdentificationCard');
+        Route::post('/organizer/{id}/approve', 'MemberController@approveOrganizer');
+        Route::post('/organizer/{id}/decline', 'MemberController@declineOrganizer');
+        Route::post('/member/{id}/ban', 'MemberController@banMember');
+        Route::post('/member/{id}/activate', 'MemberController@activateMember');
 
         Route::put('/dota-2/abilities', 'Dota2Controller@updateAbilities');
         Route::put('/dota-2/heroes', 'Dota2Controller@updateHeroes');
