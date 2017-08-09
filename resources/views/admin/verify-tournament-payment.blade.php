@@ -1,6 +1,6 @@
 @extends('admin.main.master')
 
-@section('title', 'Verify Tournament')
+@section('title', 'Verify Tournament Payment')
 
 @section('style')
     <link href="{{ asset('vendor/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">

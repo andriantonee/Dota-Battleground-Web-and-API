@@ -43,7 +43,8 @@ class TournamentController extends BaseController
                 ->where('complete', 0);
         } else if ($status == 4) {
             $tournaments = $tournaments->where('start', 1)
-                ->where('complete', 1);
+                ->where('complete', 1)
+                ->where('cancel', 0);
         }
 
         $tournaments = $tournaments->get();

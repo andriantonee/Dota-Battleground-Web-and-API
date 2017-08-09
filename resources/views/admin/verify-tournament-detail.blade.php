@@ -1,6 +1,6 @@
 @extends('admin.main.master')
 
-@section('title', 'Verify Tournament')
+@section('title', 'Verify Tournament Detail')
 
 @section('style')
     <link href="{{ asset('vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
