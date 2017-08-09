@@ -141,7 +141,30 @@ class ProfileController extends BaseController
             ])
             ->whereHas('tournament', function($tournament) {
                 $tournament->where('start', 1)
-                    ->where('complete', 1);
+                    ->where('complete', 1)
+                    ->where('cancel', 0);
+            })
+            ->whereHas('confirmation', function($confirmation) {
+                $confirmation->whereHas('approval', function($approval) {
+                    $approval->where('status', 1);
+                });
+            })
+            ->orderBy('tournaments_registrations.created_at', 'DESC')
+            ->get();
+        $cancelled_tournaments = $member->tournaments_registrations()
+            ->select('tournaments_registrations.id', 'tournaments_registrations.tournaments_id', 'tournaments_registrations.teams_id', 'tournaments_registrations.created_at')
+            ->with([
+                'tournament' => function($tournament) {
+                    $tournament->select('id', 'name', 'logo_file_name', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'members_id');
+                },
+                'team' => function($team) {
+                    $team->select('id', 'name');
+                }
+            ])
+            ->whereHas('tournament', function($tournament) {
+                $tournament->where('start', 1)
+                    ->where('complete', 1)
+                    ->where('cancel', 1);
             })
             ->whereHas('confirmation', function($confirmation) {
                 $confirmation->whereHas('approval', function($approval) {
@@ -151,7 +174,7 @@ class ProfileController extends BaseController
             ->orderBy('tournaments_registrations.created_at', 'DESC')
             ->get();
 
-        return view('participant.profile', compact('identification_file_name', 'teams', 'schedules', 'registrations', 'in_progress_tournaments', 'completed_tournaments'));
+        return view('participant.profile', compact('identification_file_name', 'teams', 'schedules', 'registrations', 'in_progress_tournaments', 'completed_tournaments', 'cancelled_tournaments'));
     }
 
     public function getProfile(Request $request)

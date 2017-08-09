@@ -127,18 +127,22 @@
                                     </div>
                                     <div class="text-right" style="position: absolute;top: 10px;right: 15px;width: 200px;">
                                         <p><i class="fa fa-users" aria-hidden="true"></i>&nbsp;&nbsp;{{ $tournament->registrations_count }}/{{ $tournament->max_participant }}</p>
-                                        @if (date('Y-m-d H:i:s') <= $tournament->registration_closed)
-                                            <h6 class="in-progress" style="margin-top: 73px;">Upcoming</h6>
-                                        @else
-                                            @if ($tournament->start == 0)
+                                        @if ($tournament->cancel == 0) 
+                                            @if (date('Y-m-d H:i:s') <= $tournament->registration_closed)
                                                 <h6 class="in-progress" style="margin-top: 73px;">Upcoming</h6>
                                             @else
-                                                @if ($tournament->complete == 0)
-                                                    <h6 class="in-progress" style="margin-top: 73px;">In Progress</h6>
+                                                @if ($tournament->start == 0)
+                                                    <h6 class="in-progress" style="margin-top: 73px;">Upcoming</h6>
                                                 @else
-                                                    <h6 class="in-progress" style="margin-top: 73px;">Complete</h6>
+                                                    @if ($tournament->complete == 0)
+                                                        <h6 class="in-progress" style="margin-top: 73px;">In Progress</h6>
+                                                    @else
+                                                        <h6 class="in-progress" style="margin-top: 73px;">Complete</h6>
+                                                    @endif
                                                 @endif
                                             @endif
+                                        @elseif ($tournament->cancel == 1)
+                                            <h6 class="in-progress" style="margin-top: 73px;">Cancel</h6>
                                         @endif
                                     </div>
                                 </a>

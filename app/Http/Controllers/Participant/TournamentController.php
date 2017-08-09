@@ -26,7 +26,7 @@ class TournamentController extends BaseController
         $selected_city = $request->input('city');
 
         $cities = City::select('id', 'name')->get();
-        $tournaments = Tournament::select('id', 'name', 'logo_file_name', 'type', 'cities_id', 'entry_fee', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'members_id')
+        $tournaments = Tournament::select('id', 'name', 'logo_file_name', 'type', 'cities_id', 'entry_fee', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'cancel', 'members_id')
             ->with([
                 'owner' => function($owner) {
                     $owner->select('id', 'name');
@@ -50,7 +50,8 @@ class TournamentController extends BaseController
                 ->where('complete', 0);
         } else if ($status == 4) {
             $tournaments = $tournaments->where('start', 1)
-                ->where('complete', 1);
+                ->where('complete', 1)
+                ->where('cancel', 0);
         }
 
         if ($order == 1) {
@@ -97,18 +98,22 @@ class TournamentController extends BaseController
                 ];
 
                 $tournament_status = '';
-                if (date('Y-m-d H:i:s') <= $tournament->registration_closed) {
-                    $tournament_status = 'Upcoming';
-                } else {
-                    if ($tournament->start == 0) {
+                if ($tournament->cancel == 0) {
+                    if (date('Y-m-d H:i:s') <= $tournament->registration_closed) {
                         $tournament_status = 'Upcoming';
                     } else {
-                        if ($tournament->complete == 0) {
-                            $tournament_status = 'In Progress';
+                        if ($tournament->start == 0) {
+                            $tournament_status = 'Upcoming';
                         } else {
-                            $tournament_status = 'Complete';
+                            if ($tournament->complete == 0) {
+                                $tournament_status = 'In Progress';
+                            } else {
+                                $tournament_status = 'Complete';
+                            }
                         }
                     }
+                } else if ($tournament->cancel == 1) {
+                    $tournament_status = 'Cancel';
                 }
                 $tournaments_json[$key_tournament]['status'] = $tournament_status;
             }

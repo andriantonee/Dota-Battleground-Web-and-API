@@ -209,6 +209,7 @@
                         <li><a href="#registration-status-tab" data-toggle="tab">Registration Status</a></li>
                         <li><a href="#in-progress-tournaments-tab" data-toggle="tab">In Progress Tournaments</a></li>
                         <li><a href="#completed-tournaments-tab" data-toggle="tab">Completed Tournaments</a></li>
+                        <li><a href="#cancelled-tournaments-tab" data-toggle="tab">Cancelled Tournaments</a></li>
                     </ul>
                     <div class="panel-body">
                         <div class="tab-content">
@@ -478,6 +479,52 @@
                                                 <i class="fa fa-times" aria-hidden="true" style="font-size: 192px;"></i>
                                             </div>
                                             <strong style="font-size: 64px;">No Tournament Completed</strong>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="tab-pane fade" id="cancelled-tournaments-tab">
+                                @if (count($cancelled_tournaments) > 0)
+                                    <?php $start = 1; ?>
+                                    @foreach ($cancelled_tournaments as $tournaments_registration)
+                                        @if ($start % 2 == 1)
+                                            <div class="row cancelled-tournaments-rows">
+                                        @endif
+                                            <div class="col-xs-6">
+                                                @if ($start % 2 == 1)
+                                                    <div style="padding-left: 16px;padding-right: 8px;">
+                                                @else
+                                                    <div style="padding-left: 8px;padding-right: 16px;">
+                                                @endif
+                                                    <div class="row well-custom" style="padding: 15px 0px;">
+                                                        <div class="col-xs-4">
+                                                            <a href="{{ url('tournament/'.$tournaments_registration->tournament->id) }}" style="width: 110px;height: 110px;">
+                                                                <img src="{{ asset('storage/tournament/'.$tournaments_registration->tournament->logo_file_name) }}" style="height: 110px;width: 110px;border: 1px solid black;">
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-xs-8" style="position: relative;">
+                                                            <h3 style="margin-top: 15px;">{{ $tournaments_registration->tournament->name }}</h3>
+                                                            <p>{{ $tournaments_registration->team->name }}</p>
+                                                            <p style="color: #afaeae;">{{ date('d F Y', strtotime($tournaments_registration->tournament->start_date)) }} - {{ date('d F Y', strtotime($tournaments_registration->tournament->end_date)) }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @if ($start % 2 == 0)
+                                            </div>
+                                        @endif
+                                        <?php $start++ ?>
+                                    @endforeach
+                                    @if ($start % 2 == 0)
+                                        </div>
+                                    @endif
+                                @else
+                                    <div class="row">
+                                        <div class="col-xs-12 text-center" style="opacity: 0.2;">
+                                            <div>
+                                                <i class="fa fa-times" aria-hidden="true" style="font-size: 192px;"></i>
+                                            </div>
+                                            <strong style="font-size: 64px;">No Tournament Cancelled</strong>
                                         </div>
                                     </div>
                                 @endif

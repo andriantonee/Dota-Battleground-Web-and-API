@@ -94,39 +94,43 @@
                     <div class="col-xs-6 text-right">
                         @if ($tournament->approval)
                             @if ($tournament->approval->accepted == 1)
-                                @if (date('Y-m-d H:i:s') <= $tournament->registration_closed)
-                                    <h4>Status : <span class="in-progress">Registration Open</span></h4>
-                                @else
-                                    @if ($tournament->start == 0)
-                                        @if (count($tournament->registrations) >= 2)
-                                            <h4 style="margin: 0;">
-                                                Status : <span class="in-progress">Registration Closed</span>
-                                                <button id="btn-tournament-start" class="btn btn-default btn-custom" style="margin-left: 10px;">
-                                                    <i class="fa fa-play"></i>&nbsp;&nbsp;Start
-                                                </button>
-                                            </h4>
-                                        @else
-                                            <h4 style="margin: 0;">
-                                                Status : <span class="in-progress">Registration Closed</span>
-                                                <button id="btn-tournament-end" class="btn btn-default btn-custom" style="margin-left: 10px;">
-                                                    <i class="fa fa-stop"></i>&nbsp;&nbsp;End
-                                                </button>
-                                            </h4>
-                                        @endif
+                                @if ($tournament->cancel == 0)
+                                    @if (date('Y-m-d H:i:s') <= $tournament->registration_closed)
+                                        <h4>Status : <span class="in-progress">Registration Open</span></h4>
                                     @else
-                                        @if ($tournament->complete == 0)
-                                            <h4>
-                                                Status : <span class="in-progress">In Progress</span>
-                                                @if (count($tournament->available_matches_report) == 0)
-                                                    <button id="btn-tournament-finalize" class="btn btn-default btn-custom" style="margin-left: 10px;">
-                                                        <i class="fa fa-floppy-o"></i>&nbsp;&nbsp;Finalize
+                                        @if ($tournament->start == 0)
+                                            @if (count($tournament->registrations) >= 2)
+                                                <h4 style="margin: 0;">
+                                                    Status : <span class="in-progress">Registration Closed</span>
+                                                    <button id="btn-tournament-start" class="btn btn-default btn-custom" style="margin-left: 10px;">
+                                                        <i class="fa fa-play"></i>&nbsp;&nbsp;Start
                                                     </button>
-                                                @endif
-                                            </h4>
+                                                </h4>
+                                            @else
+                                                <h4 style="margin: 0;">
+                                                    Status : <span class="in-progress">Registration Closed</span>
+                                                    <button id="btn-tournament-end" class="btn btn-default btn-custom" style="margin-left: 10px;">
+                                                        <i class="fa fa-stop"></i>&nbsp;&nbsp;End
+                                                    </button>
+                                                </h4>
+                                            @endif
                                         @else
-                                            <h4>Status : <span class="in-progress">Complete</span></h4>
+                                            @if ($tournament->complete == 0)
+                                                <h4>
+                                                    Status : <span class="in-progress">In Progress</span>
+                                                    @if (count($tournament->available_matches_report) == 0)
+                                                        <button id="btn-tournament-finalize" class="btn btn-default btn-custom" style="margin-left: 10px;">
+                                                            <i class="fa fa-floppy-o"></i>&nbsp;&nbsp;Finalize
+                                                        </button>
+                                                    @endif
+                                                </h4>
+                                            @else
+                                                <h4>Status : <span class="in-progress">Complete</span></h4>
+                                            @endif
                                         @endif
                                     @endif
+                                @elseif ($tournament->cancel == 1)
+                                    <h4>Status : <span class="in-progress">Cancel</span></h4>
                                 @endif
                             @elseif ($tournament->approval->accepted == 0)
                                 <h4>Status : <span class="reject">Rejected</span></h4>

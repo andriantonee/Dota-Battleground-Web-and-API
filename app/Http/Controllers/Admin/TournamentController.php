@@ -184,6 +184,41 @@ class TournamentController extends BaseController
         }
     }
 
+    public function cancel($id)
+    {
+        $tournament = Tournament::select('*')
+            ->withCount('registrations')
+            ->whereHas('approval')
+            ->find($id);
+        if ($tournament) {
+            if (!($tournament->start == 0 && $tournament->registrations_count <= 0)) {
+                if ($tournament->complete == 0) {
+                    // Continue
+                } else {
+                    return response()->json(['code' => 400, 'message' => ['This Tournament is completed. Cannot Cancel anymore.']]);
+                }
+            } else {
+                return response()->json(['code' => 400, 'message' => ['This Tournament isn\'t start or have any registration yet. Please use undo.']]);
+            }
+
+            DB::beginTransaction();
+            try {
+                $tournament->start = 1;
+                $tournament->complete = 1;
+                $tournament->cancel = 1;
+                $tournament->save();
+
+                DB::commit();
+                return response()->json(['code' => 200, 'message' => ['Cancel Tournament success.']]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
+            }
+        } else {
+            return response()->json(['code' => 404, 'message' => ['Tournament ID is invalid.']]);
+        }
+    }
+
     public function verifyTournamentPaymentIndex()
     {
         $tournament_registration_confirmations = TournamentRegistrationConfirmation::select('*')

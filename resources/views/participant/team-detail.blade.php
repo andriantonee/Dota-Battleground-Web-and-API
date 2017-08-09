@@ -379,18 +379,22 @@
                                                             <p style="color: #afaeae;">{{ date('d F Y', strtotime($tournaments_registration->tournament->start_date)) }} - {{ date('d F Y', strtotime($tournaments_registration->tournament->end_date)) }}</p>
                                                             <p style="position: absolute;right: 5px;bottom: -25px;font-size: 12px;color: #afaeae;">
                                                                 <strong>
-                                                                    @if (date('Y-m-d H:i:s') <= $tournaments_registration->tournament->registration_closed)
-                                                                        Upcoming
-                                                                    @else
-                                                                        @if ($tournaments_registration->tournament->start == 0)
+                                                                    @if ($tournaments_registration->tournament->cancel == 0)
+                                                                        @if (date('Y-m-d H:i:s') <= $tournaments_registration->tournament->registration_closed)
                                                                             Upcoming
                                                                         @else
-                                                                            @if ($tournaments_registration->tournament->complete == 0)
-                                                                                In Progress
+                                                                            @if ($tournaments_registration->tournament->start == 0)
+                                                                                Upcoming
                                                                             @else
-                                                                                Complete
+                                                                                @if ($tournaments_registration->tournament->complete == 0)
+                                                                                    In Progress
+                                                                                @else
+                                                                                    Complete
+                                                                                @endif
                                                                             @endif
                                                                         @endif
+                                                                    @elseif ($tournaments_registration->tournament->cancel == 1)
+                                                                        Cancel
                                                                     @endif
                                                                 </strong>
                                                             </p>

@@ -232,6 +232,17 @@
                             </div>
                         </div>
                     </fieldset>
+                @else
+                    @if ($tournament->complete == 0)
+                        <fieldset class="fieldset-custom">
+                            <legend>Cancel Action</legend>
+                            <div class="row verify-tournament-detail-footer">
+                                <div class="col-xs-12 text-center">
+                                    <button id="btn-cancel-tournament" class="btn btn-danger" data-tournament-name="{{ $tournament->name }}"><i class="fa fa-fw fa-times"></i>&nbsp;Cancel</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    @endif
                 @endif
             </div>
         </div>

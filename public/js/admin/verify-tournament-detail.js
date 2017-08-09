@@ -277,4 +277,73 @@ $(document).ready(function (e) {
                 });
         });
     });
+
+    $("#btn-cancel-tournament").on("click", function(e) {
+        e.preventDefault();
+
+        var that = $(this);
+        var tournament_name = $(this).data("tournament-name");
+
+        swal({
+            "title" : "Cancel Tournament",
+            "text" : "Do you really want to cancel \"" + tournament_name + "\"",
+            "type" : "warning",
+            "customClass" : "sweet-alert-custom",
+            "showCancelButton" : true,
+            "showConfirmButton" : true,
+            "confirmButtonText" : "Yes, i want.",
+            "cancelButtonText" : "No, i won't.",
+            "closeOnConfirm" : false,
+            "showLoaderOnConfirm" : true
+        }, function() {
+            $.ajax({
+                "type" : "POST",
+                "url" : api_url + "tournament/" + location.pathname.split("/")[3] + "/cancel",
+                "headers" : {
+                    "Accept" : "application/json",
+                    "Authorization" : "Bearer " + document.cookie.replace(/(?:(?:^|.*;\s*)admin_token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
+                }
+            })
+                .done(function(data) {
+                    if (data.code == 200) {
+                        // that.parent().parent().remove();
+
+                        swal({
+                            "title" : "Cancel Tournament Success",
+                            "text" : data.message[0],
+                            "type" : "success",
+                            "customClass" : "sweet-alert-custom",
+                            "showConfirmButton" : false,
+                            "timer" : 1000
+                        });
+
+                        // window.location.replace(location.origin + "/admin");
+                        window.location.reload();
+                    } else {
+                        var swal_text = "";
+                        $.each(data.message, function(index, value) {
+                            if (swal_text != "") {
+                                swal_text += "\n";
+                            }
+                            swal_text += value;
+                        });
+
+                        swal({
+                            "title" : "Cancel Tournament Fail",
+                            "text" : swal_text,
+                            "type" : "error",
+                            "customClass" : "sweet-alert-custom"
+                        });
+                    }
+                })
+                .fail(function() {
+                    swal({
+                        "title" : "Cancel Tournament Fail",
+                        "text" : "Something went wrong. Please try again.",
+                        "type" : "error",
+                        "customClass" : "sweet-alert-custom"
+                    });
+                });
+        });
+    });
 });

@@ -4035,37 +4035,39 @@ class RetrieveAndUpdateDota2LiveMatch extends Command
                                         }
                                     }
 
-                                    $ability_order = $selected_player->abilities()->count() + 1;
-                                    for ($ability_idx = $ability_order - 1; $ability_idx < count($player->ability_upgrades); $ability_idx++) { 
-                                        $selected_player->abilities()->attach($player->ability_upgrades[$ability_idx]->ability, [
-                                            'ability_order' => $ability_order,
-                                            'created_at' => Carbon::now(),
-                                            'updated_at' => Carbon::now()
-                                        ]);
+                                    if (isset($player->ability_upgrades)) {
+                                        $ability_order = $selected_player->abilities()->count() + 1;
+                                        for ($ability_idx = $ability_order - 1; $ability_idx < count($player->ability_upgrades); $ability_idx++) { 
+                                            $selected_player->abilities()->attach($player->ability_upgrades[$ability_idx]->ability, [
+                                                'ability_order' => $ability_order,
+                                                'created_at' => Carbon::now(),
+                                                'updated_at' => Carbon::now()
+                                            ]);
 
-                                        $abilities_detail = null;
-                                        if (isset($dota2_abilities[$player->ability_upgrades[$ability_idx]->ability])) {
-                                            $abilities_detail = $dota2_abilities[$player->ability_upgrades[$ability_idx]->ability]->first();
-                                        }
-                                        if ($abilities_detail) {
-                                            if ($is_radiant_player) {
-                                                array_push($radiant_abilities, (object) [
-                                                    'id' => $selected_player->id,
-                                                    'name' => $abilities_detail->name,
-                                                    'picture_file_name' => $abilities_detail->picture_file_name,
-                                                    'ability_order' => $ability_order
-                                                ]);
-                                            } else {
-                                                array_push($dire_abilities, (object) [
-                                                    'id' => $selected_player->id,
-                                                    'name' => $abilities_detail->name,
-                                                    'picture_file_name' => $abilities_detail->picture_file_name,
-                                                    'ability_order' => $ability_order
-                                                ]);
+                                            $abilities_detail = null;
+                                            if (isset($dota2_abilities[$player->ability_upgrades[$ability_idx]->ability])) {
+                                                $abilities_detail = $dota2_abilities[$player->ability_upgrades[$ability_idx]->ability]->first();
                                             }
-                                        }
+                                            if ($abilities_detail) {
+                                                if ($is_radiant_player) {
+                                                    array_push($radiant_abilities, (object) [
+                                                        'id' => $selected_player->id,
+                                                        'name' => $abilities_detail->name,
+                                                        'picture_file_name' => $abilities_detail->picture_file_name,
+                                                        'ability_order' => $ability_order
+                                                    ]);
+                                                } else {
+                                                    array_push($dire_abilities, (object) [
+                                                        'id' => $selected_player->id,
+                                                        'name' => $abilities_detail->name,
+                                                        'picture_file_name' => $abilities_detail->picture_file_name,
+                                                        'ability_order' => $ability_order
+                                                    ]);
+                                                }
+                                            }
 
-                                        $ability_order++;
+                                            $ability_order++;
+                                        }
                                     }
                                 }
                             }

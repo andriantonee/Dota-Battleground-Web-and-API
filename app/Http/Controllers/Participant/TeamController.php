@@ -220,7 +220,7 @@ class TeamController extends BaseController
                 ->select('id', 'tournaments_id', 'teams_id', 'created_at')
                 ->with([
                     'tournament' => function($tournament) {
-                        $tournament->select('id', 'name', 'logo_file_name', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'members_id')
+                        $tournament->select('id', 'name', 'logo_file_name', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'cancel', 'members_id')
                             ->with([
                                 'owner' => function($owner) {
                                     $owner->select('id', 'name');

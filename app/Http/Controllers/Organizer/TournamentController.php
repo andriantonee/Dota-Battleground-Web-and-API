@@ -18,7 +18,7 @@ class TournamentController extends BaseController
         $status = $request->input('status') ?: 1;
 
         $organizer = $request->input('organizer_model');
-        $tournaments = Tournament::select('id', 'name', 'logo_file_name', 'challonges_url', 'max_participant', 'type', 'entry_fee', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'created_at')
+        $tournaments = Tournament::select('id', 'name', 'logo_file_name', 'challonges_url', 'max_participant', 'type', 'entry_fee', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'cancel', 'created_at')
             ->withCount([
                 'registrations' => function($registrations) {
                     $registrations->whereHas('confirmation', function($confirmation) {
@@ -64,7 +64,7 @@ class TournamentController extends BaseController
     public function getMyTournament(Request $request)
     {
         $organizer = $request->user();
-        $tournaments = Tournament::select('id', 'name', 'logo_file_name', 'type', 'cities_id', 'entry_fee', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'members_id')
+        $tournaments = Tournament::select('id', 'name', 'logo_file_name', 'type', 'cities_id', 'entry_fee', 'registration_closed', 'start_date', 'end_date', 'start', 'complete', 'cancel', 'members_id')
             ->where('members_id', $organizer->id)
             ->whereHas('approval', function($approval) {
                 $approval->where('tournaments_approvals.accepted', 1);
@@ -86,18 +86,22 @@ class TournamentController extends BaseController
             ];
 
             $tournament_status = '';
-            if (date('Y-m-d H:i:s' <= $tournament->registration_closed)) {
-                $tournament_status = 'Upcoming';
-            } else {
-                if ($tournament->start == 0) {
+            if ($tournament->cancel == 0) {
+                if (date('Y-m-d H:i:s' <= $tournament->registration_closed)) {
                     $tournament_status = 'Upcoming';
                 } else {
-                    if ($tournament->complete == 0) {
-                        $tournament_status = 'In Progress';
+                    if ($tournament->start == 0) {
+                        $tournament_status = 'Upcoming';
                     } else {
-                        $tournament_status = 'Complete';
+                        if ($tournament->complete == 0) {
+                            $tournament_status = 'In Progress';
+                        } else {
+                            $tournament_status = 'Complete';
+                        }
                     }
                 }
+            } else if ($tournament->cancel == 1) {
+                $tournament_status = 'Cancel';
             }
             $tournaments_json[$key_tournament]['status'] = $tournament_status;
         }

@@ -259,18 +259,22 @@
                                 <div class="tournament-list-group-item-detail-2">
                                     <h4 class="tournament-list-group-item-detail-2-price" style="color: #fc7b67;">Rp. {{ number_format($tournament->entry_fee, 0, ',', '.') }} / Team</h4>
                                     <p class="tournament-list-group-item-detail-2-registration-closed">Registration Before {{ date('d F Y H:i', strtotime($tournament->registration_closed)) }}</p>
-                                    @if (date('Y-m-d H:i:s') <= $tournament->registration_closed)
-                                        <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Upcoming</p>
-                                    @else
-                                        @if ($tournament->start == 0)
+                                    @if ($tournament->cancel == 0) 
+                                        @if (date('Y-m-d H:i:s') <= $tournament->registration_closed)
                                             <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Upcoming</p>
                                         @else
-                                            @if ($tournament->complete == 0)
-                                                <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">In Progress</p>
+                                            @if ($tournament->start == 0)
+                                                <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Upcoming</p>
                                             @else
-                                                <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Complete</p>
+                                                @if ($tournament->complete == 0)
+                                                    <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">In Progress</p>
+                                                @else
+                                                    <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Complete</p>
+                                                @endif
                                             @endif
                                         @endif
+                                    @elseif ($tournament->cancel == 1)
+                                        <p class="tournament-list-group-item-detail-2-status" style="color:#5f6472">Cancel</p>
                                     @endif
                                 </div>
                             </a>

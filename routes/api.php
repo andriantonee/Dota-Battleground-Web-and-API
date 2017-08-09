@@ -95,6 +95,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function() {
         Route::post('/tournament/{id}/approve', 'TournamentController@approve');
         Route::post('/tournament/{id}/decline', 'TournamentController@decline');
         Route::post('/tournament/{id}/undo', 'TournamentController@undo');
+        Route::post('/tournament/{id}/cancel', 'TournamentController@cancel');
         Route::post('/tournament-payment/{id}/approve', 'TournamentController@approvePayment');
         Route::post('/tournament-payment/{id}/decline', 'TournamentController@declinePayment');
         Route::post('/tournament-payment/{id}/undo', 'TournamentController@undoPayment');
