@@ -80,9 +80,8 @@ class MemberController extends BaseController
 
     public function verifyOrganizerIndex()
     {
-        $organizers = Member::select('id', 'name', 'email', 'created_at')
+        $organizers = Member::select('id', 'name', 'email', 'document_file_name', 'verified', 'created_at')
             ->where('member_type', 2)
-            ->where('verified', 0)
             ->get();
 
         return view('admin.verify-organizer', compact('organizers'));
@@ -92,7 +91,7 @@ class MemberController extends BaseController
     {
         $organizer = Member::select('*')
             ->where('member_type', 2)
-            ->where('verified', 0)
+            ->where('verified', '<>', 1)
             ->find($id);
 
         if ($organizer) {
@@ -116,7 +115,7 @@ class MemberController extends BaseController
     {
         $organizer = Member::select('*')
             ->where('member_type', 2)
-            ->where('verified', 0)
+            ->where('verified', '<>', 2)
             ->find($id);
 
         if ($organizer) {

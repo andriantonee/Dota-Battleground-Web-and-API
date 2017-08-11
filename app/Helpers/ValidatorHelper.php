@@ -70,6 +70,43 @@ class ValidatorHelper
         }
     }
 
+    public static function validateOrganizerRegisterRequest(array $data, $member_type)
+    {
+        $rule = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255|email',
+            'password' => 'required|string|min:6|confirmed',
+            'document' => 'required|mimes:pdf|max:1024'
+        ];
+        $message = [
+            'name.required' => 'Name is required.',
+            'name.string' => 'Name must be a string.',
+            'name.max' => 'Name has a maximum :max characters only.',
+            'email.required' => 'E-mail is required.',
+            'email.string' => 'E-mail must be a string.',
+            'email.max' => 'E-mail has a maximum :max characters only.',
+            'email.email' => 'E-mail format is not a valid email address.',
+            'password.required' => 'Password is required.',
+            'password.string' => 'Password must be a string.',
+            'password.min' => 'Password must contain minimum :min characters.',
+            'password.confirmed' => 'Password confirmation does not match.',
+            'document.required' => 'Document must be uploaded.',
+            'document.mimes' => 'Document only accept PDF file type.',
+            'document.max' => 'Document has passed :max Kb.'
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            if (Member::checkEmailExists($data['email'], $member_type)) {
+                return ['E-mail '.$data['email'].' has been used.'];
+            } else {
+                return null;
+            }
+        }
+    }
+
     public static function validateProfileUpdateRequest(array $data, $member_type, $member_id)
     {
         $rule = [
@@ -102,6 +139,25 @@ class ValidatorHelper
             } else {
                 return null;
             }
+        }
+    }
+
+    public static function validateDocumentUpdateRequest(array $data)
+    {
+        $rule = [
+            'document' => 'required|mimes:pdf|max:1024'
+        ];
+        $message = [
+            'document.required' => 'Document must be uploaded.',
+            'document.mimes' => 'Document only accept PDF file type.',
+            'document.max' => 'Document has passed :max Kb.'
+        ];
+        $validator = Validator::make($data, $rule, $message);
+
+        if ($validator->fails()) {
+            return $validator->errors()->all();
+        } else {
+            return null;
         }
     }
 

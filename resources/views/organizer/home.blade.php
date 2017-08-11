@@ -59,27 +59,33 @@
                             </ul>
                         </div>
                         <div class="form-group">
-                            <label for="sign-up-name" class="col-xs-4 control-label text-left">Name</label>
-                            <div class="col-xs-8">
+                            <label for="sign-up-name" class="col-xs-5 control-label text-left">Name</label>
+                            <div class="col-xs-7">
                                 <input type="text" class="form-control" id="sign-up-name" name="name" placeholder="Name" required="required">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="sign-up-email" class="col-xs-4 control-label text-left">Email</label>
-                            <div class="col-xs-8">
+                            <label for="sign-up-email" class="col-xs-5 control-label text-left">Email</label>
+                            <div class="col-xs-7">
                                 <input type="email" class="form-control" id="sign-up-email" name="email" placeholder="Email" required="required">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="sign-up-password" class="col-xs-4 control-label text-left">Password</label>
-                            <div class="col-xs-8">
+                            <label for="sign-up-password" class="col-xs-5 control-label text-left">Password</label>
+                            <div class="col-xs-7">
                                 <input type="password" class="form-control" id="sign-up-email" name="password" placeholder="Password" required="required">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="sign-up-password-confirmation" class="col-xs-4 control-label text-left">Confirm Password</label>
-                            <div class="col-xs-8">
+                            <label for="sign-up-password-confirmation" class="col-xs-5 control-label text-left">Confirm Password</label>
+                            <div class="col-xs-7">
                                 <input type="password" class="form-control" id="sign-up-password-confirmation" name="password_confirmation" placeholder="Password" required="required">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sign-up-document" class="col-xs-5 control-label text-left">Business Document</label>
+                            <div class="col-xs-7">
+                                <input type="file" id="sign-up-document" name="document" accept="application/pdf" required="required">
                             </div>
                         </div>
                         <div class="form-group">

@@ -41,13 +41,15 @@ $("#ckbox-organizer-agree").on("change", function(e) {
 $("#form-organizer-register").on("submit", function(e) {
     e.preventDefault();
 
-    var data = $(this).serialize();
+    var form_data = new FormData(this);
     var btn_register = Ladda.create(document.querySelector("#btn-organizer-register"));
 
     $.ajax({
         "type" : "POST",
         "url" : api_url + "register",
-        "data" : data,
+        "data" : form_data,
+        "contentType" : false,
+        "processData" : false,
         "beforeSend" : function() {
             $("#register-alert-container").parent().hide();
             $("#register-alert-container").empty();

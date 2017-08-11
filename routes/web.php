@@ -35,13 +35,16 @@ Route::group(['prefix' => 'organizer', 'middleware' => ['exchange:organizer,2'],
     });
 
     Route::group(['middleware' => ['authorize:organizer']], function() {
-        Route::get('/dashboard', 'HomeController@dashboard');
-        Route::get('/tournament', 'TournamentController@index');
-        Route::get('/tournament/create', 'TournamentController@create');
-        Route::get('/tournament/{id}/detail', 'TournamentController@detail');
+        Route::group(['middleware' => ['document:organizer']], function() {
+            Route::get('/document', 'HomeController@document');
+            Route::get('/dashboard', 'HomeController@dashboard');
+            Route::get('/tournament', 'TournamentController@index');
+            Route::get('/tournament/create', 'TournamentController@create');
+            Route::get('/tournament/{id}/detail', 'TournamentController@detail');
+            Route::get('/dota-2/match/{id}', 'Dota2MatchController@show');
+        });
         Route::get('/password', 'HomeController@password');
         Route::post('/logout', 'AuthController@webLogout');
-        Route::get('/dota-2/match/{id}', 'Dota2MatchController@show');
     });
 });
 

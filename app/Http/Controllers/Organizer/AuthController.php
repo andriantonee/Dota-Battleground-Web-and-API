@@ -10,6 +10,7 @@ use DB;
 use Hash;
 use Illuminate\Http\Request;
 use Lcobucci\JWT\Parser;
+use Storage;
 
 class AuthController extends BaseController
 {
@@ -59,11 +60,14 @@ class AuthController extends BaseController
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => $request->input('password'),
-            'password_confirmation' => $request->input('password_confirmation')
+            'password_confirmation' => $request->input('password_confirmation'),
+            'document' => $request->file('document')
         ];
         $member_type = $this->getMemberType();
 
-        if (!$validatorResponse = ValidatorHelper::validateRegisterRequest($data, $member_type)) {
+        if (!$validatorResponse = ValidatorHelper::validateOrganizerRegisterRequest($data, $member_type)) {
+            $path = $data['document']->storeAs('public/member/document', time().uniqid().$data['document']->hashName());
+
             DB::beginTransaction();
             try {
                 $member = new Member([
@@ -71,6 +75,7 @@ class AuthController extends BaseController
                     'email' => $data['email'],
                     'member_type' => $member_type,
                     'password' => Hash::make($data['password']),
+                    'document_file_name' => substr($path, strlen('public/member/document') + 1),
                     'verified' => 0
                 ]);
                 $member->save();
@@ -79,6 +84,7 @@ class AuthController extends BaseController
                 return response()->json(['code' => 201, 'message' => ['Register success.']]);
             } catch (\Exception $e) {
                 DB::rollBack();
+                Storage::delete($path);
                 return response()->json(['code' => 500, 'message' => ['Something went wrong. Please try again.']]);
             }
         } else {

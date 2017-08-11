@@ -27,12 +27,18 @@
                         <img alt="Brand" src="{{ asset('img/logo.png') }}">
                     </a>
                 </li>
-                <li>
-                    <a href="{{ url('/organizer/dashboard') }}"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
-                </li>
-                <li>
-                    <a href="{{ url('/organizer/tournament') }}"><i class="fa fa-fw fa-trophy"></i> My Tournament</a>
-                </li>
+                @if ($organizer->verified == 1)
+                    <li>
+                        <a href="{{ url('/organizer/dashboard') }}"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/organizer/tournament') }}"><i class="fa fa-fw fa-trophy"></i> My Tournament</a>
+                    </li>
+                @else
+                    <li>
+                        <a href="{{ url('/organizer/tournament') }}"><i class="fa fa-fw fa-file-text"></i> Document</a>
+                    </li>
+                @endif
                 <li>
                     <a href="{{ url('/organizer/password') }}"><i class="fa fa-fw fa-key"></i> Password</a>
                 </li>

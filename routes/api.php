@@ -66,23 +66,26 @@ Route::group(['prefix' => 'organizer', 'namespace' => 'Organizer'], function() {
     Route::post('/register', 'AuthController@register');
 
     Route::group(['middleware' => ['auth:api']], function() {
+        Route::post('/document', 'ProfileController@updateDocument');
         Route::put('/password', 'ProfileController@updatePassword');
-        Route::get('/my-tournament', 'TournamentController@getMyTournament');
-        Route::get('/my-tournament/{id}', 'TournamentController@getMyTournamentDetail');
-        Route::post('/tournament/create', 'TournamentController@store');
-        Route::put('/tournament/{id}', 'TournamentController@update');
-        Route::put('/tournament/{id}/type', 'TournamentController@updateType');
-        Route::put('/tournament/{id}/start', 'TournamentController@start');
-        Route::put('/tournament/{id}/end', 'TournamentController@end');
-        Route::put('/tournament/{id}/finalize', 'TournamentController@finalize');
-        Route::get('/match/{id}/schedule', 'MatchController@getSchedule');
-        Route::put('/match/{id}/schedule', 'MatchController@updateSchedule');
-        Route::put('/match/{id}/score', 'MatchController@updateScore');
-        Route::get('/match/{id}/team-attendance', 'MatchController@getMatchTeamAttendance');
-        Route::get('/match/{id}/attendance', 'MatchController@getAttendance');
-        Route::post('/match/{id}/attendance', 'MatchController@postAttendance');
-        // Route::post('/match/{id}/start', 'MatchController@start');
-        Route::post('/dota-2/match/{id}/comment', 'Dota2MatchController@postComment');
+        Route::group(['middleware' => ['verified_to_access']], function() {
+            Route::get('/my-tournament', 'TournamentController@getMyTournament');
+            Route::get('/my-tournament/{id}', 'TournamentController@getMyTournamentDetail');
+            Route::post('/tournament/create', 'TournamentController@store');
+            Route::put('/tournament/{id}', 'TournamentController@update');
+            Route::put('/tournament/{id}/type', 'TournamentController@updateType');
+            Route::put('/tournament/{id}/start', 'TournamentController@start');
+            Route::put('/tournament/{id}/end', 'TournamentController@end');
+            Route::put('/tournament/{id}/finalize', 'TournamentController@finalize');
+            Route::get('/match/{id}/schedule', 'MatchController@getSchedule');
+            Route::put('/match/{id}/schedule', 'MatchController@updateSchedule');
+            Route::put('/match/{id}/score', 'MatchController@updateScore');
+            Route::get('/match/{id}/team-attendance', 'MatchController@getMatchTeamAttendance');
+            Route::get('/match/{id}/attendance', 'MatchController@getAttendance');
+            Route::post('/match/{id}/attendance', 'MatchController@postAttendance');
+            // Route::post('/match/{id}/start', 'MatchController@start');
+            Route::post('/dota-2/match/{id}/comment', 'Dota2MatchController@postComment');
+        });
         Route::post('logout', 'AuthController@logout');
     });
 });

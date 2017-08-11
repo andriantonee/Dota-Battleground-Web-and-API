@@ -12,6 +12,11 @@ class HomeController extends BaseController
         return view('organizer.home');
     }
 
+    public function document()
+    {
+        return view('organizer.document');
+    }
+
     public function dashboard(Request $request)
     {
         $organizer = $request->input('organizer_model');

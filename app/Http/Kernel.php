@@ -56,5 +56,7 @@ class Kernel extends HttpKernel
         'authorize' => \App\Http\Middleware\RedirectIfUnauthorized::class,
         'notification' => \App\Http\Middleware\Notification::class,
         'already_authorize' => \App\Http\Middleware\RedirectIfAuthorized::class,
+        'document' => \App\Http\Middleware\RedirectIfDocumentNotVerify::class,
+        'verified_to_access' => \App\Http\Middleware\VerifiedToAccess::class,
     ];
 }
