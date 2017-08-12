@@ -37,7 +37,7 @@
                     <a href="{{ url('/admin/verify-tournament-payment') }}"><i class="fa fa-fw fa-usd"></i> Tournament Payment</a>
                 </li>
                 <li>
-                    <a href="{{ url('/admin/verify-identification-card') }}"><i class="fa fa-fw fa-id-card"></i> Verify Identity Card</a>
+                    <a href="{{ url('/admin/verify-identification-card') }}"><i class="fa fa-fw fa-id-card"></i> Verify Identification Card</a>
                 </li>
                 <li>
                     <a href="{{ url('/admin/verify-organizer') }}"><i class="fa fa-fw fa-user"></i> Verify Organizer</a>

@@ -66,14 +66,14 @@
                                         </td>
                                         <td>{{ $organizer->created_at->format('d F Y H:i:s') }}</td>
                                         <td class="text-center">
+                                            @if ($organizer->document_file_name)
+                                                <a role="button" href="{{ asset('/storage/member/document/'.$organizer->document_file_name) }}" class="btn btn-default btn-xs btn-info btn-width-25"><i class="fa fa-download"></i></a>
+                                            @endif
                                             @if ($organizer->verified != 1)
                                                 <button class="btn btn-default btn-xs btn-success btn-width-25 btn-approve-organizer" data-id="{{ $organizer->id }}"><i class="fa fa-check"></i></button>
                                             @endif
                                             @if ($organizer->verified != 2)
                                                 <button class="btn btn-default btn-xs btn-danger btn-width-25 btn-decline-organizer" data-id="{{ $organizer->id }}"><i class="fa fa-times"></i></button>
-                                            @endif
-                                            @if ($organizer->document_file_name)
-                                                <a role="button" href="{{ asset('/storage/member/document/'.$organizer->document_file_name) }}" class="btn btn-default btn-xs btn-primary btn-width-25"><i class="fa fa-download"></i></a>
                                             @endif
                                         </td>
                                     </tr>

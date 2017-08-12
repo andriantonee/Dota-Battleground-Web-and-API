@@ -16,8 +16,16 @@ class ProfileController extends BaseController
     public function index(Request $request)
     {
         $member = Member::find($request->input('participant_model')->id);
+        $pending_identification_file_name = $member->identifications()
+            ->where('verified', 0)
+            ->orderBy('created_at', 'DESC')
+            ->value('identification_file_name');
         $identification_file_name = $member->identifications()
             ->where('verified', 1)
+            ->orderBy('created_at', 'DESC')
+            ->value('identification_file_name');
+        $rejected_identification_file_name = $member->identifications()
+            ->where('verified', 2)
             ->orderBy('created_at', 'DESC')
             ->value('identification_file_name');
         $teams = $member->teams()
@@ -175,7 +183,7 @@ class ProfileController extends BaseController
             ->orderBy('tournaments_registrations.created_at', 'DESC')
             ->get();
 
-        return view('participant.profile', compact('identification_file_name', 'teams', 'schedules', 'registrations', 'in_progress_tournaments', 'completed_tournaments', 'cancelled_tournaments'));
+        return view('participant.profile', compact('pending_identification_file_name', 'identification_file_name', 'rejected_identification_file_name', 'teams', 'schedules', 'registrations', 'in_progress_tournaments', 'completed_tournaments', 'cancelled_tournaments'));
     }
 
     public function getProfile(Request $request)
@@ -525,6 +533,13 @@ class ProfileController extends BaseController
     public function updateIdentification(Request $request)
     {
         $member = $request->user();
+
+        $has_pending_identification_file_name = $member->identifications()
+            ->where('verified', 0)
+            ->exists();
+        if ($has_pending_identification_file_name) {
+            return response()->json(['code' => 400, 'message' => ['Member has a pending Identity Card.']]);
+        }
 
         $data = [
             'identification_file' => $request->file('identity_card')

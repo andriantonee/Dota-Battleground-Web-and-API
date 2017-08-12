@@ -555,6 +555,9 @@ class TeamController extends BaseController
         $search_keyword = $request->input('search_keyword') ? (!is_array($request->input('search_keyword')) ? ((string) $request->input('search_keyword')) : '') : '';
         if ($search_keyword) {
             $members = Member::select('id', 'name', 'steam32_id', 'picture_file_name')
+                ->whereHas('identifications', function($identifications) {
+                    $identifications->where('verified', 1);
+                })
                 ->doesntHave('notifications', 'and', function($notifications) use($id) {
                     $notifications->whereHas('team_invitation', function($team_invitation) use($id) {
                         $team_invitation->where('notifications_teams_invitations.teams_id', $id)
@@ -606,6 +609,12 @@ class TeamController extends BaseController
         }
 
         $invited_member = Member::find((int) $member_id);
+        $invited_member_has_verified_identifications = $invited_member->identifications()
+            ->where('verified', 1)
+            ->exists();
+        if (!$invited_member_has_verified_identifications) {
+            return response()->json(['code' => 400, 'message' => ['Invited Member doesn\'t has verified Identity Card.']]);
+        }
         if ($invited_member) {
             if ($invited_member->member_type == 1) {
                 $is_exists_in_uninvited_member_list = Member::doesntHave('notifications', 'and', function($notifications) use($id) {

@@ -38,7 +38,6 @@ Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function
         Route::get('/my-tournament', 'ProfileController@getMyTournament');
         Route::get('/my-register', 'ProfileController@getMyRegister');
         Route::get('/my-team', 'TeamController@getMyTeam');
-        Route::post('/team', 'TeamController@store');
         Route::get('/my-team/{id}', 'TeamController@getMyTeamDetail');
         Route::put('/team/{id}', 'TeamController@update');
         Route::post('/team/{id}/picture', 'TeamController@updatePicture');
@@ -52,12 +51,16 @@ Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function
         Route::post('/team/{id}/leave', 'TeamController@leave');
         Route::delete('/team/{id}/disband', 'TeamController@disband');
         Route::get('/team/{id}/member', 'TeamController@member');
-        Route::get('/tournament/{id}/register', 'TournamentController@registerAPIIndex');
-        Route::post('/tournament/{id}/register', 'TournamentController@register');
         Route::get('/tournament/confirm-payment/{id}', 'TournamentController@confirmPaymentAPIIndex');
         Route::post('/tournament/confirm-payment/{id}', 'TournamentController@confirmPayment');
-        Route::post('/dota-2/match/{id}/comment', 'Dota2MatchController@postComment');
         Route::post('/logout', 'AuthController@logout');
+
+        Route::group(['middleware' => ['verified_to_access:participant']], function() {
+            Route::post('/team', 'TeamController@store');
+            Route::get('/tournament/{id}/register', 'TournamentController@registerAPIIndex');
+            Route::post('/tournament/{id}/register', 'TournamentController@register');
+            Route::post('/dota-2/match/{id}/comment', 'Dota2MatchController@postComment');
+        });
     });
 });
 
@@ -68,7 +71,7 @@ Route::group(['prefix' => 'organizer', 'namespace' => 'Organizer'], function() {
     Route::group(['middleware' => ['auth:api']], function() {
         Route::post('/document', 'ProfileController@updateDocument');
         Route::put('/password', 'ProfileController@updatePassword');
-        Route::group(['middleware' => ['verified_to_access']], function() {
+        Route::group(['middleware' => ['verified_to_access:organizer']], function() {
             Route::get('/my-tournament', 'TournamentController@getMyTournament');
             Route::get('/my-tournament/{id}', 'TournamentController@getMyTournamentDetail');
             Route::post('/tournament/create', 'TournamentController@store');

@@ -258,7 +258,11 @@
                         <p id="tournament-header-registration-closed" style="color: #afaeae;">Registration Ends : {{ date('d F Y H:i', strtotime($tournament->registration_closed)) }}</p>
                         @if ($tournament->registration_closed >= date('Y-m-d H:i:s'))
                             @if ($participant)
-                                <a href="{{ url('tournament/'.$tournament->id.'/register') }}" id="tournament-header-registration-action" class="btn btn-default btn-custom">REGISTER</a>
+                                @if ($has_verified_identifications)
+                                    <a href="{{ url('tournament/'.$tournament->id.'/register') }}" id="tournament-header-registration-action" class="btn btn-default btn-custom">REGISTER</a>
+                                @else
+                                    <span id="tournament-header-alert">IDENTITY CARD NOT VERIFIED</span>
+                                @endif
                             @else
                                 <span id="tournament-header-alert">SIGN IN TO REGISTER</span>
                             @endif

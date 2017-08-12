@@ -26,12 +26,16 @@ class AuthController extends BaseController
             if ($member_id = Member::getMemberIDByEmail($data['email'], $member_type)) {
                 $response = GuzzleHelper::requestAccessToken($member_id, $data['password']);
                 if ($response['code'] == 200) {
+                    $member = Member::find($member_id);
                     if (!$data['token_in_json']) {
+                        $has_identifications = $member->identifications()
+                            ->where('verified', 1)
+                            ->exists();
+
                         return response()
-                            ->json(['code' => 200, 'message' => ['Login Success.']])
+                            ->json(['code' => 200, 'message' => ['Login Success.'], 'has_identifications' => $has_identifications])
                             ->cookie('participant_token', $response['access_token'], 0, '/', '', false, false);
                     } else {
-                        $member = Member::find($member_id);
                         $member_json = [
                             'id' => $member->id,
                             'email' => $member->email,

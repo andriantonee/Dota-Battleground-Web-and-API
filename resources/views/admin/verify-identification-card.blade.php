@@ -48,6 +48,7 @@
                                     <th>Identification Card ID</th>
                                     <th>Name</th>
                                     <th>E-mail</th>
+                                    <th>Status</th>
                                     <th>Uploaded At</th>
                                     <th style="width: 70px;"></th>
                                 </tr>
@@ -58,11 +59,24 @@
                                         <td>{{ $identification->id }}</td>
                                         <td>{{ $identification->member->name }}</td>
                                         <td>{{ $identification->member->email }}</td>
+                                        <td class="text-center">
+                                            @if ($identification->verified == 0)
+                                                <span class="label label-warning">Pending</span>
+                                            @elseif ($identification->verified == 1)
+                                                <span class="label label-success">Accepted</span>
+                                            @elseif ($identification->verified == 2)
+                                                <span class="label label-danger">Rejected</span>
+                                            @endif
+                                        </td>
                                         <td>{{ $identification->created_at->format('d F Y H:i:s') }}</td>
                                         <td class="text-center">
                                             <button class="btn btn-default btn-xs btn-info btn-width-25" data-src="{{ asset('storage/member/identification/'.$identification->identification_file_name) }}" data-toggle="modal" data-target="#show-image-modal"><i class="fa fa-picture-o"></i></button>
-                                            <button class="btn btn-default btn-xs btn-success btn-width-25 btn-approve-identification-card" data-id="{{ $identification->id }}"><i class="fa fa-check"></i></button>
-                                            <button class="btn btn-default btn-xs btn-danger btn-width-25 btn-decline-identification-card" data-id="{{ $identification->id }}"><i class="fa fa-times"></i></button>
+                                            @if ($identification->verified != 1)
+                                                <button class="btn btn-default btn-xs btn-success btn-width-25 btn-approve-identification-card" data-id="{{ $identification->id }}"><i class="fa fa-check"></i></button>
+                                            @endif
+                                            @if ($identification->verified != 2)
+                                                <button class="btn btn-default btn-xs btn-danger btn-width-25 btn-decline-identification-card" data-id="{{ $identification->id }}"><i class="fa fa-times"></i></button>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

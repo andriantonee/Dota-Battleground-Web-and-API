@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Helpers\GuzzleHelper;
+use App\Member;
 use Closure;
 
 class ExchangeCookiesToModel
@@ -23,6 +24,14 @@ class ExchangeCookiesToModel
             if ($model) {
                 if ($model->member_type == $member_type) {
                     $request->merge([$guard.'_model' => $model]);
+                    if ($model->member_type == 1) {
+                        $member = Member::find($model->id);
+                        $has_verified_identifications = $member->identifications()
+                            ->where('verified', 1)
+                            ->exists();
+
+                        view()->share('has_verified_identifications', $has_verified_identifications);
+                    }
                 }
             }
         }

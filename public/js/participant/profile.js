@@ -1,4 +1,8 @@
 $(document).ready(function() {
+    if (!has_identifications) {
+        $("#settings-modal").modal("show");
+    }
+
     $("#editable-name").editable({
         "ajaxOptions" : {
             "type" : "PUT",
@@ -303,6 +307,7 @@ $(document).ready(function() {
                 $("#settings-alert-container").append(li_message);
 
                 if (data.code == 200) {
+                    location.reload();
                     // $("#default-settings-picture-modal").attr("src", data.file_path);
                 }
             })

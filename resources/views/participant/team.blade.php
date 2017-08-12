@@ -62,7 +62,7 @@
                                 <p style="color: #afaeae;"><span class="team-count" >{{ $team->details_count }}</span> Member</p>
                             </div>
                             <div class="col-xs-5 text-right" style="padding-top: 20px;">
-                                @if (count($team->details) == 0 && $participant)
+                                @if (count($team->details) == 0 && $participant && $has_verified_identifications)
                                     @if (count($team->invitation_list) > 0)
                                         <button class="btn btn-default btn-custom btn-accept accept-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="false">
                                             <i class="glyphicon glyphicon-ok" style="color:#68ff90"></i>&nbsp;&nbsp;Accept

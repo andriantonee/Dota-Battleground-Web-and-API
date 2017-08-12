@@ -24,7 +24,9 @@ Route::group(['middleware' => ['exchange:participant,1', 'notification'], 'names
         Route::get('/profile', 'ProfileController@index');
         Route::post('/logout', 'AuthController@webLogout');
 
-        Route::get('/tournament/{id}/register', 'TournamentController@registerIndex');
+        Route::group(['middleware' => ['document:participant']], function() {
+            Route::get('/tournament/{id}/register', 'TournamentController@registerIndex');
+        });
         Route::get('/tournament/confirm-payment/{id}', 'TournamentController@confirmPaymentIndex');
     });
 });

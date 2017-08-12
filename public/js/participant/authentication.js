@@ -29,7 +29,11 @@ $("#form-participant-login").on("submit", function(e) {
             $("#login-alert-container").append(li_message);
 
             if (data.code == 200) {
-                location.reload();
+                if (data.has_identifications == true) {
+                    location.reload();
+                } else {
+                    location.replace(location.origin + "/profile");
+                }
             }
         })
         .fail(function() {

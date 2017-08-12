@@ -134,7 +134,7 @@
                             </button>
                         @endif
                     @else
-                        @if ($participant)
+                        @if ($participant && $has_verified_identifications)
                             <div style="position: absolute;right: 0px;top: 10px;">
                                 @if (count($team->invitation_list) > 0)
                                     <button class="btn btn-default btn-custom btn-accept accept-invite-request" style="font-size: 20px;" data-team-id="{{ $team->id }}" data-team-name="{{ $team->name }}" data-refresh="true">

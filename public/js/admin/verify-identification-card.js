@@ -1,6 +1,6 @@
 $(document).ready(function (e) {
     window.dTablesIdentificationCard = $("#identification-card-table").DataTable({
-        "order" : [[3, "asc"]],
+        "order" : [[4, "desc"]],
         "drawCallback" : function(settings) {
             $("#identification-card-table_paginate").find(".pagination").addClass("pagination-custom");
         }

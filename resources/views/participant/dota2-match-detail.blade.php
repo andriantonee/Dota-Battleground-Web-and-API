@@ -1285,7 +1285,7 @@
             <img src="{{ asset('img/close-comment.png') }}">
         </div>
         <div class="comment-container-scroll scrollbar-macosx">
-            @if ($participant)
+            @if ($participant && $has_verified_identifications)
                 <form id="post-comment">
                     <h4>Leave a comment</h4>
                     <textarea class="form-control" id="comment" name="comment" rows="4" placeholder="Leave a comment here..." required="required"></textarea>
