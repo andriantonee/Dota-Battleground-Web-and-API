@@ -16,7 +16,7 @@ class VerifiedToAccess
     public function handle($request, Closure $next)
     {
         if ($request->user()->verified != 1) {
-            if ($request->ajax()) {
+            if ($request->segment(1) == 'api') {
                 return response()->json(['code' => 404, 'message' => ['Member is not verified.']]);
             } else {
                 abort(404);
