@@ -42,11 +42,8 @@ Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function
         Route::put('/team/{id}', 'TeamController@update');
         Route::post('/team/{id}/picture', 'TeamController@updatePicture');
         Route::delete('/team/{id}/picture', 'TeamController@deletePicture');
-        Route::post('/team/{id}/join', 'TeamController@join');
         Route::get('/team/{id}/uninvited-member', 'TeamController@uninvitedMember');
         Route::put('/team/{id}/invite-member/{member_id}', 'TeamController@inviteMember');
-        Route::post('/team/{id}/accept-invitation', 'TeamController@acceptInvitation');
-        Route::post('/team/{id}/reject-invitation', 'TeamController@rejectInvitation');
         Route::delete('/team/{id}/kick-member/{member_id}', 'TeamController@kickMember');
         Route::post('/team/{id}/leave', 'TeamController@leave');
         Route::delete('/team/{id}/disband', 'TeamController@disband');
@@ -60,6 +57,9 @@ Route::group(['prefix' => 'participant', 'namespace' => 'Participant'], function
             Route::get('/tournament/{id}/register', 'TournamentController@registerAPIIndex');
             Route::post('/tournament/{id}/register', 'TournamentController@register');
             Route::post('/dota-2/match/{id}/comment', 'Dota2MatchController@postComment');
+            Route::post('/team/{id}/accept-invitation', 'TeamController@acceptInvitation');
+            Route::post('/team/{id}/reject-invitation', 'TeamController@rejectInvitation');
+            Route::post('/team/{id}/join', 'TeamController@join');
         });
     });
 });
